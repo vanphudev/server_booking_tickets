@@ -70,103 +70,103 @@ class SuccessResponse {
    }
 }
 
-// class OK extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.OK,
-//          reasonStatusCode: ReasonStatusCode.OK,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class OK extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.OK,
+         reasonStatusCode: ReasonStatusCode.OK,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
-// class CREATED extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.CREATED,
-//          reasonStatusCode: ReasonStatusCode.CREATED,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class CREATED extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.CREATED,
+         reasonStatusCode: ReasonStatusCode.CREATED,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
-// class ACCEPTED extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.ACCEPTED,
-//          reasonStatusCode: ReasonStatusCode.ACCEPTED,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class ACCEPTED extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.ACCEPTED,
+         reasonStatusCode: ReasonStatusCode.ACCEPTED,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
-// class NO_CONTENT extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.NO_CONTENT,
-//          reasonStatusCode: ReasonStatusCode.NO_CONTENT,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class NO_CONTENT extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.NO_CONTENT,
+         reasonStatusCode: ReasonStatusCode.NO_CONTENT,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
-// class RESET_CONTENT extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.RESET_CONTENT,
-//          reasonStatusCode: ReasonStatusCode.RESET_CONTENT,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class RESET_CONTENT extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.RESET_CONTENT,
+         reasonStatusCode: ReasonStatusCode.RESET_CONTENT,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
-// class UPDATE extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.UPDATE,
-//          reasonStatusCode: ReasonStatusCode.UPDATE,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class UPDATE extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.UPDATE,
+         reasonStatusCode: ReasonStatusCode.UPDATE,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
-// class DELETE extends SuccessResponse {
-//    constructor({message, metadata, suggestion, redirectTo, request}) {
-//       super({
-//          statusCode: StatusCode.DELETE,
-//          reasonStatusCode: ReasonStatusCode.DELETE,
-//          message,
-//          metadata,
-//          suggestion,
-//          redirectTo,
-//          request,
-//       });
-//    }
-// }
+class DELETE extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.DELETE,
+         reasonStatusCode: ReasonStatusCode.DELETE,
+         message,
+         metadata,
+         suggestion,
+         redirectTo,
+         request,
+      });
+   }
+}
 
 class GET extends SuccessResponse {
    constructor({
@@ -191,12 +191,12 @@ class GET extends SuccessResponse {
 }
 
 module.exports = {
-   // OK,
-   // CREATED,
-   // ACCEPTED,
-   // NO_CONTENT,
-   // RESET_CONTENT,
-   // UPDATE,
-   // DELETE,
+   OK,
+   CREATED,
+   ACCEPTED,
+   NO_CONTENT,
+   RESET_CONTENT,
+   UPDATE,
+   DELETE,
    GET,
 };

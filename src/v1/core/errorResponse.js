@@ -29,6 +29,7 @@ const ReasonStatus = {
    BAD_GATEWAY: "Bad Gateway",
    SERVICE_UNAVAILABLE: "Service Unavailable",
 };
+
 class ErrorResponse extends Error {
    constructor(message, status, reason, suggestion, redirectTo, request) {
       super(message || reason);

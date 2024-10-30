@@ -38,9 +38,10 @@ class ErrorResponse extends Error {
       this.reason = reason;
       this.message = message || reason;
       this.timestamp = new Date();
-      this.details = {
+      this.details = request || {
          requestedUrl: request?.originalUrl || "",
          suggestion: suggestion || "",
+         requestTime: request?.requestTime || "",
          redirectTo: redirectTo || "",
          browser:
             {

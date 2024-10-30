@@ -36,7 +36,7 @@ class SuccessResponse {
       this.status = statusCode || StatusCode.OK;
       this.reason = reasonStatusCode || ReasonStatusCode.OK;
       this.message = message || reasonStatusCode;
-      this.details = {
+      this.details = request || {
          requestedUrl: request?.originalUrl || "",
          suggestion: suggestion || "",
          redirectTo: redirectTo || "",

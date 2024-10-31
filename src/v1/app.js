@@ -14,7 +14,7 @@ const __RESPONSE = require("./core");
 const {ConnectDatabase: initDb, CloseDatabase: closedDb} = require("./db");
 const rootRouter = require("./routes");
 const logRequestTime = require("../v1/middlewares/logRequestTime");
-const {stringify} = require("flatted");
+// const {stringify} = require("flatted");
 const app = express();
 
 app.use(bodyParser.json());
@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(expressIp().getIpInfoMiddleware);
 app.use(device.capture());
+app.use(useragent.express());
 app.use(useragent.express());
 
 initDb();

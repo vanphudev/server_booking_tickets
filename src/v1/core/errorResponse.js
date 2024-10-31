@@ -38,31 +38,33 @@ class ErrorResponse extends Error {
       this.reason = reason;
       this.message = message || reason;
       this.timestamp = new Date();
-      this.details = request || {
-         requestedUrl: request?.originalUrl || "",
-         suggestion: suggestion || "",
-         requestTime: request?.requestTime || "",
-         redirectTo: redirectTo || "",
-         browser:
-            {
-               userAgent: request?.headers["user-agent"] || "",
-               ip: request?.ip || "",
-               ipInfo: request?.ipInfo || "",
-               host: request?.hostname || "",
-               origin: request?.headers.origin || "",
-               referer: request?.headers.referer || "",
-               location: request?.headers.location || "",
-               device: request?.device.type || "",
-               browser_details: {
-                  name: request?.useragent?.browser || "",
-                  version: request?.useragent?.version || "",
-                  os: request?.useragent?.os || "",
-                  platform: request?.useragent?.platform || "",
-                  source: request?.useragent?.source || "",
-               },
-               geo: geoip.lookup(request?.ip),
-            } || "",
-      };
+      this.details = request
+         ? {
+              requestedUrl: request?.originalUrl || "",
+              suggestion: suggestion || "",
+              requestTime: request?.requestTime || "",
+              redirectTo: redirectTo || "",
+              browser:
+                 {
+                    userAgent: request?.headers["user-agent"] || "",
+                    ip: request?.ip || "",
+                    ipInfo: request?.ipInfo || "",
+                    host: request?.hostname || "",
+                    origin: request?.headers.origin || "",
+                    referer: request?.headers.referer || "",
+                    location: request?.headers.location || "",
+                    device: request?.device.type || "",
+                    browser_details: {
+                       name: request?.useragent?.browser || "",
+                       version: request?.useragent?.version || "",
+                       os: request?.useragent?.os || "",
+                       platform: request?.useragent?.platform || "",
+                       source: request?.useragent?.source || "",
+                    },
+                    geo: geoip.lookup(request?.ip),
+                 } || "",
+           }
+         : {};
    }
 }
 

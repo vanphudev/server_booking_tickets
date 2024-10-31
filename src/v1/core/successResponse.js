@@ -36,31 +36,33 @@ class SuccessResponse {
       this.status = statusCode || StatusCode.OK;
       this.reason = reasonStatusCode || ReasonStatusCode.OK;
       this.message = message || reasonStatusCode;
-      this.details = request || {
-         requestedUrl: request?.originalUrl || "",
-         suggestion: suggestion || "",
-         redirectTo: redirectTo || "",
-         requestTime: request?.requestTime || "",
-         browser:
-            {
-               userAgent: request?.headers["user-agent"] || "",
-               ip: request?.ip || "",
-               ipInfo: request?.ipInfo || "",
-               host: request?.hostname || "",
-               origin: request?.headers.origin || "",
-               referer: request?.headers.referer || "",
-               location: request?.headers.location || "",
-               device: request?.device.type || "",
-               browser_details: {
-                  name: request.useragent?.browser || "",
-                  version: request.useragent?.version || "",
-                  os: request.useragent?.os || "",
-                  platform: request.useragent?.platform || "",
-                  source: request.useragent?.source || "",
-               },
-               geo: geoip.lookup(request?.ip),
-            } || "",
-      };
+      this.details = request
+         ? {
+              requestedUrl: request?.originalUrl || "",
+              suggestion: suggestion || "",
+              requestTime: request?.requestTime || "",
+              redirectTo: redirectTo || "",
+              browser:
+                 {
+                    userAgent: request?.headers["user-agent"] || "",
+                    ip: request?.ip || "",
+                    ipInfo: request?.ipInfo || "",
+                    host: request?.hostname || "",
+                    origin: request?.headers.origin || "",
+                    referer: request?.headers.referer || "",
+                    location: request?.headers.location || "",
+                    device: request?.device.type || "",
+                    browser_details: {
+                       name: request?.useragent?.browser || "",
+                       version: request?.useragent?.version || "",
+                       os: request?.useragent?.os || "",
+                       platform: request?.useragent?.platform || "",
+                       source: request?.useragent?.source || "",
+                    },
+                    geo: geoip.lookup(request?.ip),
+                 } || "",
+           }
+         : {};
       this.metadata = metadata || {};
       this.success = true;
       this.responeTime = new Date();

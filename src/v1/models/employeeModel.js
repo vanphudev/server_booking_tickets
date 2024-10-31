@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             as: "employee_onetoOne_driver",
          });
          Employee.hasMany(models.Voucher, {
-            foreignKey: "employee_id",
+            foreignKey: "voucher_created_by",
             as: "employee_to_voucher",
          });
          Employee.hasMany(models.TripEmployee, {

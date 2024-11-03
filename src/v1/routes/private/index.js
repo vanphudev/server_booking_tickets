@@ -1,5 +1,9 @@
 const express = require("express");
 const rootRouter = express.Router();
+rootRouter.use("/type-customer", require("./typeCustomerAPI"));
+rootRouter.use("/office", require("./officeAPI"));
+rootRouter.use("/way", require("./wayAPI"));
+rootRouter.use("/officeimage", require("./officeImageAPI"));
 const typeCustomerRouter = require("./typeCustomerAPI");
 const mapVehicleLayoutRouter = require("./mapVehicleLayoutAPI");
 const mapVehicleSeatRouter = require("./mapVehicleSeatAPI");
@@ -7,7 +11,6 @@ const roleRouter=require("./roleAPI");
 const paymentTypeRouter =require("./paymentTypeAPI");
 const groupRouter =require("./groupAPI");
 const roleGroupRouter =require("./roleGroupAPI");
-
 rootRouter.use("/type-customer", typeCustomerRouter);
 rootRouter.use("/map-vehicle-layout", mapVehicleLayoutRouter);
 rootRouter.use("/map-vehicle-seat", mapVehicleSeatRouter);

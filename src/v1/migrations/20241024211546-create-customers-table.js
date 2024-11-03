@@ -31,6 +31,9 @@ module.exports = {
             customer_avatar_url: {
                type: Sequelize.TEXT,
             },
+            customer_avatar_public_id: {
+               type: Sequelize.TEXT,
+            },
             customer_destination_address: {
                type: Sequelize.JSON,
                defaultValue: '{"province": "value_province", "district": "value_district", "wards": "value_wards"}',

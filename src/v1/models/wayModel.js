@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
          });
          Way.belongsToMany(models.Office, {
             through: models.PickupPoint,
-            foreignKey: "way_id",
-            otherKey: "office_id",
+            foreignKey: "pickup_point_way_id",
+            otherKey: "pickup_point_office_id",
             as: "way_to_office",
          });
          Way.hasMany(models.PickupPoint, {

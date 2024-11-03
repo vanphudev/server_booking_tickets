@@ -24,8 +24,9 @@ module.exports = (sequelize, DataTypes) => {
          vehicle_image_description: {
             type: DataTypes.STRING(500),
          },
-         vehicle_image_type: {
-            type: DataTypes.STRING(50),
+         vehicle_image_public_id: {
+            type: DataTypes.TEXT,
+            allowNull: false,
          },
          vehicle_id: {
             type: DataTypes.INTEGER,

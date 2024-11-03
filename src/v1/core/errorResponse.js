@@ -8,7 +8,6 @@ const StatusCode = {
    FORBIDDEN: 403, // Không được phép truy cập tài nguyên.
    NOT_FOUND: 404, // Không tìm thấy tài nguyên.
    CONFLICT: 409, // Xung đột với tài nguyên hiện tại của máy chủ.
-   NOT_FOUND_USER: 405, // Không tìm thấy người dùng.
    METHOD_NOT_ALLOWED: 405, // Phương thức không được phép.
    INTERNAL_SERVER_ERROR: 500, // Lỗi xảy ra trên máy chủ.
    NOT_IMPLEMENTED: 501, // Chưa được triển khai.
@@ -23,7 +22,6 @@ const ReasonStatus = {
    NOT_FOUND: "Not Found",
    CONFLICT: "Conflict",
    INTERNAL_SERVER_ERROR: "Internal Server Error",
-   NOT_FOUND_USER: "User Not Found",
    METHOD_NOT_ALLOWED: "Method Not Allowed",
    NOT_IMPLEMENTED: "Not Implemented",
    BAD_GATEWAY: "Bad Gateway",
@@ -38,30 +36,33 @@ class ErrorResponse extends Error {
       this.reason = reason;
       this.message = message || reason;
       this.timestamp = new Date();
-      this.details = {
-         requestedUrl: request?.originalUrl || "",
-         suggestion: suggestion || "",
-         redirectTo: redirectTo || "",
-         browser:
-            {
-               userAgent: request?.headers["user-agent"] || "",
-               ip: request?.ip || "",
-               ipInfo: request?.ipInfo || "",
-               host: request?.hostname || "",
-               origin: request?.headers.origin || "",
-               referer: request?.headers.referer || "",
-               location: request?.headers.location || "",
-               device: request?.device.type || "",
-               browser_details: {
-                  name: request?.useragent?.browser || "",
-                  version: request?.useragent?.version || "",
-                  os: request?.useragent?.os || "",
-                  platform: request?.useragent?.platform || "",
-                  source: request?.useragent?.source || "",
-               },
-               geo: geoip.lookup(request?.ip),
-            } || "",
-      };
+      this.details = request
+         ? {
+              requestedUrl: request?.originalUrl || "",
+              suggestion: suggestion || "",
+              requestTime: request?.requestTime || "",
+              redirectTo: redirectTo || "",
+              browser:
+                 {
+                    userAgent: request?.headers["user-agent"] || "",
+                    ip: request?.ip || "",
+                    ipInfo: request?.ipInfo || "",
+                    host: request?.hostname || "",
+                    origin: request?.headers.origin || "",
+                    referer: request?.headers.referer || "",
+                    location: request?.headers.location || "",
+                    device: request?.device.type || "",
+                    browser_details: {
+                       name: request?.useragent?.browser || "",
+                       version: request?.useragent?.version || "",
+                       os: request?.useragent?.os || "",
+                       platform: request?.useragent?.platform || "",
+                       source: request?.useragent?.source || "",
+                    },
+                    geo: geoip.lookup(request?.ip),
+                 } || "",
+           }
+         : {};
    }
 }
 
@@ -136,16 +137,6 @@ class ServiceUnavailableError extends ErrorResponse {
    }
 }
 
-class NotFoundUserError extends ErrorResponse {
-   constructor({message, suggestion, redirectTo, request}) {
-      super(message, StatusCode.NOT_FOUND_USER, ReasonStatus.NOT_FOUND_USER, {
-         suggestion,
-         redirectTo,
-         request,
-      });
-   }
-}
-
 module.exports = {
    ErrorResponse,
    NotFoundError,
@@ -153,7 +144,6 @@ module.exports = {
    BadRequestError,
    UnauthorizedError,
    ForbiddenError,
-   NotFoundUserError,
    ConflictError,
    MethodNotAllowedError,
    NotImplementedError,

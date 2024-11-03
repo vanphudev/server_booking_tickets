@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             as: "employee_onetoOne_driver",
          });
          Employee.hasMany(models.Voucher, {
-            foreignKey: "employee_id",
+            foreignKey: "voucher_created_by",
             as: "employee_to_voucher",
          });
          Employee.hasMany(models.TripEmployee, {
@@ -92,6 +92,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
          },
          employee_profile_image: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+         },
+         employee_profile_image_public_id: {
             type: DataTypes.TEXT,
             allowNull: true,
          },

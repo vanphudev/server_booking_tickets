@@ -25,8 +25,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false,
          },
-         image_article_type: {
-            type: DataTypes.STRING(50),
+         image_article_public_id: {
+            type: DataTypes.TEXT,
+            allowNull: false,
          },
          article_id: {
             type: DataTypes.INTEGER,

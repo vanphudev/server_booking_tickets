@@ -3,6 +3,7 @@ const geoip = require("geoip-lite");
 
 const StatusCode = {
    OK: 200, // OK
+   SUCCESS: 200, // OK
    GET: 200, // OK
    UPDATE: 200, // OK
    DELETE: 200, // OK
@@ -14,6 +15,7 @@ const StatusCode = {
 
 const ReasonStatusCode = {
    OK: "OK",
+   SUCCESS: "Success",
    CREATED: "Created",
    ACCEPTED: "Accepted",
    NO_CONTENT: "No Content",
@@ -36,31 +38,33 @@ class SuccessResponse {
       this.status = statusCode || StatusCode.OK;
       this.reason = reasonStatusCode || ReasonStatusCode.OK;
       this.message = message || reasonStatusCode;
-      this.details = {
-         requestedUrl: request?.originalUrl || "",
-         suggestion: suggestion || "",
-         redirectTo: redirectTo || "",
-         requestTime: request?.requestTime || "",
-         browser:
-            {
-               userAgent: request?.headers["user-agent"] || "",
-               ip: request?.ip || "",
-               ipInfo: request?.ipInfo || "",
-               host: request?.hostname || "",
-               origin: request?.headers.origin || "",
-               referer: request?.headers.referer || "",
-               location: request?.headers.location || "",
-               device: request?.device.type || "",
-               browser_details: {
-                  name: request.useragent?.browser || "",
-                  version: request.useragent?.version || "",
-                  os: request.useragent?.os || "",
-                  platform: request.useragent?.platform || "",
-                  source: request.useragent?.source || "",
-               },
-               geo: geoip.lookup(request?.ip),
-            } || "",
-      };
+      this.details = request
+         ? {
+              requestedUrl: request?.originalUrl || "",
+              suggestion: suggestion || "",
+              requestTime: request?.requestTime || "",
+              redirectTo: redirectTo || "",
+              browser:
+                 {
+                    userAgent: request?.headers["user-agent"] || "",
+                    ip: request?.ip || "",
+                    ipInfo: request?.ipInfo || "",
+                    host: request?.hostname || "",
+                    origin: request?.headers.origin || "",
+                    referer: request?.headers.referer || "",
+                    location: request?.headers.location || "",
+                    device: request?.device.type || "",
+                    browser_details: {
+                       name: request?.useragent?.browser || "",
+                       version: request?.useragent?.version || "",
+                       os: request?.useragent?.os || "",
+                       platform: request?.useragent?.platform || "",
+                       source: request?.useragent?.source || "",
+                    },
+                    geo: geoip.lookup(request?.ip),
+                 } || "",
+           }
+         : {};
       this.metadata = metadata || {};
       this.success = true;
       this.responeTime = new Date();
@@ -80,6 +84,15 @@ class OK extends SuccessResponse {
          suggestion,
          redirectTo,
          request,
+      });
+   }
+}
+
+class SUCCESS extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.SUCCESS,
+         reasonStatusCode: ReasonStatusCode.SUCCESS,
       });
    }
 }
@@ -193,6 +206,7 @@ class GET extends SuccessResponse {
 module.exports = {
    OK,
    CREATED,
+   SUCCESS,
    ACCEPTED,
    NO_CONTENT,
    RESET_CONTENT,

@@ -1,5 +1,6 @@
 "use strict";
 const __RESPONSE = require("../../core");
+
 const db = require("../../models");
 const validator = require("validator");
 
@@ -143,3 +144,9 @@ module.exports = {
     deleteVehicle,
     updateVehicle,
 };
+
+const {validationResult} = require("express-validator");
+const db = require("../../models");
+
+module.exports = {};
+

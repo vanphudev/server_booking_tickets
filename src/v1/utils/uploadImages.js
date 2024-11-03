@@ -5,7 +5,7 @@ const __RESPONSE = require("../core/");
 require("dotenv").config();
 const crypto = require("crypto");
 
-const createCloudinaryStorage = ({customFolder = "others", file_name = "others"}) => {
+const createCloudinaryStorage = ({customFolder = "others"}) => {
    return new CloudinaryStorage({
       cloudinary: cloudinary.config({
          cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

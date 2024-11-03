@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
          });
          Office.belongsToMany(models.Way, {
             through: models.PickupPoint,
-            foreignKey: "office_id",
-            otherKey: "route_id",
-            as: "office_to_route",
+            foreignKey: "pickup_point_office_id",
+            otherKey: "pickup_point_way_id",
+            as: "office_to_way",
          });
          Office.hasMany(models.Employee, {
             foreignKey: "office_id",

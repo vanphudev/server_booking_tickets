@@ -15,10 +15,11 @@ module.exports = {
                allowNull: false,
             },
             office_image_description: {
-               type: Sequelize.STRING(255),
+               type: Sequelize.TEXT,
             },
-            office_image_type: {
-               type: Sequelize.STRING(50),
+            office_image_public_id: {
+               type: Sequelize.TEXT,
+               allowNull: false,
             },
             created_at: {
                type: Sequelize.DATE,

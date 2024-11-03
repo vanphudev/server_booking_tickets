@@ -1,8 +1,0 @@
-@hostname = localhost
-@port = 8800
-@host = {{hostname}}:{{port}}
-@contentType = application/json
-
-### Get All Vouchers
-GET http://{{host}}/api/v1/public/vouchers/getall HTTP/1.1
-Content-Type: {{contentType}}

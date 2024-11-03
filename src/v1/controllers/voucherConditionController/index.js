@@ -1,8 +1,13 @@
 "use strict";
 
 const __RESPONSE = require("../../core");
-const {getAllVouchers, getVoucherByCode, createVoucher,    updateVoucher,
-   deleteVoucher,} = require("../../services/voucherService");
+const {
+   getAllVouchers,
+   getVoucherByCode,
+   createVoucher,
+   updateVoucher,
+   deleteVoucher,
+} = require("../../services/voucherService");
 
 const __VOUCHER_CONTROLLER = {
    getAllVouchers: async (req, res, next) => {
@@ -41,7 +46,6 @@ const __VOUCHER_CONTROLLER = {
          request: req,
       }).send(res);
    },
-  
 };
 
 module.exports = __VOUCHER_CONTROLLER;

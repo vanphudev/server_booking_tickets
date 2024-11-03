@@ -3,6 +3,7 @@ const geoip = require("geoip-lite");
 
 const StatusCode = {
    OK: 200, // OK
+   SUCCESS: 200, // OK
    GET: 200, // OK
    UPDATE: 200, // OK
    DELETE: 200, // OK
@@ -14,6 +15,7 @@ const StatusCode = {
 
 const ReasonStatusCode = {
    OK: "OK",
+   SUCCESS: "Success",
    CREATED: "Created",
    ACCEPTED: "Accepted",
    NO_CONTENT: "No Content",
@@ -82,6 +84,15 @@ class OK extends SuccessResponse {
          suggestion,
          redirectTo,
          request,
+      });
+   }
+}
+
+class SUCCESS extends SuccessResponse {
+   constructor({message, metadata, suggestion, redirectTo, request}) {
+      super({
+         statusCode: StatusCode.SUCCESS,
+         reasonStatusCode: ReasonStatusCode.SUCCESS,
       });
    }
 }
@@ -195,6 +206,7 @@ class GET extends SuccessResponse {
 module.exports = {
    OK,
    CREATED,
+   SUCCESS,
    ACCEPTED,
    NO_CONTENT,
    RESET_CONTENT,

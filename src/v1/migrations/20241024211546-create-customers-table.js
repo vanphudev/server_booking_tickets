@@ -50,16 +50,6 @@ module.exports = {
                type: Sequelize.DATE,
                defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
             },
-            access_token: {
-               type: Sequelize.TEXT,
-            },
-            refresh_token: {
-               type: Sequelize.TEXT,
-            },
-            last_refresh_token: {
-               type: Sequelize.DATE,
-               defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-            },
             created_at: {
                type: Sequelize.DATE,
                defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),

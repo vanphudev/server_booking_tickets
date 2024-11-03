@@ -17,4 +17,4 @@ rootRouter
    .post("/create", validateCreateWay, asyncHandler(__WAY_CONTROLLER__.createWay))
    .delete("/delete", validateWayWithByIDToQuery, asyncHandler(__WAY_CONTROLLER__.deleteWay));
 
-module.exports = rootRouter;  
+module.exports = rootRouter;

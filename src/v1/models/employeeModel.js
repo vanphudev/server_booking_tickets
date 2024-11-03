@@ -106,18 +106,6 @@ module.exports = (sequelize, DataTypes) => {
                isIn: [[0, 1, -1]],
             },
          },
-         access_token: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-         },
-         refresh_token: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-         },
-         last_refresh_token: {
-            type: DataTypes.DATE(6),
-            defaultValue: DataTypes.NOW,
-         },
          is_first_activation: {
             type: DataTypes.TINYINT(1),
             defaultValue: 1,

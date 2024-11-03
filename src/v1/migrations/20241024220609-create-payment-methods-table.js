@@ -27,6 +27,12 @@ module.exports = {
                   isIn: [[0, 1]],
                },
             },
+            payment_method_avatar_url: {
+               type: Sequelize.TEXT,
+            },
+            payment_method_avatar_public_id: {
+               type: Sequelize.TEXT,
+            },
             last_lock_at: {
                type: Sequelize.DATE,
                allowNull: true,

@@ -16,8 +16,9 @@ module.exports = {
             vehicle_image_description: {
                type: Sequelize.STRING(500),
             },
-            vehicle_image_type: {
-               type: Sequelize.STRING(50),
+            vehicle_image_public_id: {
+               type: Sequelize.TEXT,
+               allowNull: false,
             },
             created_at: {
                type: Sequelize.DATE,

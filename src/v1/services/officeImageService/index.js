@@ -24,7 +24,7 @@ const getOfficeByOfficeId = async (req, res, next) => {
          request: req,
       });
    }
-   const {officeId} = req.body;
+   const {officeId} = req.params;
    return await db.Office.findOne({
       where: {office_id: officeId},
       attributes: ["office_id", "office_name"],
@@ -60,7 +60,7 @@ const createOfficeImage = async (req, res, next) => {
          request: req,
       });
    }
-   const {officeId} = req.body;
+   const {officeId} = req.params;
    const office = await db.Office.findOne({
       where: {office_id: officeId},
       attributes: ["office_id", "office_name"],

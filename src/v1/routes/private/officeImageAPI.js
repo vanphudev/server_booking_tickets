@@ -2,7 +2,6 @@ const express = require("express");
 const rootRouter = express.Router();
 const __OFFICE_IMAGE_CONTROLLER__ = require("../../controllers/officeImageController");
 const asyncHandler = require("../../middlewares/handleError");
-const multer = require("multer");
 
 const {
    validateCreateOfficeImage,
@@ -25,7 +24,9 @@ rootRouter
    .put("/update", validateUpdateOfficeImage, asyncHandler(__OFFICE_IMAGE_CONTROLLER__.updateOfficeImage))
    .get("/getbyid", validateOfficeImageWithByIDToQuery, asyncHandler(__OFFICE_IMAGE_CONTROLLER__.getOfficeImageById))
    .post(
-      "/create",
+      "/create/:officeId",
+      validateCreateOfficeImage,
+      asyncHandler(__OFFICE_IMAGE_CONTROLLER__.getOfficeByOfficeId),
       officeImageUpload,
       validateCreateOfficeImage,
       asyncHandler(__OFFICE_IMAGE_CONTROLLER__.createOfficeImage)

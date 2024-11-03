@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false,
          },
-         review_image_type: {
-            type: DataTypes.STRING(50),
-            allowNull: true,
+         review_image_public_id: {
+            type: DataTypes.TEXT,
+            allowNull: false,
          },
       },
       {

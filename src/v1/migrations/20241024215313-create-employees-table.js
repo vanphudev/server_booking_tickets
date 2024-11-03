@@ -50,6 +50,10 @@ module.exports = {
                type: Sequelize.TEXT,
                allowNull: true,
             },
+            employee_profile_image_public_id: {
+               type: Sequelize.TEXT,
+               allowNull: true,
+            },
             employee_gender: {
                type: Sequelize.TINYINT(1),
                allowNull: true,

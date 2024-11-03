@@ -17,8 +17,9 @@ module.exports = {
                type: Sequelize.TEXT,
                allowNull: false,
             },
-            image_article_type: {
-               type: Sequelize.STRING(50),
+            image_article_public_id: {
+               type: Sequelize.TEXT,
+               allowNull: false,
             },
             created_at: {
                type: Sequelize.DATE,

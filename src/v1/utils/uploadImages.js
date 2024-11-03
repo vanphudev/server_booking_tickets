@@ -6,10 +6,6 @@ require("dotenv").config();
 const crypto = require("crypto");
 const {normalizeVietnameseString} = require("./normalizeVietnameseString");
 
-const randomHex = () => {
-   return crypto.randomBytes(16).toString("hex");
-};
-
 cloudinary.config({
    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
    api_key: process.env.CLOUDINARY_API_KEY,
@@ -24,7 +20,9 @@ const createUploadMiddleware = ({maxFiles = 5, customFolder = "others"}) => {
          return {
             folder: dynamicFolder,
             format: file.mimetype.split("/")[1],
-            public_id: `${Date.now()}_${normalizeVietnameseString(req.body.officeId)}_${randomHex()}`,
+            public_id: `${Date.now()}_${normalizeVietnameseString(req.body.officeName)}_${normalizeVietnameseString(
+               req.params.officeId
+            )}_${crypto.randomBytes(32).toString("hex")}`,
             allowed_formats: ["jpg", "png", "jpeg", "svg", "webp", "ico"],
          };
       },

@@ -95,6 +95,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: true,
          },
+         employee_profile_image_public_id: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+         },
          employee_gender: {
             type: DataTypes.TINYINT(1),
             allowNull: true,

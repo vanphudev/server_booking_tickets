@@ -19,7 +19,6 @@ const __OFFICE_IMAGE_CONTROLLER__ = {
       }).send(res);
    },
    getOfficeByOfficeId: async (req, res, next) => {
-      console.log("req.body", req.body);
       req.office = await getOfficeByOfficeId(req, res, next);
       next();
    },

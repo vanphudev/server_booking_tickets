@@ -5,13 +5,14 @@
 @endpoint = api/v1/private/{{object}}
 @contentType = application/json
 ### Create Office Image
-POST http://{{host}}/{{endpoint}}/create
+POST http://{{host}}/{{endpoint}}/create/12 HTTP/1.1
 Content-Type: multipart/form-data; boundary=MfnBoundry
 
 --MfnBoundry
-Content-Disposition: form-data; name="officeId"
+Content-Disposition: form-data; name="officeName"
 
-12
+Văn phòng bến xe miền đông, Hà Nội
+
 --MfnBoundry
 Content-Disposition: form-data; name="images"; filename="Screenshot 2024-11-02 104534.png"
 Content-Type: image/jpeg

@@ -84,6 +84,9 @@ module.exports = (sequelize, DataTypes) => {
          thumbnail_img: {
             type: DataTypes.TEXT,
          },
+         thumbnail_img_public_id: {
+            type: DataTypes.TEXT,
+         },
       },
       {
          sequelize,

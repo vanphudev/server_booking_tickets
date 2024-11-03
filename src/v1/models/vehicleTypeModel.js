@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
          indexes: [
             {
                unique: true,
-               fields: ["vehicle_type_id", "vehicle_type_name"],
+               fields: ["vehicle_type_name", "vehicle_type_id"],
             },
          ],
          createdAt: "created_at",

@@ -39,6 +39,7 @@
       "morgan": "^1.10.0",
       "multer": "^1.4.5-lts.1",
       "multer-storage-cloudinary": "^4.0.0",
+      "multiparty": "^4.2.3",
       "mysql2": "^3.11.0",
       "react-i18next": "^15.1.0",
       "react-redux": "^9.1.2",

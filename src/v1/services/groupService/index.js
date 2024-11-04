@@ -13,7 +13,10 @@ const getAllGroup = async () => {
 const getGroupById = async (id) => {
     const group = await db.Group.findByPk(id);
     if (!group) {
-        throw new Error("Group not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Group not found",
+            request: req,
+        })
     }
     return group;
 };
@@ -43,7 +46,10 @@ const createGroup = async (req) => {
 
     const group = await db.Group.findByPk(id);
     if (!group) {
-        throw new Error("Group not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Group not found",
+            request: req,
+        })
     }
 
     // Cập nhật thông tin
@@ -62,13 +68,15 @@ const createGroup = async (req) => {
     };
 };
 
-  
  const deleteGroup = async (req) => {
      const {id} = req.params;
  
      const group = await db.Group.findByPk(id);
      if (!group) {
-        throw new Error("Group not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Group not found",
+            request: req,
+        })
      }
  
      await group.destroy();

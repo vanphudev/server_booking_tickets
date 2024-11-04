@@ -25,9 +25,9 @@ const __ROLE_GROUP_CONTROLLER = {
 
     getRoleGroupById: async (req, res, next) => {
         try {
-            const { roleId, groupId } = req.params;
-            const roleGroup = await getRoleGroupById(roleId, groupId);
-
+            const { role_id, group_id } = req.params; // Lấy tham số từ req.params
+            const roleGroup = await getRoleGroupById(role_id, group_id); // Gọi hàm dịch vụ với tham số
+    
             new __RESPONSE.OK({
                 message: "Retrieved Role group",
                 metadata: roleGroup,
@@ -41,7 +41,7 @@ const __ROLE_GROUP_CONTROLLER = {
                 details: error.message,
             });
         }
-    },
+    },    
 
     createRoleGroup: async (req, res, next) => {
         try {
@@ -81,7 +81,7 @@ const __ROLE_GROUP_CONTROLLER = {
         try {
             new __RESPONSE.OK({
                 message: "Role group deleted successfully",
-                metadata: await updateRoleGroup(req),
+                metadata: await deleteRoleGroup(req),
                 request: req,
             }).send(res);
         } catch (error) {

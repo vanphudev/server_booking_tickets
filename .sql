@@ -309,7 +309,7 @@ CREATE TABLE review_images (
     review_image_id INT AUTO_INCREMENT PRIMARY KEY, -- ID duy nhất cho mỗi hình ảnh, tự động tăng.
     review_id INT, -- ID đánh giá mà hình ảnh thuộc về.
     review_image_url TEXT, -- URL của hình ảnh.
-		review_image_type VARCHAR(50), -- Kiểu file ảnh (jpg, png, gif,...)
+	review_image_type VARCHAR(50), -- Kiểu file ảnh (jpg, png, gif,...)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Thời gian tạo bản ghi.
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Thời gian cập nhật bản ghi.
     CONSTRAINT fk_review_images_reviews FOREIGN KEY (review_id) REFERENCES reviews(review_id) -- Liên kết với bảng reviews.

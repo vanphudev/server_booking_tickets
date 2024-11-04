@@ -56,14 +56,19 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
     updateMapVehicleSeat: async (req, res, next) => {
         try {
             const seatId = req.params.id;
-            const metadata = await updateMapVehicleSeat(seatId, req.body); 
-            new __RESPONSE.SUCCESS({
+            const metadata = await updateMapVehicleSeat(seatId, req.body);
+            new __RESPONSE.OK({
                 message: "Update map vehicle seat successfully",
                 metadata: metadata,
                 request: req,
             }).send(res);
         } catch (error) {
-            next(error);
+            console.error("Error updating Map Vehicle Seat:", error);
+            res.status(500).json({
+                error: true,
+                message: "Internal Server Error",
+                details: error.message,
+            });
         }
     },
 

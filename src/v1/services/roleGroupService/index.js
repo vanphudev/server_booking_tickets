@@ -14,8 +14,7 @@ const getRoleGroupById = async (roleId, groupId) => {
     if (!roleGroup) {
         throw new __RESPONSE.NotFoundError({
             message: "Role group not found",
-            request: req,
-        })
+        });
     }
     return roleGroup;
 };
@@ -55,21 +54,27 @@ const updateRoleGroup = async (req) => {
     
 };
 
-// Phương thức xóa RoleGroup
 const deleteRoleGroup = async (req) => {
     const { roleId, groupId } = req.body;
-    console.log(req.body);
-    const [roleGroup] = await db.RoleGroup.delete({role_id: roleId}, { where: {group_id: groupId } });
+
+    // Tìm bản ghi để xóa (soft delete)
+    const roleGroup = await db.RoleGroup.findOne({
+        where: { role_id: roleId, group_id: groupId }
+    });
+
     if (!roleGroup) {
         throw new __RESPONSE.NotFoundError({
             message: "Role group not found",
             request: req,
-        })
+        });
     }
 
+    // Xóa mềm (soft delete) để cập nhật `deletedAt`
     await roleGroup.destroy();
+
     return { message: "Role group deleted successfully" };
 };
+
 
 module.exports = {
     getAllRoleGroup,

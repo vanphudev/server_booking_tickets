@@ -3,6 +3,24 @@ const __RESPONSE = require("../../core");
 const db = require("../../models");
 const validator = require("validator");
 
+// Phương thức lấy tất cả 
+const getAllRole = async () => {
+    const role = await db.Role.findAll();
+    return role;
+};
+
+// Phương thức lấy theo ID
+const getRoleById = async (id) => {
+    const role = await db.Role.findByPk(id);
+    if (!role) {
+        throw new __RESPONSE.NotFoundError({
+            message: "Role not found",
+            request: req,
+        })
+    }
+    return role;
+};
+
 const createRole = async (req) => {
     const {name, description, url, locked} = req.body;
 
@@ -32,7 +50,10 @@ const createRole = async (req) => {
 
     const role = await db.Role.findByPk(id);
     if (!role) {
-        throw new Error("Role not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Role not found",
+            request: req,
+        })
     }
 
     // Cập nhật thông tin
@@ -57,7 +78,10 @@ const createRole = async (req) => {
  
      const role = await db.Role.findByPk(id);
      if (!role) {
-        throw new Error("Role not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Role not found",
+            request: req,
+        })
      }
  
      await role.destroy();
@@ -65,6 +89,8 @@ const createRole = async (req) => {
  };
  
  module.exports = {
+    getAllRole,
+    getRoleById,
      createRole,
      updateRole,
      deleteRole,

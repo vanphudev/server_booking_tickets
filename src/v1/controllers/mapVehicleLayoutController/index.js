@@ -3,10 +3,46 @@
 const __RESPONSE = require("../../core");
 const db = require("../../models");
 
-const { createMapVehicleLayout, updateMapVehicleLayout, deleteMapVehicleLayout } = require("../../services/mapVehicleLayoutService");
-
+const { createMapVehicleLayout, updateMapVehicleLayout, deleteMapVehicleLayout, getAllMapVehicleLayout, getMapVehicleLayoutById } = require("../../services/mapVehicleLayoutService");
 
 const __MAP_VEHICLElAYOUT = {
+   getAllMapVehicleLayout: async (req, res, next) => {
+      try {
+          const mapVehicleLayout = await getAllMapVehicleLayout(); // Gọi phương thức từ service
+          new __RESPONSE.OK({
+              message: "Retrieved all Map Vehicle Layout",
+              metadata: mapVehicleLayout,
+              request: req,
+          }).send(res);
+      } catch (error) {
+          console.error("Error retrieving Map Vehicle Layout:", error);
+          res.status(500).json({
+              error: true,
+              message: "Internal Server Error",
+              details: error.message,
+          });
+      }
+  },
+
+  getMapVehicleLayoutById: async (req, res, next) => {
+      try {
+          const { id } = req.params;
+          const mapVehicleLayout = await getMapVehicleLayoutById(id); // Gọi phương thức từ service
+
+          new __RESPONSE.OK({
+              message: "Retrieved Map Vehicle Layout",
+              metadata: mapVehicleLayout,
+              request: req,
+          }).send(res);
+      } catch (error) {
+          console.error("Error retrieving Map Vehicle Layout:", error);
+          res.status(500).json({
+              error: true,
+              message: "Internal Server Error",
+              details: error.message,
+          });
+      }
+  },
     createMapVehicleLayout: async (req, res, next) => {
       new __RESPONSE.CREATED({
          message: "Create new Map Vehicle Layout",

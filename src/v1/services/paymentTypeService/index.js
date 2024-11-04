@@ -13,7 +13,10 @@ const getAllPaymentTypes = async () => {
 const getPaymentTypeById = async (id) => {
     const paymentType = await db.PaymentType.findByPk(id);
     if (!paymentType) {
-        throw new Error("Payment Type not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Payment Type not found",
+            request: req,
+        })
     }
     return paymentType;
 };
@@ -38,7 +41,10 @@ const createPaymentType = async (req) => {
 
     const paymentType = await db.PaymentType.findByPk(id);
     if (!paymentType) {
-        throw new Error("Payment type not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Payment Type not found",
+            request: req,
+        })
     }
 
     // Cập nhật thông tin
@@ -59,7 +65,10 @@ const createPaymentType = async (req) => {
  
      const paymentType = await db.PaymentType.findByPk(id);
      if (!paymentType) {
-        throw new Error("Payment Type not found");
+        throw new __RESPONSE.NotFoundError({
+            message: "Payment Type not found",
+            request: req,
+        })
      }
  
      await paymentType.destroy();

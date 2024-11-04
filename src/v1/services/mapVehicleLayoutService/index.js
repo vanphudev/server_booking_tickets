@@ -3,6 +3,22 @@ const __RESPONSE = require("../../core");
 const db = require("../../models");
 const validator = require("validator");
 
+const getAllMapVehicleLayout = async () => {
+   const mapVehicleLayout = await db.MapVehicleLayout.findAll();
+   return mapVehicleLayout;
+};
+
+// Phương thức lấy theo ID
+const getMapVehicleLayoutById = async (id) => {
+   const mapVehicleLayout = await db.MapVehicleLayout.findByPk(id);
+   if (!mapVehicleLayout) {
+       throw new __RESPONSE.NotFoundError({
+         message: "Map Vehicle Layout not found",
+         request: req,
+     })
+   }
+   return mapVehicleLayout;
+};
 const createMapVehicleLayout = async (req) => {
    const {name, description} = req.body;
    // có tôn tại hong.
@@ -24,7 +40,10 @@ const updateMapVehicleLayout = async (req) => {
     // Tìm bản ghi cần cập nhật
     const mapVehicleLayout = await db.MapVehicleLayout.findByPk(id);
     if (!mapVehicleLayout) {
-       throw new Error("MapVehicleLayout not found");
+      throw new __RESPONSE.NotFoundError({
+         message: "Map Vehicle Layout not found",
+         request: req,
+     })
     }
  
     // Cập nhật layout_name
@@ -43,7 +62,10 @@ const updateMapVehicleLayout = async (req) => {
     // Tìm bản ghi cần xóa
     const mapVehicleLayout = await db.MapVehicleLayout.findByPk(id);
     if (!mapVehicleLayout) {
-       throw new Error("MapVehicleLayout not found");
+      throw new __RESPONSE.NotFoundError({
+         message: "Map Vehicle Layout not found",
+         request: req,
+     })
     }
  
     // Xóa bản ghi
@@ -53,6 +75,8 @@ const updateMapVehicleLayout = async (req) => {
  };
  
  module.exports = {
+   getAllMapVehicleLayout,
+   getMapVehicleLayoutById,
     createMapVehicleLayout,
     updateMapVehicleLayout,
     deleteMapVehicleLayout,

@@ -1,0 +1,44 @@
+@hostname = localhost
+@port = 8800
+@object = payment-method
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo phương thức thanh toán mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "code": "Zalo",
+  "name": "Ví điện tử ",
+  "islocked": false,
+  "lock_at": "2024-11-04T00:00:00.000Z",
+  "description": "Thanh toán qua ví điện tử MoMo",
+  "paymenttypeid": 22
+}
+
+### Cập nhật phương thức thanh toán
+PUT http://{{host}}/{{endpoint}}/update/32
+Content-Type: {{contentType}}
+
+{
+  "code": "Zalo",
+  "name": "Ví MoMo E-Wallet",
+  "islocked": true,
+  "lock_at": "2024-11-04T00:00:00.000Z",
+  "description": "Thanh toán qua ví điện tử MoMo - Cập nhật",
+  "paymenttypeid": 22
+}
+
+### Xóa phương thức thanh toán
+DELETE http://{{host}}/{{endpoint}}/delete/32
+Content-Type: {{contentType}}
+
+### Lấy tất cả phương thức thanh toán
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy phương thức thanh toán theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?methodId=22
+Content-Type: {{contentType}}

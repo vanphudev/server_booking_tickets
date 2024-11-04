@@ -1,112 +1,296 @@
 "use strict";
-const { floor } = require("lodash");
 const __RESPONSE = require("../../core");
+const {validationResult} = require("express-validator");
 const db = require("../../models");
-const validator = require("validator");
 
 const getAllPaymentMethod = async () => {
-   const paymentMethod = await db.PaymentMethod.findAll();
-   return paymentMethod;
+   try {
+      const methods = await db.PaymentMethod.findAll({
+         attributes: [
+            "payment_method_id",
+            "payment_method_code",
+            "payment_method_name",
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
+         ],
+         include: [
+            {
+               model: db.PaymentType,
+               as: "paymentMethod_belongto_paymentType",
+               attributes: ["payment_type_name"],
+            },
+         ],
+         order: [["payment_method_id", "ASC"]],
+         where: {
+            deleted_at: null,
+         },
+      });
+
+      return {methods, total: methods.length};
+   } catch (error) {
+      console.error("getAllPaymentMethod Error:", error);
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in finding all payment methods",
+         suggestion: "Please check database connection",
+         details: error.message,
+      });
+   }
 };
 
-// Phương thức lấy theo ID
-const getPaymentMethodById = async (id) => {
-   const paymentMethod = await db.PaymentMethod.findByPk(id);
-   if (!paymentMethod) {
-       throw new __RESPONSE.NotFoundError({
-        message: "Payment Method not found",
-        request: req,
-    })
+const getPaymentMethodById = async (req) => {
+   try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+         throw new __RESPONSE.BadRequestError({
+            message: "Validation failed: " + errors.array()[0]?.msg,
+            suggestion: "Please provide the correct data",
+         });
+      }
+
+      const {methodId} = req.query;
+      const method = await db.PaymentMethod.findOne({
+         where: {
+            payment_method_id: methodId,
+            deleted_at: null,
+         },
+         attributes: [
+            "payment_method_id",
+            "payment_method_code",
+            "payment_method_name",
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
+         ],
+         include: [
+            {
+               model: db.PaymentType,
+               as: "paymentMethod_belongto_paymentType",
+               attributes: ["payment_type_name"],
+            },
+         ],
+      });
+
+      if (!method) {
+         throw new __RESPONSE.NotFoundError({
+            message: "PaymentMethod not found",
+            suggestion: "Please check the payment method ID",
+         });
+      }
+
+      return {method};
+   } catch (error) {
+      console.error("getPaymentMethodById Error:", error);
+      if (error instanceof __RESPONSE.NotFoundError) throw error;
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in finding payment method",
+         suggestion: "Please check your request",
+         details: error.message,
+      });
    }
-   return paymentMethod;
 };
 
 const createPaymentMethod = async (req) => {
-   const { code, name, islocked, lock_at, description, paymenttypeid } = req.body;
-
-   if (!code || !name || islocked === undefined || !lock_at || !description || paymenttypeid === undefined) {
-       console.error("Missing required fields:", req.body);  // Log dữ liệu yêu cầu
-       throw new Error("Missing required fields");
-   }
-
    try {
-       const paymentMethod = await db.PaymentMethod.create({
-           payment_method_code: code,
-           payment_method_name: name,
-           is_locked: islocked,
-           last_lock_at: lock_at,
-           payment_method_description: description,
-           payment_type_id: paymenttypeid,
-       });
-       return {
-           id: paymentMethod.payment_method_id,
-           code: paymentMethod.payment_method_code,
-           name: paymentMethod.payment_method_name,
-           islocked: paymentMethod.is_locked,
-           lock_at: paymentMethod.last_lock_at,
-           description: paymentMethod.payment_method_description,
-           paymenttypeid: paymentMethod.payment_type_id,
-       };
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+         throw new __RESPONSE.BadRequestError({
+            message: "Validation failed: " + errors.array()[0]?.msg,
+            suggestion: "Please provide the correct data",
+         });
+      }
+
+      const {code, name, avatar_url, avatar_public_id, islocked, lock_at, description, paymenttypeid} = req.body;
+
+      // Kiểm tra payment type tồn tại
+      if (paymenttypeid) {
+         const paymentType = await db.PaymentType.findByPk(paymenttypeid);
+         if (!paymentType) {
+            throw new __RESPONSE.NotFoundError({
+               message: "PaymentType not found",
+               suggestion: "Please check the payment type ID",
+            });
+         }
+      }
+
+      const method = await db.PaymentMethod.create({
+         payment_method_code: code,
+         payment_method_name: name,
+         payment_method_avatar_url: avatar_url,
+         payment_method_avatar_public_id: avatar_public_id,
+         is_locked: islocked ? 1 : 0,
+         last_lock_at: lock_at,
+         payment_method_description: description,
+         payment_type_id: paymenttypeid,
+      });
+
+      const newMethod = await db.PaymentMethod.findOne({
+         where: {payment_method_id: method.payment_method_id},
+         attributes: [
+            "payment_method_id",
+            "payment_method_code",
+            "payment_method_name",
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
+         ],
+         include: [
+            {
+               model: db.PaymentType,
+               as: "paymentMethod_belongto_paymentType",
+               attributes: ["payment_type_name"],
+            },
+         ],
+      });
+
+      return {method: newMethod};
    } catch (error) {
-       console.error("Error creating PaymentMethod:", error);  // Log lỗi chi tiết
-       throw error;
+      console.error("createPaymentMethod Error:", error);
+      if (error.name === "SequelizeUniqueConstraintError") {
+         throw new __RESPONSE.BadRequestError({
+            message: "Payment method code or name already exists",
+            suggestion: "Please use different code and name",
+         });
+      }
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in creating payment method",
+         suggestion: "Please check your request",
+         details: error.message,
+      });
    }
 };
+
 const updatePaymentMethod = async (req) => {
-    const { id } = req.params;
-    const { code, name, islocked, lock_at, description, paymenttypeid } = req.body;
+   try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+         throw new __RESPONSE.BadRequestError({
+            message: "Validation failed: " + errors.array()[0]?.msg,
+            suggestion: "Please provide the correct data",
+         });
+      }
 
-    try {
-        // Tìm PaymentMethod theo ID
-        const paymentMethod = await db.PaymentMethod.findByPk(id);
-        if (!paymentMethod) {
-            console.error(`Payment Method with ID ${id} not found`);
+      const id = parseInt(req.params.id);
+      const {code, name, avatar_url, avatar_public_id, islocked, lock_at, description, paymenttypeid} = req.body;
+
+      const method = await db.PaymentMethod.findOne({
+         where: {
+            payment_method_id: id,
+            deleted_at: null,
+         },
+      });
+
+      if (!method) {
+         throw new __RESPONSE.NotFoundError({
+            message: "PaymentMethod not found",
+            suggestion: "Please check the payment method ID",
+         });
+      }
+
+      if (paymenttypeid) {
+         const paymentType = await db.PaymentType.findByPk(paymenttypeid);
+         if (!paymentType) {
             throw new __RESPONSE.NotFoundError({
-                message: "Payment Method not found",
-                request: req,
+               message: "PaymentType not found",
+               suggestion: "Please check the payment type ID",
             });
-        }
+         }
+      }
 
-        // Cập nhật thông tin
-        paymentMethod.payment_method_code = code;
-        paymentMethod.payment_method_name = name;
-        paymentMethod.is_locked = islocked;
-        paymentMethod.last_lock_at = lock_at;
-        paymentMethod.payment_method_description = description;
-        paymentMethod.payment_type_id = paymenttypeid;
+      await method.update({
+         payment_method_code: code || method.payment_method_code,
+         payment_method_name: name || method.payment_method_name,
+         payment_method_avatar_url: avatar_url || method.payment_method_avatar_url,
+         payment_method_avatar_public_id: avatar_public_id || method.payment_method_avatar_public_id,
+         is_locked: islocked !== undefined ? (islocked ? 1 : 0) : method.is_locked,
+         last_lock_at: lock_at || method.last_lock_at,
+         payment_method_description: description || method.payment_method_description,
+         payment_type_id: paymenttypeid || method.payment_type_id,
+      });
 
-        // Lưu thay đổi vào cơ sở dữ liệu
-        await paymentMethod.save();
+      const updatedMethod = await db.PaymentMethod.findOne({
+         where: {payment_method_id: id},
+         attributes: [
+            "payment_method_id",
+            "payment_method_code",
+            "payment_method_name",
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
+         ],
+         include: [
+            {
+               model: db.PaymentType,
+               as: "paymentMethod_belongto_paymentType",
+               attributes: ["payment_type_name"],
+            },
+         ],
+      });
 
-        // Trả về thông tin cập nhật
-        return {
-            id: paymentMethod.payment_method_id,
-            code: paymentMethod.payment_method_code,
-            name: paymentMethod.payment_method_name,
-            islocked: paymentMethod.is_locked,
-            lock_at: paymentMethod.last_lock_at,
-            description: paymentMethod.payment_method_description,
-            paymenttypeid: paymentMethod.payment_type_id,
-        };
-    } catch (error) {
-        console.error("Error in updatePaymentMethod:", error); // Log lỗi chi tiết
-        throw error; // Ném lỗi ra ngoài để controller xử lý
-    }
+      return {method: updatedMethod};
+   } catch (error) {
+      console.error("updatePaymentMethod Error:", error);
+      if (error.name === "SequelizeUniqueConstraintError") {
+         throw new __RESPONSE.BadRequestError({
+            message: "Payment method code or name already exists",
+            suggestion: "Please use different code and name",
+         });
+      }
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in updating payment method",
+         suggestion: "Please check your request",
+         details: error.message,
+      });
+   }
 };
 
 const deletePaymentMethod = async (req) => {
-   const {id} = req.params;
+   try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+         throw new __RESPONSE.BadRequestError({
+            message: "Validation failed: " + errors.array()[0]?.msg,
+            suggestion: "Please provide the correct data",
+         });
+      }
 
-   const paymentMethod = await db.PaymentMethod.findByPk(id);
-   if (!paymentMethod) {
-    throw new __RESPONSE.NotFoundError({
-        message: "Payment Method not found",
-        request: req,
-    })
+      const id = parseInt(req.params.id);
+      const method = await db.PaymentMethod.findOne({
+         where: {
+            payment_method_id: id,
+            deleted_at: null,
+         },
+      });
+
+      if (!method) {
+         throw new __RESPONSE.NotFoundError({
+            message: "PaymentMethod not found",
+            suggestion: "Please check the payment method ID",
+         });
+      }
+
+      await method.destroy();
+      return {message: "PaymentMethod deleted successfully"};
+   } catch (error) {
+      console.error("deletePaymentMethod Error:", error);
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in deleting payment method",
+         suggestion: "Please check your request",
+         details: error.message,
+      });
    }
-
-   await paymentMethod.destroy();
-   return { message: "Payment Method deleted successfully" };
 };
 
 module.exports = {

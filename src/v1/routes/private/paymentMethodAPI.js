@@ -1,14 +1,37 @@
 const express = require("express");
 const rootRouter = express.Router();
 
-const __PAYMENTMETHOD_CONTROLLER = require("../../controllers/paymentMethodController");
+const __PAYMENT_METHOD_CONTROLLER = require("../../controllers/paymentMethodController");
 const asyncHandler = require("../../middlewares/handleError");
+const {
+    validateCreatePaymentMethod,
+    validateUpdatePaymentMethod,
+    validatePaymentMethodWithIdInQuery,
+    validateDeletePaymentMethod
+} = require("../../middlewares/validates/paymentMethodValidates");
 
-rootRouter.post("/create", asyncHandler(__PAYMENTMETHOD_CONTROLLER.createPaymentMethod));
-rootRouter.put("/update/:id", asyncHandler(__PAYMENTMETHOD_CONTROLLER.updatePaymentMethod)); 
-rootRouter.delete("/delete/:id", asyncHandler(__PAYMENTMETHOD_CONTROLLER.deletePaymentMethod));
+rootRouter.post("/create", 
+    validateCreatePaymentMethod, 
+    asyncHandler(__PAYMENT_METHOD_CONTROLLER.createPaymentMethod)
+);
 
-rootRouter.get("/all", asyncHandler(__PAYMENTMETHOD_CONTROLLER.getAllPaymentMethod)); 
-rootRouter.get("/:id", asyncHandler(__PAYMENTMETHOD_CONTROLLER.getPaymentMethodById));
+rootRouter.put("/update/:id", 
+    validateUpdatePaymentMethod, 
+    asyncHandler(__PAYMENT_METHOD_CONTROLLER.updatePaymentMethod)
+);
+
+rootRouter.delete("/delete/:id", 
+    validateDeletePaymentMethod, 
+    asyncHandler(__PAYMENT_METHOD_CONTROLLER.deletePaymentMethod)
+);
+
+rootRouter.get("/all", 
+    asyncHandler(__PAYMENT_METHOD_CONTROLLER.getAllPaymentMethod)
+);
+
+rootRouter.get("/getbyid", 
+    validatePaymentMethodWithIdInQuery, 
+    asyncHandler(__PAYMENT_METHOD_CONTROLLER.getPaymentMethodById)
+);
 
 module.exports = rootRouter;

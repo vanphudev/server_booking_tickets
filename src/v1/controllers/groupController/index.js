@@ -1,65 +1,60 @@
 "use strict";
 
 const __RESPONSE = require("../../core");
-const db = require("../../models");
-const { getAllGroup, getGroupById, createGroup, updateGroup, deleteGroup } = require("../../services/groupService");
+const {getAllGroup, getGroupById, createGroup, updateGroup, deleteGroup} = require("../../services/groupService");
 
 const __GROUP_CONTROLLER = {
-    getAllGroup: async (req, res, next) => {
-        try {
-            const group = await getAllGroup(); // Gọi phương thức từ service
-            new __RESPONSE.OK({
-                message: "Retrieved all Group",
-                metadata: group,
-                request: req,
-            }).send(res);
-        } catch (error) {
-            console.error("Error retrieving Group:", error);
-            res.status(500).json({
-                error: true,
-                message: "Internal Server Error",
-                details: error.message,
-            });
-        }
-    },
+   getAllGroup: async (req, res, next) => {
+      try {
+         new __RESPONSE.GET({
+            message: "List of all groups",
+            metadata: await getAllGroup(),
+            request: req,
+         }).send(res);
+      } catch (error) {
+         console.error("Error finding groups:", error);
+         res.status(error.statusCode || 500).json({
+            error: true,
+            message: error.message,
+            details: error.details || {},
+         });
+      }
+   },
 
-    getGroupById: async (req, res, next) => {
-        try {
-            const { id } = req.params;
-            const group = await getGroupById(id); // Gọi phương thức từ service
+   getGroupById: async (req, res, next) => {
+      try {
+         new __RESPONSE.GET({
+            message: "Group details",
+            metadata: await getGroupById(req), // Truyền toàn bộ req object
+            request: req,
+         }).send(res);
+      } catch (error) {
+         console.error("Error finding group by ID:", error);
+         res.status(error.statusCode || 500).json({
+            error: true,
+            message: error.message,
+            details: error.details || {},
+         });
+      }
+   },
 
-            new __RESPONSE.OK({
-                message: "Retrieved Group",
-                metadata: group,
-                request: req,
-            }).send(res);
-        } catch (error) {
-            console.error("Error retrieving Group:", error);
-            res.status(500).json({
-                error: true,
-                message: "Internal Server Error",
-                details: error.message,
-            });
-        }
-    },
+   createGroup: async (req, res, next) => {
+      try {
+         new __RESPONSE.CREATED({
+            message: "Group created successfully",
+            metadata: await createGroup(req),
+            request: req,
+         }).send(res);
+      } catch (error) {
+         console.error("Error creating group:", error);
+         res.status(error.statusCode || 500).json({
+            error: true,
+            message: error.message,
+            details: error.details || {},
+         });
+      }
+   },
 
-    createGroup: async (req, res, next) => {
-        try {
-           new __RESPONSE.CREATED({
-              message: "Create new Group",
-              metadata: await createGroup(req),
-              request: req,
-           }).send(res);
-        } catch (error) {
-           console.error("Error creating Group:", error); // Ghi log lỗi
-           res.status(500).json({
-              error: true,
-              message: "Internal Server Error",
-              details: error.message,
-           });
-        }
-     },
-   
    updateGroup: async (req, res, next) => {
       try {
          new __RESPONSE.OK({
@@ -68,24 +63,29 @@ const __GROUP_CONTROLLER = {
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error updating Group:", error);
-         res.status(500).json({
+         console.error("Error updating group:", error);
+         res.status(error.statusCode || 500).json({
             error: true,
-            message: "Internal Server Error",
-            details: error.message,
+            message: error.message,
+            details: error.details || {},
          });
       }
    },
 
    deleteGroup: async (req, res, next) => {
       try {
-         new __RESPONSE.OK({
+         new __RESPONSE.DELETE({
             message: "Group deleted successfully",
             metadata: await deleteGroup(req),
             request: req,
          }).send(res);
       } catch (error) {
-         next(error);
+         console.error("Error deleting group:", error);
+         res.status(error.statusCode || 500).json({
+            error: true,
+            message: error.message,
+            details: error.details || {},
+         });
       }
    },
 };

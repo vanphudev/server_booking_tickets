@@ -49,6 +49,6 @@ Content-Type: {{contentType}}
 }
 
 ### Delete Office
-DELETE http://{{host}}/{{endpoint}}/delete?officeId=53 HTTP/1.1
+DELETE http://{{host}}/{{endpoint}}/delete?officeId=64 HTTP/1.1
 Content-Type: {{contentType}}
 

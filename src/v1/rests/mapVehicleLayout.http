@@ -1,0 +1,34 @@
+@hostname = localhost
+@port = 8800
+@object = map-vehicle-layout
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo layout xe mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "name": "Layout 16 chỗ"
+}
+
+### Cập nhật layout xe
+PUT http://{{host}}/{{endpoint}}/update/23
+Content-Type: {{contentType}}
+
+{
+  "name": "Layout 32 chỗ"
+}
+
+### Xóa layout xe
+DELETE http://{{host}}/{{endpoint}}/delete/30
+Content-Type: {{contentType}}
+
+### Lấy tất cả layout xe
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy layout xe theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?layoutId=22
+Content-Type: {{contentType}}

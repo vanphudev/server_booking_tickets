@@ -1,61 +1,99 @@
 "use strict";
 
 const __RESPONSE = require("../../core");
-const db = require("../../models");
+const {
+    getAllMapVehicleLayouts,
+    getMapVehicleLayoutById,
+    createMapVehicleLayout,
+    updateMapVehicleLayout,
+    deleteMapVehicleLayout,
+} = require("../../services/mapVehicleLayoutService");
 
-const { createMapVehicleLayout, updateMapVehicleLayout, deleteMapVehicleLayout } = require("../../services/mapVehicleLayoutService");
+const __MAP_VEHICLE_LAYOUT_CONTROLLER = {
+    getAllMapVehicleLayouts: async (req, res, next) => {
+        try {
+            new __RESPONSE.GET({
+                message: "List of all map vehicle layouts",
+                metadata: await getAllMapVehicleLayouts(),
+                request: req,
+            }).send(res);
+        } catch (error) {
+            console.error("Error finding map vehicle layouts:", error);
+            res.status(error.statusCode || 500).json({
+                error: true,
+                message: error.message,
+                details: error.details || {},
+            });
+        }
+    },
 
+    getMapVehicleLayoutById: async (req, res, next) => {
+        try {
+            new __RESPONSE.GET({
+                message: "Map vehicle layout details",
+                metadata: await getMapVehicleLayoutById(req),
+                request: req,
+            }).send(res);
+        } catch (error) {
+            console.error("Error finding map vehicle layout by ID:", error);
+            res.status(error.statusCode || 500).json({
+                error: true,
+                message: error.message,
+                details: error.details || {},
+            });
+        }
+    },
 
-const __MAP_VEHICLElAYOUT = {
     createMapVehicleLayout: async (req, res, next) => {
-      new __RESPONSE.CREATED({
-         message: "Create new Map Vehicle Layout",
-         metadata: await createMapVehicleLayout(req),
-         request: req,
-      }).send(res);
-   },
-   updateMapVehicleLayout: async (req, res, next) => {
-    try {
-       const { id } = req.params;
-       const { name } = req.body;
- 
-       const mapVehicleLayout = await db.MapVehicleLayout.findByPk(id);
-       if (!mapVehicleLayout) {
-          return res.status(404).json({ error: "Map Vehicle Layout not found" });
-       }
- 
-       // Cập nhật thông tin
-       mapVehicleLayout.layout_name = name;
-       await mapVehicleLayout.save();
- 
-       new __RESPONSE.OK({
-          message: "Map Vehicle Layout updated successfully",
-          metadata: {
-             id: mapVehicleLayout.map_vehicle_layout_id,
-             name: mapVehicleLayout.layout_name,
-          },
-          request: req,
-       }).send(res);
- 
-    } catch (error) {
-       console.error("Error updating Map Vehicle Layout:", error);
-       res.status(500).json({
-          error: true,
-          message: "Internal Server Error",
-          details: error.message,
-       });
-    }
- },
- 
+        try {
+            new __RESPONSE.CREATED({
+                message: "Map vehicle layout created successfully",
+                metadata: await createMapVehicleLayout(req),
+                request: req,
+            }).send(res);
+        } catch (error) {
+            console.error("Error creating map vehicle layout:", error);
+            res.status(error.statusCode || 500).json({
+                error: true,
+                message: error.message,
+                details: error.details || {},
+            });
+        }
+    },
 
- deleteMapVehicleLayout: async (req, res, next) => {
-    new __RESPONSE.OK({
-       message: "Map Vehicle Layout deleted successfully",
-       metadata: await deleteMapVehicleLayout(req),
-       request: req,
-    }).send(res);
- },
+    updateMapVehicleLayout: async (req, res, next) => {
+        try {
+            new __RESPONSE.OK({
+                message: "Map vehicle layout updated successfully",
+                metadata: await updateMapVehicleLayout(req),
+                request: req,
+            }).send(res);
+        } catch (error) {
+            console.error("Error updating map vehicle layout:", error);
+            res.status(error.statusCode || 500).json({
+                error: true,
+                message: error.message,
+                details: error.details || {},
+            });
+        }
+    },
 
+    deleteMapVehicleLayout: async (req, res, next) => {
+        try {
+            new __RESPONSE.DELETE({
+                message: "Map vehicle layout deleted successfully",
+                metadata: await deleteMapVehicleLayout(req),
+                request: req,
+            }).send(res);
+        } catch (error) {
+            console.error("Error deleting map vehicle layout:", error);
+            res.status(error.statusCode || 500).json({
+                error: true,
+                message: error.message,
+                details: error.details || {},
+            });
+        }
+    },
 };
 
-module.exports = __MAP_VEHICLElAYOUT;
+module.exports = __MAP_VEHICLE_LAYOUT_CONTROLLER;

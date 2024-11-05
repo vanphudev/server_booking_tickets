@@ -1,10 +1,21 @@
 const express = require("express");
 const rootRouter = express.Router();
-
-const __TYPE_VEHICLE_CONTROLLER = require("../../controllers/vehicleController");
+const __RESPONSE = require("../../core/errorResponse");
+const __VEHICLE_CONTROLLER = require("../../controllers/vehicleController");
 const asyncHandler = require("../../middlewares/handleError");
+const {
+   validateVehicleWithByIDToQuery,
+   validateCreateVehicle,
+   validateUpdateVehicle,
+} = require("../../middlewares/validates/vehicleValidates");
 
-rootRouter.post("/create", asyncHandler(__TYPE_VEHICLE_CONTROLLER.createVehicle));
-rootRouter.delete("/delete/:id", asyncHandler(__TYPE_VEHICLE_CONTROLLER.deleteVehicle));
-rootRouter.put("/update/:id", asyncHandler(__TYPE_VEHICLE_CONTROLLER.updateVehicle));
+rootRouter
+   .get("/getall", asyncHandler(__VEHICLE_CONTROLLER.getAllVehicles))
+   .get("/getbyid", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.getVehicleById))
+   .post("/create", validateCreateVehicle, asyncHandler(__VEHICLE_CONTROLLER.createVehicle))
+   .put("/update", validateUpdateVehicle, asyncHandler(__VEHICLE_CONTROLLER.updateVehicle))
+   .delete("/delete", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
+   .get("/getalldeleted", asyncHandler(__VEHICLE_CONTROLLER.findAllDeletedVehicle));
+
+
 module.exports = rootRouter;

@@ -1,0 +1,40 @@
+   @hostname = localhost
+@port = 8800
+@object = vehicleimage
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Get All Vehicle Images
+GET http://{{host}}/{{endpoint}}/getall HTTP/1.1
+Content-Type: {{contentType}}
+### Create Office Image
+POST http://{{host}}/{{endpoint}}/create/9 HTTP/1.1
+Content-Type: multipart/form-data; boundary=MfnBoundry
+
+--MfnBoundry
+Content-Disposition: form-data; name="vehicleName"
+
+Văn phòng bến xe miền đông, Hà Nội
+
+--MfnBoundry
+Content-Disposition: form-data; name="images"; filename="phuongtrang.jpg"
+Content-Type: image/jpg
+
+< C:\Users\ACER\Pictures\Camera Roll\phuongtrang.jpg
+
+--MfnBoundry
+Content-Disposition: form-data; name="images"; filename="phuongtrang.jpg"
+Content-Type: image/jpg
+
+< C:\Users\ACER\Pictures\Camera Roll\phuongtrang.jpg
+
+--MfnBoundry--
+
+### Delete Vehicle Image
+//DELETE http://{{host}}/{{endpoint}}/vehicleimage/delete?vehicleImageId=8
+//Content-Type: {{contentType}}
+
+### Get All Deleted Vehicle Images
+//GET http://{{host}}/{{endpoint}}/vehicleimage/getalldeleted
+//Content-Type: {{contentType}}

@@ -47,8 +47,8 @@ const createUploadMiddleware = ({maxFiles = 5, customFolder = "others"}) => {
          uploadMultiple(req, res, async function (err) {
             if (err) {
                throw new __RESPONSE.BadRequestError({
-                  message: "Lỗi khi upload ảnh - " + err,
-                  reason: err,
+                  message: "Lỗi khi upload ảnh - " + err.msg,
+                  reason: err.msg,
                   suggestion: "Vui lòng kiểm tra lại file upload",
                   request: req,
                });

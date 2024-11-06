@@ -1,7 +1,7 @@
 "use strict";
 
 const __RESPONSE = require("../../core");
-const {getAllVehicleImages, getVehicleImageById, getVehicleByVehicleId, createVehicleImage,updateVehicleImage
+const {getAllVehicleImages, getVehicleImageById, getVehicleByVehicleId, createVehicleImage, deleteVehicleImage, findAllDeleteVehicleImages, updateVehicleImage
 } = require("../../services/vehicleImageService");
 
 const __VEHICLE_IMAGE_CONTROLLER = {
@@ -12,9 +12,12 @@ const __VEHICLE_IMAGE_CONTROLLER = {
          request: req,
       }).send(res);
    },
-   getVehicleByVehicleId: async (req, res, next) => {
-      req.office = await getVehicleByVehicleId(req, res, next);
-      next();
+   getVehicleImageById: async (req, res, next) => {
+      new __RESPONSE.UPDATE({
+         message: "Vehicle updated",
+         metadata: await getVehicleImageById(req),
+         request: req,
+      }).send(res);
    },
    getAllVehicleImages: async (req, res, next) => {
       new __RESPONSE.GET({
@@ -23,7 +26,14 @@ const __VEHICLE_IMAGE_CONTROLLER = {
          request: req,
       }).send(res);
    },
-   /*deleteVehicleImage: async (req, res, next) => {
+   updateVehicleImage: async (req, res, next) => {
+      new __RESPONSE.UPDATE({
+         message: "Vehicle updated",
+         metadata: await updateVehicleImage(req),
+         request: req,
+      }).send(res);
+   },
+   deleteVehicleImage: async (req, res, next) => {
       new __RESPONSE.DELETE({
          message: "vehicle deleted",
          metadata: await deleteVehicleImage(req),
@@ -36,7 +46,7 @@ const __VEHICLE_IMAGE_CONTROLLER = {
          metadata: await findAllDeleteVehicleImages(req),
          request: req,
       }).send(res);
-   },*/
+   },
 };
 
 module.exports = __VEHICLE_IMAGE_CONTROLLER;

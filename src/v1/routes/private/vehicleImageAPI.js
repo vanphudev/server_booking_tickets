@@ -21,6 +21,7 @@ const vehicleImageUpload = createUploadMiddleware({
 rootRouter
    .get("/getall", asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getAllVehicleImages))
    .get("/getalldeleted", asyncHandler(__VEHICLE_IMAGE_CONTROLLER.findAllDeleteVehicleImages))
+   .get("/getbyid",validateVehicleImageWithByIDToQuery , asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getVehicleImageById))
    .put("/update", validateUpdateVehicleImage, asyncHandler(__VEHICLE_IMAGE_CONTROLLER.updateVehicleImage))
    .get("/getbyid", validateVehicleImageWithByIDToQuery, asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getVehicleImageById))
    .post(

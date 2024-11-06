@@ -31,7 +31,7 @@ const validateCreateArticleImage = [
 ];
 
 const validateUpdateArticleImage = [
-   param("articleImageId")
+   query("articleImageId")  
       .trim()
       .notEmpty().withMessage("Article Image ID is required")
       .isInt().withMessage("Article Image ID must be an integer")
@@ -43,12 +43,11 @@ const validateUpdateArticleImage = [
       .isString().withMessage("Image name must be a string")
       .isLength({ min: 3, max: 255 }).withMessage("Image name must be between 3 and 255 characters"),
    
-   body("image_article_description")
+   body("article_id")
       .optional()
-      .trim()
-      .isString().withMessage("Image description must be a string")
+      .isInt().withMessage("Article ID must be an integer")
+      .toInt()
 ];
-
 const validateArticleImageWithByIDToQuery = [
    query("articleImageId")
       .trim()
@@ -65,9 +64,26 @@ const validateDeleteArticleImage = [
       .toInt()
 ];
 
+const validateGetArticleImageById = [
+   query("articleImageId")
+      .trim()
+      .notEmpty().withMessage("Article Image ID is required")
+      .isInt().withMessage("Article Image ID must be an integer")
+      .toInt()
+];
+
+const validateGetArticleImagesByArticleId = [
+   query("articleId")
+      .trim()
+      .notEmpty().withMessage("Article ID is required")
+      .isInt().withMessage("Article ID must be an integer")
+      .toInt()
+];
 module.exports = {
    validateCreateArticleImage,
    validateUpdateArticleImage,
    validateArticleImageWithByIDToQuery,
-   validateDeleteArticleImage
+   validateDeleteArticleImage,
+   validateGetArticleImageById,        
+   validateGetArticleImagesByArticleId  
 };

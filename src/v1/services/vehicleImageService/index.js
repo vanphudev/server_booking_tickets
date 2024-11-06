@@ -53,7 +53,57 @@ const getAllVehicleImages = async (req, res) => {
 };
 
 const getVehicleImageById = async (req, res) => {
-   const {vehicleImageId} = req.query;
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+      throw new __RESPONSE.BadRequestError({
+         message: "Validation failed " + errors.array()[0]?.msg + " !",
+         suggestion: "Please provide the correct data",
+         request: req,
+      });
+   }
+
+   const { vehicleImageId } = req.query;
+
+   try {
+      const vehicleImage = await db.VehicleImage.findOne({
+         where: { vehicle_image_id: vehicleImageId },
+         include: [
+            {
+               model: db.Vehicle,
+               as: "vehicleImage_belongto_vehicle",
+               attributes: ["vehicle_id", "vehicle_code"],
+            },
+         ],
+      });
+
+      if (!vehicleImage) {
+         throw new __RESPONSE.NotFoundError({
+            message: "Không tìm thấy hình ảnh phương tiện với ID " + vehicleImageId,
+            suggestion: "Vui lòng kiểm tra lại ID hình ảnh",
+            request: req,
+         });
+      }
+
+      return {
+         vehicleImage: {
+            vehicle_image_id: vehicleImage.vehicle_image_id,
+            vehicle_image_url: vehicleImage.vehicle_image_url,
+            vehicle_image_description: vehicleImage.vehicle_image_description,
+            vehicle: vehicleImage.vehicleImage_belongto_vehicle
+         }
+      };
+
+   } catch (error) {
+      if (error instanceof __RESPONSE.NotFoundError) {
+         throw error;
+      }
+
+      throw new __RESPONSE.BadRequestError({
+         message: "Lỗi khi lấy thông tin hình ảnh: " + error.message,
+         suggestion: "Vui lòng thử lại",
+         request: req,
+      });
+   }
 };
 
 const getVehicleByVehicleId = async (req, res, next) => {
@@ -163,10 +213,6 @@ const createVehicleImage = async (req, res, next) => {
    }
 };
 
-const updateVehicleImage = async (req, res) => {
-   const {vehicleImageId} = req.query;
-};
-
 const deleteVehicleImage = async (req, res) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
@@ -199,13 +245,11 @@ const deleteVehicleImage = async (req, res) => {
          });
       }
 
-      // Xóa ảnh trên cloud nếu có public_id
       if (vehicleImage.vehicle_image_public_id) {
          try {
             await deleteImage(vehicleImage.vehicle_image_public_id);
          } catch (cloudError) {
             console.error("Lỗi khi xóa ảnh trên cloud:", cloudError);
-            // Có thể tiếp tục xóa record trong DB ngay cả khi xóa ảnh thất bại
          }
       }
 
@@ -256,7 +300,7 @@ const findAllDeleteVehicleImages = async (req, res) => {
                attributes: ["vehicle_id", "vehicle_code"],
             },
          ],
-         paranoid: false, // Để lấy cả record đã soft delete
+         paranoid: false, 
          nest: true,
          raw: true,
       });
@@ -286,12 +330,140 @@ const findAllDeleteVehicleImages = async (req, res) => {
    }
 };
 
+const updateVehicleImage = async (req, res) => {
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+      throw new __RESPONSE.BadRequestError({
+         message: "Validation failed " + errors.array()[0]?.msg + " !",
+         suggestion: "Please provide the correct data",
+         request: req,
+      });
+   }
+
+   const { vehicleImageId } = req.query;
+   const { vehicle_image_description, vehicle_id } = req.body;
+
+   try {
+      // Tìm ảnh cần update
+      const vehicleImage = await db.VehicleImage.findOne({
+         where: { vehicle_image_id: vehicleImageId },
+         include: [
+            {
+               model: db.Vehicle,
+               as: "vehicleImage_belongto_vehicle",
+               attributes: ["vehicle_id", "vehicle_code"],
+            },
+         ],
+      });
+
+      if (!vehicleImage) {
+         throw new __RESPONSE.NotFoundError({
+            message: "Không tìm thấy hình ảnh phương tiện với ID " + vehicleImageId,
+            suggestion: "Vui lòng kiểm tra lại ID hình ảnh",
+            request: req,
+         });
+      }
+
+      // Nếu có vehicle_id mới, kiểm tra xe mới có tồn tại không
+      if (vehicle_id) {
+         const newVehicle = await db.Vehicle.findOne({
+            where: { vehicle_id: vehicle_id },
+            attributes: ["vehicle_id", "vehicle_code"],
+         });
+
+         if (!newVehicle) {
+            throw new __RESPONSE.NotFoundError({
+               message: "Không tìm thấy phương tiện với ID " + vehicle_id,
+               suggestion: "Vui lòng kiểm tra lại ID phương tiện",
+               request: req,
+            });
+         }
+      }
+
+      const updateData = {};
+      
+      if (req.uploadedImages && req.uploadedImages.length > 0) {
+         const newImage = req.uploadedImages[0];
+
+         if (vehicleImage.vehicle_image_public_id) {
+            try {
+               await deleteImage(vehicleImage.vehicle_image_public_id);
+            } catch (cloudError) {
+               console.error("Lỗi khi xóa ảnh cũ trên cloud:", cloudError);
+            }
+         }
+
+         updateData.vehicle_image_url = newImage.url;
+         updateData.vehicle_image_public_id = newImage.public_id;
+      }
+
+      if (vehicle_image_description) {
+         updateData.vehicle_image_description = vehicle_image_description;
+      }
+      
+      if (vehicle_id) {
+         updateData.vehicle_id = vehicle_id;
+      }
+
+      if (Object.keys(updateData).length === 0) {
+         throw new __RESPONSE.BadRequestError({
+            message: "Không có thông tin cần cập nhật",
+            suggestion: "Vui lòng cung cấp ít nhất một thông tin cần cập nhật",
+            request: req,
+         });
+      }
+
+      await vehicleImage.update(updateData);
+
+      const updatedImage = await db.VehicleImage.findOne({
+         where: { vehicle_image_id: vehicleImageId },
+         include: [
+            {
+               model: db.Vehicle,
+               as: "vehicleImage_belongto_vehicle",
+               attributes: ["vehicle_id", "vehicle_code"],
+            },
+         ],
+      });
+
+      return {
+         updatedImage: {
+            vehicle_image_id: updatedImage.vehicle_image_id,
+            vehicle_image_url: updatedImage.vehicle_image_url,
+            vehicle_image_description: updatedImage.vehicle_image_description,
+            vehicle_id: updatedImage.vehicle_id,
+            vehicle: updatedImage.vehicleImage_belongto_vehicle
+         }
+      };
+
+   } catch (error) {
+     
+      if (req.uploadedImages && req.uploadedImages.length > 0) {
+         try {
+            await deleteImage(req.uploadedImages[0].public_id);
+         } catch (cleanupError) {
+            console.error("Lỗi khi xóa ảnh mới trong quá trình rollback:", cleanupError);
+         }
+      }
+
+      if (error instanceof __RESPONSE.NotFoundError) {
+         throw error;
+      }
+
+      throw new __RESPONSE.BadRequestError({
+         message: "Lỗi khi cập nhật hình ảnh: " + error.message,
+         suggestion: "Vui lòng thử lại",
+         request: req,
+      });
+   }
+};
+
 module.exports = {
    getAllVehicleImages,
    getVehicleImageById,
    getVehicleByVehicleId,
    createVehicleImage,
+   deleteVehicleImage,
+   findAllDeleteVehicleImages,
    updateVehicleImage,
-  // deleteVehicleImage,
-  // findAllDeleteVehicleImages,
 };

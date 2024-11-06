@@ -22,7 +22,7 @@ const getAllArticle = async (req) => {
          include: [
             {
                model: db.ImageArticle,
-               as: "article_to_imageArticle",  
+               as: "article_to_imageArticle",
                attributes: ["image_article_id", "image_article_name", "image_article_url"],
             },
          ],
@@ -42,7 +42,6 @@ const getAllArticle = async (req) => {
          articles,
          total: articles.length,
       };
-
    } catch (error) {
       throw new __RESPONSE.BadRequestError({
          message: `Error in getting all articles: ${error.message}`,
@@ -63,7 +62,7 @@ const getArticleById = async (req) => {
       }
 
       const {article_id} = req.query;
-      
+
       const article = await db.Article.findOne({
          where: {
             article_id: article_id,
@@ -84,7 +83,7 @@ const getArticleById = async (req) => {
          include: [
             {
                model: db.ImageArticle,
-               as: "article_to_imageArticle",  // Sửa alias này cho khớp với model
+               as: "article_to_imageArticle", // Sửa alias này cho khớp với model
                attributes: ["image_article_id", "image_article_name", "image_article_url"],
             },
          ],
@@ -101,7 +100,6 @@ const getArticleById = async (req) => {
       }
 
       return {article};
-
    } catch (error) {
       if (error instanceof __RESPONSE.NotFoundError) {
          throw error;
@@ -134,7 +132,7 @@ const createArticle = async (req) => {
          article_type_id,
          employee_id,
          thumbnail_img,
-         thumbnail_img_public_id
+         thumbnail_img_public_id,
       } = req.body;
 
       const article = await db.Article.create({
@@ -147,7 +145,7 @@ const createArticle = async (req) => {
          article_type_id,
          employee_id,
          thumbnail_img,
-         thumbnail_img_public_id
+         thumbnail_img_public_id,
       });
 
       if (!article) {
@@ -158,8 +156,7 @@ const createArticle = async (req) => {
          });
       }
 
-      return { article };
-
+      return {article};
    } catch (error) {
       if (error.original?.code === "ER_DUP_ENTRY") {
          throw new __RESPONSE.BadRequestError({
@@ -187,7 +184,7 @@ const updateArticle = async (req) => {
          });
       }
 
-      const { article_id } = req.query;
+      const {article_id} = req.query;
       const {
          article_title,
          article_description,
@@ -198,7 +195,7 @@ const updateArticle = async (req) => {
          article_type_id,
          employee_id,
          thumbnail_img,
-         thumbnail_img_public_id
+         thumbnail_img_public_id,
       } = req.body;
 
       // Kiểm tra article có tồn tại không
@@ -211,21 +208,24 @@ const updateArticle = async (req) => {
          });
       }
 
-      const [updatedRows] = await db.Article.update({
-         article_title,
-         article_description,
-         article_content,
-         article_slug,
-         published_at,
-         is_priority,
-         article_type_id,
-         employee_id,
-         thumbnail_img,
-         thumbnail_img_public_id
-      }, {
-         where: { article_id },
-         returning: true
-      });
+      const [updatedRows] = await db.Article.update(
+         {
+            article_title,
+            article_description,
+            article_content,
+            article_slug,
+            published_at,
+            is_priority,
+            article_type_id,
+            employee_id,
+            thumbnail_img,
+            thumbnail_img_public_id,
+         },
+         {
+            where: {article_id},
+            returning: true,
+         }
+      );
 
       if (updatedRows === 0) {
          throw new __RESPONSE.BadRequestError({
@@ -236,15 +236,16 @@ const updateArticle = async (req) => {
       }
 
       const updatedArticle = await db.Article.findByPk(article_id, {
-         include: [{
-            model: db.ImageArticle,
-            as: "article_to_imageArticle",
-            attributes: ["image_article_id", "image_article_name", "image_article_url"],
-         }]
+         include: [
+            {
+               model: db.ImageArticle,
+               as: "article_to_imageArticle",
+               attributes: ["image_article_id", "image_article_name", "image_article_url"],
+            },
+         ],
       });
 
-      return { article: updatedArticle };
-
+      return {article: updatedArticle};
    } catch (error) {
       if (error.original?.code === "ER_DUP_ENTRY") {
          throw new __RESPONSE.BadRequestError({
@@ -270,7 +271,7 @@ const deleteArticle = async (req) => {
       });
    }
 
-   const { article_id } = req.query;
+   const {article_id} = req.query;
    const article = await db.Article.findOne({
       where: {
          article_id: article_id,
@@ -295,7 +296,7 @@ const deleteArticle = async (req) => {
                request: req,
             });
          }
-         return { article };
+         return {article};
       })
       .catch((error) => {
          if (error.original && error.original.code === "ER_ROW_IS_REFERENCED_2") {
@@ -327,10 +328,10 @@ const findAllDeletedArticle = async (req) => {
          "employee_id",
          "thumbnail_img",
          "thumbnail_img_public_id",
-         "deleted_at"
+         "deleted_at",
       ],
       where: {
-         deleted_at: { [db.Sequelize.Op.ne]: null },
+         deleted_at: {[db.Sequelize.Op.ne]: null},
       },
       order: [["deleted_at", "DESC"]],
       include: [
@@ -338,7 +339,7 @@ const findAllDeletedArticle = async (req) => {
             model: db.ImageArticle,
             as: "article_to_imageArticle",
             attributes: ["image_article_id", "image_article_name", "image_article_url"],
-         }
+         },
       ],
       paranoid: false,
       nest: true,
@@ -352,9 +353,9 @@ const findAllDeletedArticle = async (req) => {
                request: req,
             });
          }
-         return { 
-            articles, 
-            total: articles.length 
+         return {
+            articles,
+            total: articles.length,
          };
       })
       .catch((error) => {
@@ -371,5 +372,5 @@ module.exports = {
    createArticle,
    updateArticle,
    findAllDeletedArticle,
-   deleteArticle
+   deleteArticle,
 };

@@ -2,7 +2,7 @@ const express = require("express");
 const rootRouter = express.Router();
 const __ARTICLE_IMAGE_CONTROLLER = require("../../controllers/articleImageController");
 const asyncHandler = require("../../middlewares/handleError");
-const {validateCreateArticleImage, validateArticleImageWithByIDToQuery} = require("../../middlewares/validates/articleImageValidates");
+const {validateCreateArticleImage, validateArticleImageWithByIDToQuery,  validateGetArticleImageById, validateUpdateArticleImage  } = require("../../middlewares/validates/articleImageValidates");
 const {createUploadMiddleware} = require("../../utils/uploadImages");
 
 const __FOLDER__ = "article_images";
@@ -15,18 +15,22 @@ const articleImageUpload = createUploadMiddleware({
 
 rootRouter
    .post(
-      "/create/:articleId",
+      "/create/:articleId",validateCreateArticleImage,
       asyncHandler(__ARTICLE_IMAGE_CONTROLLER.getArticleByArticleId),
-      articleImageUpload,
+      articleImageUpload,validateCreateArticleImage,
       asyncHandler(__ARTICLE_IMAGE_CONTROLLER.createArticleImage)
    )
    .get(
       "/getall", 
       asyncHandler(__ARTICLE_IMAGE_CONTROLLER.getAllArticleImages)
    )
+   .put("/update", validateUpdateArticleImage, asyncHandler(__ARTICLE_IMAGE_CONTROLLER.updateArticleImage))
+   .get("/getbyid",validateGetArticleImageById , asyncHandler(__ARTICLE_IMAGE_CONTROLLER.getArticleImageById))
+   .get("/getalldeleted", asyncHandler(__ARTICLE_IMAGE_CONTROLLER.findAllDeleteActicleImages))
    .delete(
       "/delete",
       validateArticleImageWithByIDToQuery,
       asyncHandler(__ARTICLE_IMAGE_CONTROLLER.deleteArticleImage)
    );
+   
 module.exports = rootRouter;

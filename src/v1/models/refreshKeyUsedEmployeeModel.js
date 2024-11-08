@@ -6,6 +6,7 @@ module.exports = (sequelize) => {
          RefreshKeyUsedEmployee.belongsTo(models.KeyStoreEmployee, {
             foreignKey: "key_store_employee_id",
             as: "refreshKeyUsedEmployee_belongto_keyStoreEmployee",
+            onDelete: "CASCADE",
          });
       }
    }
@@ -24,6 +25,7 @@ module.exports = (sequelize) => {
                model: "KeyStoreEmployee",
                key: "key_store_employee_id",
             },
+            onDelete: "CASCADE",
          },
          refreshkey_used_employee_key: {
             type: DataTypes.TEXT,

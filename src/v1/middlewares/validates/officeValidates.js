@@ -14,6 +14,7 @@ const validateCreateOffice = [
    body("latitude").notEmpty().withMessage("Latitude is required"),
    body("longitude").notEmpty().withMessage("Longitude is required"),
    body("map_url").notEmpty().withMessage("Map URL is required"),
+   body("wardId").notEmpty().withMessage("Map URL is required"),
    body("map_url").isURL().withMessage("Map URL must be a valid URI"),
    body("phone").isMobilePhone("vi-VN").withMessage("Phone must be a valid phone number"),
    body("fax").isMobilePhone("vi-VN").withMessage("Fax must be a valid phone number"),

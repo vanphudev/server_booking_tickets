@@ -17,6 +17,7 @@ module.exports = {
                },
                key: "key_store_employee_id",
             },
+            onDelete: "CASCADE",
          },
          refreshkey_used_employee_key: {
             type: Sequelize.TEXT,

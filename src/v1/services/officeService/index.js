@@ -3,7 +3,7 @@ const __RESPONSE = require("../../core");
 const {validationResult} = require("express-validator");
 const db = require("../../models");
 
-const getAllOffices = async () => {
+const getAllOffices = async (req) => {
    return await db.Office.findAll({
       attributes: [
          "office_id",
@@ -15,6 +15,10 @@ const getAllOffices = async () => {
          "office_latitude",
          "office_longitude",
          "office_map_url",
+         "is_locked",
+         "last_lock_at",
+         "created_at",
+         "updated_at",
       ],
       include: [
          {
@@ -22,9 +26,26 @@ const getAllOffices = async () => {
             as: "office_to_officeImage",
             attributes: ["office_image_id", "office_image_url", "office_image_description"],
          },
+         {
+            model: db.Ward,
+            as: "office_belongto_ward",
+            attributes: ["ward_id", "ward_name"],
+            include: [
+               {
+                  model: db.District,
+                  as: "ward_belongto_district",
+                  attributes: ["district_id", "district_name"],
+                  include: [
+                     {
+                        model: db.Province,
+                        as: "district_belongto_province",
+                        attributes: ["province_id", "province_name"],
+                     },
+                  ],
+               },
+            ],
+         },
       ],
-      nest: true,
-      raw: true,
    })
       .then((offices) => {
          if (!offices || offices.length === 0) {
@@ -41,7 +62,7 @@ const getAllOffices = async () => {
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in getting all offices",
+            message: "Error in getting all offices" + error.message,
             suggestion: "Please check your request",
             request: req,
          });
@@ -134,7 +155,8 @@ const createOffice = async (req) => {
          request: req,
       });
    }
-   const {name, address, phone, fax, description, latitude, longitude, map_url} = req.body;
+   const {name, address, phone, fax, description, latitude, longitude, map_url, isLocked, lastLockAt, wardId} =
+      req.body;
    return await db.Office.create({
       office_name: name,
       office_address: address,
@@ -144,6 +166,9 @@ const createOffice = async (req) => {
       office_latitude: latitude,
       office_longitude: longitude,
       office_map_url: map_url,
+      ward_id: wardId,
+      is_locked: isLocked && isLocked == 1 ? 1 : 0,
+      last_lock_at: isLocked && isLocked == 1 ? new Date() : null,
    })
       .then((office) => {
          if (!office) {
@@ -164,7 +189,7 @@ const createOffice = async (req) => {
             });
          }
          throw new __RESPONSE.BadRequestError({
-            message: "Error in creating office",
+            message: "Error in creating office" + error.message,
             suggestion: "Please check your request",
             request: req,
          });

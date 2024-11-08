@@ -1,77 +1,52 @@
 "use strict";
 
 const __RESPONSE = require("../../core");
-const {createVehicleImage, getAllVehicleImage, getVehicleImageById, updateImageVehicle, deleteImageVehicle} = require("../../services/vehicleImageService");
+const {getAllVehicleImages, getVehicleImageById, getVehicleByVehicleId, createVehicleImage, deleteVehicleImage, findAllDeleteVehicleImages, updateVehicleImage
+} = require("../../services/vehicleImageService");
 
-const __TYPE_VEHICLE_IMAGE_CONTROLLER = {
-    getAllVehicleImage: async (req, res, next) => {
-        try {
-            const vehicleImage = await getAllVehicleImage(); 
-            new __RESPONSE.OK({
-                message: "Retrieved all Vehicle image",
-                metadata: vehicleImage,
-                request: req,
-            }).send(res);
-        } catch (error) {
-            console.error("Error retrieving Vehicle image:", error);
-            res.status(500).json({
-                error: true,
-                message: "Internal Server Error",
-                details: error.message,
-            });
-        }
-    },
-  
-    getVehicleImageById: async (req, res, next) => {
-        try {
-           const { id } = req.params;
-           const vehicleImage = await getVehicleImageById(id); 
-  
-           new __RESPONSE.OK({
-              message: "Retrieved Vehicle image",
-              metadata: vehicleImage,
-              request: req,
-           }).send(res);
-        } catch (error) {
-           console.error("Error retrieving Vehicle image:", error);
-           res.status(500).json({
-              error: true,
-              message: "Internal Server Error",
-              details: error.message,
-           });
-        }
-     },
-    createVehicleImage: async (req, res, next) => {
+const __VEHICLE_IMAGE_CONTROLLER = {
+   createVehicleImage: async (req, res, next) => {
       new __RESPONSE.CREATED({
-         message: "Create new vehicle image",
-         metadata: await createVehicleImage(req),
+         message: "Create vehicle image successfully",
+         metadata: await createVehicleImage(req, res, next),
          request: req,
       }).send(res);
    },
-   updateImageVehicle: async (req, res, next) => {
-        try {
-        const result = await updateImageVehicle(req);
-        res.status(200).json({
-            message: "Update image vehicle",
-            data: result,
-        });
-        } catch (error) {
-        console.error("Error in update ImageVehicle:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-        }
-    },
-   deleteImageVehicle: async (req, res, next) => {
-    try {
-       new __RESPONSE.DELETE({
-          message: "Delete  vehicle",
-          metadata: await deleteImageVehicle(req),
-          request: req,
-       }).send(res);
-     } catch (error) {
-       next(error);
-     }
-    },
-
+   getVehicleImageById: async (req, res, next) => {
+      new __RESPONSE.UPDATE({
+         message: "Vehicle updated",
+         metadata: await getVehicleImageById(req),
+         request: req,
+      }).send(res);
+   },
+   getAllVehicleImages: async (req, res, next) => {
+      new __RESPONSE.GET({
+         message: "List of all vehicle images",
+         metadata: await getAllVehicleImages(),
+         request: req,
+      }).send(res);
+   },
+   updateVehicleImage: async (req, res, next) => {
+      new __RESPONSE.UPDATE({
+         message: "Vehicle updated",
+         metadata: await updateVehicleImage(req),
+         request: req,
+      }).send(res);
+   },
+   deleteVehicleImage: async (req, res, next) => {
+      new __RESPONSE.DELETE({
+         message: "vehicle deleted",
+         metadata: await deleteVehicleImage(req),
+         request: req,
+      }).send(res);
+   },
+   findAllDeleteVehicleImages: async (req, res, next) => {
+      new __RESPONSE.GET({
+         message: "List of all deleted vehicle",
+         metadata: await findAllDeleteVehicleImages(req),
+         request: req,
+      }).send(res);
+   },
 };
 
-module.exports = __TYPE_VEHICLE_IMAGE_CONTROLLER;
+module.exports = __VEHICLE_IMAGE_CONTROLLER;

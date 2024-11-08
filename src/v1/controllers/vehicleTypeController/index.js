@@ -1,78 +1,50 @@
 "use strict";
 
 const __RESPONSE = require("../../core");
-const {getAllVehicleTypes, getVehicleTypeById, createTypeVehicle, deleteTypeVehicle, updateTypeVehicle} = require("../../services/typeVehicleService");
+const {getAllVehicleTypes, getVehicleTypeById, createVehicleType, updateVehicleType, deleteVehicleType, findAllDeletedVehicleType} = require("../../services/typeVehicleService");
 
 const __TYPE_VEHICLE_CONTROLLER = {
    getAllVehicleTypes: async (req, res, next) => {
-      try {
-          const vehicleTypes = await getAllVehicleTypes(); 
-          new __RESPONSE.OK({
-              message: "Retrieved all Vehicle Types",
-              metadata: vehicleTypes,
-              request: req,
-          }).send(res);
-      } catch (error) {
-          console.error("Error retrieving Vehicle Types:", error);
-          res.status(500).json({
-              error: true,
-              message: "Internal Server Error",
-              details: error.message,
-          });
-      }
-  },
-
-  getVehicleTypeById: async (req, res, next) => {
-      try {
-         const { id } = req.params;
-         const vehicleType = await getVehicleTypeById(id); 
-
-         new __RESPONSE.OK({
-            message: "Retrieved Vehicle Type",
-            metadata: vehicleType,
-            request: req,
-         }).send(res);
-      } catch (error) {
-         console.error("Error retrieving Vehicle Type:", error);
-         res.status(500).json({
-            error: true,
-            message: "Internal Server Error",
-            details: error.message,
-         });
-      }
-   },
-   createTypeVehicle: async (req, res, next) => {
-      new __RESPONSE.CREATED({
-         message: "Create new type vehicle",
-         metadata: await createTypeVehicle(req),
+      new __RESPONSE.GET({
+         message: "List of all vehicle types",
+         metadata: await getAllVehicleTypes(),
          request: req,
       }).send(res);
    },
-
-   updateTypeVehicle: async (req, res, next) => {
-      try {
-         const result = await updateTypeVehicle(req);
-         res.status(200).json({
-            message: "Update type vehicle",
-            data: result,
-         });
-      } catch (error) {
-         console.error("Error in updateTypeVehicle:", error);
-         res.status(500).json({ error: "Internal Server Error" });
-      }
+   getVehicleTypeById: async (req, res, next) => {
+      new __RESPONSE.GET({
+         message: "Vehicle type details",
+         metadata: await getVehicleTypeById(req),
+         request: req,
+      }).send(res);
    },
-   
-    
-   deleteTypeVehicle: async (req, res, next) => {
-      try {
-         new __RESPONSE.DELETE({
-            message: "Delete type vehicle",
-            metadata: await deleteTypeVehicle(req),
-            request: req,
-         }).send(res);
-      } catch (error) {
-         next(error);
-      }
+   createVehicleType: async (req, res, next) => {
+      new __RESPONSE.CREATED({
+         message: "Vehicle type created",
+         metadata: await createVehicleType(req),
+         request: req,
+      }).send(res);
+   },
+   updateVehicleType: async (req, res, next) => {
+      new __RESPONSE.UPDATE({
+         message: "Vehicle updated",
+         metadata: await updateVehicleType(req),
+         request: req,
+      }).send(res);
+   },
+   deleteVehicleType: async (req, res, next) => {
+      new __RESPONSE.DELETE({
+         message: "Vehicle typedeleted",
+         metadata: await deleteVehicleType(req),
+         request: req,
+      }).send(res);
+   },
+   findAllDeletedVehicleType: async (req, res, next) => {
+      new __RESPONSE.GET({
+         message: "List of all deleted vehicle types",
+         metadata: await findAllDeletedVehicleType(req),
+         request: req,
+      }).send(res);
    },
 };
 

@@ -50,7 +50,7 @@ module.exports = (sequelize) => {
          tableName: "key_store_employees",
          underscored: true,
          timestamps: true,
-         paranoid: true,
+         paranoid: false,
          freezeTableName: true,
          charset: "utf8mb4",
          collate: "utf8mb4_unicode_ci",

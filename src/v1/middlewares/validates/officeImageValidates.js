@@ -1,4 +1,5 @@
 const {body, query, param} = require("express-validator");
+
 const validateCreateOfficeImage = [
    param("officeId").notEmpty().withMessage("Office ID is required"),
    param("officeId").isInt().withMessage("Office ID must be an integer"),

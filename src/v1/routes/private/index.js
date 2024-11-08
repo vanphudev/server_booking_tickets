@@ -2,6 +2,8 @@
 const express = require("express");
 const privateRouter = express.Router();
 
+// Xác thực token.
+privateRouter.use(require("../../middlewares/Auth/authUtils").authentication);
 privateRouter.use("/type-customer", require("./typeCustomerAPI"));
 privateRouter.use("/type-vehicle", require("./typeVehicleAPI"));
 privateRouter.use("/vehicle", require("./vehicleAPI"));
@@ -17,5 +19,6 @@ privateRouter.use("/role", require("./roleAPI"));
 privateRouter.use("/payment-type", require("./paymentTypeAPI"));
 privateRouter.use("/group", require("./groupAPI"));
 privateRouter.use("/role-group", require("./roleGroupAPI"));
+privateRouter.use("/employee/auth", require("./Auth/employeeAPI"));
 
 module.exports = privateRouter;

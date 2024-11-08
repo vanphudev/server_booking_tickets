@@ -20,7 +20,7 @@ module.exports = {
 
       return queryInterface.bulkInsert(
          "trip_employees",
-         Array.from({length: 10}, () => {
+         Array.from({length: 5}, () => {
             const trip = getRandomElement(tripRows, usedTripEmployeePairs, "trip_id");
             const employee = getRandomElement(employeeRows, usedTripEmployeePairs, "employee_id");
             const pairKey = `${trip.trip_id}-${employee.employee_id}`;

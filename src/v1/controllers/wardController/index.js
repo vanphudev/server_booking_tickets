@@ -2,13 +2,13 @@
 
 const __RESPONSE = require("../../core/");
 
-const {getWardsAll, getWardsByIdDistrict} = require("../../services/wardService");
+const {getAllWards, getWardsByIdDistrict} = require("../../services/wardService");
 
 const __WARD_CONTROLLER = {
    getWards: async (req, res, next) => {
       new __RESPONSE.GET({
          message: "List of all wards",
-         metadata: await getWardsAll(req),
+         metadata: await getAllWards(req),
          request: req,
       }).send(res);
    },

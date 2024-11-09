@@ -2,23 +2,23 @@
 
 const __RESPONSE = require("../../core");
 const {
-   getAllRoleGroup,
-   getRoleGroupById,
-   createRoleGroup,
-   updateRoleGroup,
-   deleteRoleGroup,
-} = require("../../services/roleGroupService");
+   getAllTags,
+   getTagById,
+   createTag,
+   updateTag,
+   deleteTag,
+} = require("../../services/tagService");
 
-const __ROLE_GROUP_CONTROLLER = {
-   getAllRoleGroup: async (req, res, next) => {
+const __TAG_CONTROLLER = {
+   getAllTags: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "List of all role groups",
-            metadata: await getAllRoleGroup(),
+            message: "List of all tags",
+            metadata: await getAllTags(),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding role groups:", error);
+         console.error("Error finding tags:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -27,15 +27,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   getRoleGroupById: async (req, res, next) => {
+   getTagById: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "Role group details",
-            metadata: await getRoleGroupById(req),
+            message: "Tag details",
+            metadata: await getTagById(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding role group by ID:", error);
+         console.error("Error finding tag by ID:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -44,15 +44,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   createRoleGroup: async (req, res, next) => {
+   createTag: async (req, res, next) => {
       try {
          new __RESPONSE.CREATED({
-            message: "Role group created successfully",
-            metadata: await createRoleGroup(req),
+            message: "Tag created successfully",
+            metadata: await createTag(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error creating role group:", error);
+         console.error("Error creating tag:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -61,15 +61,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   updateRoleGroup: async (req, res, next) => {
+   updateTag: async (req, res, next) => {
       try {
          new __RESPONSE.OK({
-            message: "Role group updated successfully",
-            metadata: await updateRoleGroup(req),
+            message: "Tag updated successfully",
+            metadata: await updateTag(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error updating role group:", error);
+         console.error("Error updating tag:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -78,15 +78,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   deleteRoleGroup: async (req, res, next) => {
+   deleteTag: async (req, res, next) => {
       try {
          new __RESPONSE.DELETE({
-            message: "Role group deleted successfully",
-            metadata: await deleteRoleGroup(req),
+            message: "Tag deleted successfully",
+            metadata: await deleteTag(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error deleting role group:", error);
+         console.error("Error deleting tag:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -96,4 +96,4 @@ const __ROLE_GROUP_CONTROLLER = {
    },
 };
 
-module.exports = __ROLE_GROUP_CONTROLLER;
+module.exports = __TAG_CONTROLLER;

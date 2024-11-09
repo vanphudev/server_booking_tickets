@@ -3,28 +3,28 @@ const __RESPONSE = require("../../core");
 const {validationResult} = require("express-validator");
 const db = require("../../models");
 
-const getAllGroup = async () => {
-   return await db.Group.findAll({
-      attributes: ["group_id", "group_name", "group_description", "is_locked"],
+const getAllTags = async () => {
+   return await db.Tag.findAll({
+      attributes: ["tag_id", "tag_name", "tag_description"],
    })
-      .then((groups) => {
-         if (!groups || groups.length === 0) {
+      .then((tags) => {
+         if (!tags || tags.length === 0) {
             throw new __RESPONSE.NotFoundError({
-               message: "Resource not found - Groups not found!",
+               message: "Resource not found - Tags not found!",
                suggestion: "Please check your request",
             });
          }
-         return {groups, total: groups.length};
+         return {tags, total: tags.length};
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in finding all groups",
+            message: "Error in finding all tags",
             suggestion: "Please check your request",
          });
       });
 };
 
-const getGroupById = async (req) => {
+const getTagById = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -34,30 +34,29 @@ const getGroupById = async (req) => {
       });
    }
 
-   const groupId = req.query.groupId; // Thêm dòng này để lấy groupId từ query
-
-   return await db.Group.findOne({
-      where: {group_id: groupId},
-      attributes: ["group_id", "group_name", "group_description", "is_locked"],
+   const {tagId} = req.query;
+   return await db.Tag.findOne({
+      where: {tag_id: tagId},
+      attributes: ["tag_id", "tag_name", "tag_description"],
    })
-      .then((group) => {
-         if (!group) {
+      .then((tag) => {
+         if (!tag) {
             throw new __RESPONSE.NotFoundError({
-               message: "Resource not found - Group not found!",
+               message: "Resource not found - Tag not found!",
                suggestion: "Please check your request",
             });
          }
-         return {group};
+         return {tag};
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in finding group: " + error.message,
+            message: "Error in finding tag: " + error.message,
             suggestion: "Please check your request",
          });
       });
 };
 
-const createGroup = async (req) => {
+const createTag = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -67,39 +66,38 @@ const createGroup = async (req) => {
       });
    }
 
-   const {name, description, locked} = req.body;
-   return await db.Group.create({
-      group_name: name,
-      group_description: description,
-      is_locked: locked || 0,
+   const {tag_name, tag_description} = req.body;
+   return await db.Tag.create({
+      tag_name,
+      tag_description,
    })
-      .then((group) => {
-         if (!group) {
+      .then((tag) => {
+         if (!tag) {
             throw new __RESPONSE.BadRequestError({
-               message: "Error in creating group",
+               message: "Error in creating tag",
                suggestion: "Please check your request",
                request: req,
             });
          }
-         return {group};
+         return {tag};
       })
       .catch((error) => {
          if (error.original?.code === "ER_DUP_ENTRY") {
             throw new __RESPONSE.BadRequestError({
-               message: "Group name already exists: " + error.original.sqlMessage,
-               suggestion: "Please use different group name",
+               message: "Tag name already exists: " + error.original.sqlMessage,
+               suggestion: "Please use different tag name",
                request: req,
             });
          }
          throw new __RESPONSE.BadRequestError({
-            message: "Error in creating group: " + error.message,
+            message: "Error in creating tag: " + error.message,
             suggestion: "Please check your request",
             request: req,
          });
       });
 };
 
-const updateGroup = async (req) => {
+const updateTag = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -109,39 +107,46 @@ const updateGroup = async (req) => {
       });
    }
 
-   const {id} = req.params;
-   const {name, description, locked} = req.body;
+   const tag_id = parseInt(req.params.id);
+   const {tag_name, tag_description} = req.body;
 
-   const group = await db.Group.findOne({
-      where: {group_id: id},
+   const tag = await db.Tag.findOne({
+      where: {tag_id},
    });
 
-   if (!group) {
+   if (!tag) {
       throw new __RESPONSE.NotFoundError({
-         message: "Resource not found - Group not found!",
+         message: "Resource not found - Tag not found!",
          suggestion: "Please check your request",
          request: req,
       });
    }
 
-   return await group
+   return await tag
       .update({
-         group_name: name || group.group_name,
-         group_description: description || group.group_description,
-         is_locked: locked !== undefined ? (locked ? 1 : 0) : group.is_locked, // Chuyển boolean sang 0/1
+         tag_name: tag_name || tag.tag_name,
+         tag_description: tag_description || tag.tag_description,
       })
-      .then((updatedGroup) => {
-         return {group: updatedGroup};
+      .then((updatedTag) => {
+         return {tag: updatedTag};
       })
       .catch((error) => {
+         if (error.original?.code === "ER_DUP_ENTRY") {
+            throw new __RESPONSE.BadRequestError({
+               message: "Tag name already exists: " + error.original.sqlMessage,
+               suggestion: "Please use different tag name",
+               request: req,
+            });
+         }
          throw new __RESPONSE.BadRequestError({
-            message: "Error in updating group: " + error.message,
+            message: "Error in updating tag: " + error.message,
             suggestion: "Please check your request",
             request: req,
          });
       });
 };
-const deleteGroup = async (req) => {
+
+const deleteTag = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -151,28 +156,28 @@ const deleteGroup = async (req) => {
       });
    }
 
-   const {id} = req.params;
+   const tag_id = parseInt(req.params.id);
 
-   const group = await db.Group.findOne({
-      where: {group_id: id},
+   const tag = await db.Tag.findOne({
+      where: {tag_id},
    });
 
-   if (!group) {
+   if (!tag) {
       throw new __RESPONSE.NotFoundError({
-         message: "Resource not found - Group not found!",
+         message: "Resource not found - Tag not found!",
          suggestion: "Please check your request",
          request: req,
       });
    }
 
-   return await group
+   return await tag
       .destroy()
       .then(() => {
-         return {message: "Group deleted successfully"};
+         return {message: "Tag deleted successfully"};
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in deleting group: " + error.message,
+            message: "Error in deleting tag: " + error.message,
             suggestion: "Please check your request",
             request: req,
          });
@@ -180,9 +185,9 @@ const deleteGroup = async (req) => {
 };
 
 module.exports = {
-   getAllGroup,
-   getGroupById,
-   createGroup,
-   updateGroup,
-   deleteGroup,
+   getAllTags,
+   getTagById,
+   createTag,
+   updateTag,
+   deleteTag,
 };

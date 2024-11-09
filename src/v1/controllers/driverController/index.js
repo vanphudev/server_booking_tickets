@@ -2,23 +2,23 @@
 
 const __RESPONSE = require("../../core");
 const {
-   getAllRoleGroup,
-   getRoleGroupById,
-   createRoleGroup,
-   updateRoleGroup,
-   deleteRoleGroup,
-} = require("../../services/roleGroupService");
+   getAllDrivers,
+   getDriverById,
+   createDriver,
+   updateDriver,
+   deleteDriver,
+} = require("../../services/driverService");
 
-const __ROLE_GROUP_CONTROLLER = {
-   getAllRoleGroup: async (req, res, next) => {
+const __DRIVER_CONTROLLER = {
+   getAllDrivers: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "List of all role groups",
-            metadata: await getAllRoleGroup(),
+            message: "List of all drivers",
+            metadata: await getAllDrivers(),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding role groups:", error);
+         console.error("Error finding drivers:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -27,15 +27,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   getRoleGroupById: async (req, res, next) => {
+   getDriverById: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "Role group details",
-            metadata: await getRoleGroupById(req),
+            message: "Driver details",
+            metadata: await getDriverById(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding role group by ID:", error);
+         console.error("Error finding driver by ID:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -44,15 +44,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   createRoleGroup: async (req, res, next) => {
+   createDriver: async (req, res, next) => {
       try {
          new __RESPONSE.CREATED({
-            message: "Role group created successfully",
-            metadata: await createRoleGroup(req),
+            message: "Driver created successfully",
+            metadata: await createDriver(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error creating role group:", error);
+         console.error("Error creating driver:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -61,15 +61,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   updateRoleGroup: async (req, res, next) => {
+   updateDriver: async (req, res, next) => {
       try {
          new __RESPONSE.OK({
-            message: "Role group updated successfully",
-            metadata: await updateRoleGroup(req),
+            message: "Driver updated successfully",
+            metadata: await updateDriver(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error updating role group:", error);
+         console.error("Error updating driver:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -78,15 +78,15 @@ const __ROLE_GROUP_CONTROLLER = {
       }
    },
 
-   deleteRoleGroup: async (req, res, next) => {
+   deleteDriver: async (req, res, next) => {
       try {
          new __RESPONSE.DELETE({
-            message: "Role group deleted successfully",
-            metadata: await deleteRoleGroup(req),
+            message: "Driver deleted successfully",
+            metadata: await deleteDriver(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error deleting role group:", error);
+         console.error("Error deleting driver:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -96,4 +96,4 @@ const __ROLE_GROUP_CONTROLLER = {
    },
 };
 
-module.exports = __ROLE_GROUP_CONTROLLER;
+module.exports = __DRIVER_CONTROLLER;

@@ -21,6 +21,7 @@ privateRouter.use("/role", require("./roleAPI"));
 privateRouter.use("/payment-type", require("./paymentTypeAPI"));
 privateRouter.use("/group", require("./groupAPI"));
 privateRouter.use("/role-group", require("./roleGroupAPI"));
+privateRouter.use("/payment-method", require("./paymentMethodAPI"));
+privateRouter.use("/driver", require("./driverAPI"));
 privateRouter.use("/employee/auth", require("./Auth/employeeAPI"));
-
 module.exports = privateRouter;

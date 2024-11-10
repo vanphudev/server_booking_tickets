@@ -226,9 +226,9 @@ CREATE TABLE employee_types (
 CREATE TABLE employees (
     employee_id INT AUTO_INCREMENT PRIMARY KEY, -- ID duy nhất cho mỗi nhân viên, tự động tăng.
     employee_full_name VARCHAR(500) NOT NULL, -- Họ và tên của nhân viên, không được để trống.
-    employee_email VARCHAR(500) NOT NULL UNIQUE, -- Email nhân viên, không được để trống và phải duy nhất.
+    emploeyee_email VARCHAR(500) NOT NULL UNIQUE, -- Email nhân viên, không được để trống và phải duy nhất.
     employee_phone VARCHAR(20) NOT NULL UNIQUE, -- Số điện thoại nhân viên, không được để trống.
-    employee_username VARCHAR(255) NOT NULL UNIQUE, -- Tên đăng nhập của nhân viên, không được để trống và phải duy nhất.
+    employe_username VARCHAR(255) NOT NULL UNIQUE, -- Tên đăng nhập của nhân viên, không được để trống và phải duy nhất.
     employee_birthday DATE CHECK (employee_birthday BETWEEN '1900-01-01' AND '2100-12-31'), -- Ngày sinh của nhân viên (dạng YYYY-MM-DD).
 		employee_password VARCHAR(255) NOT NULL, -- Mật khẩu của nhân viên, không được để trống.
     employee_profile_image TEXT, -- Hình ảnh của nhân viên.

@@ -12,6 +12,11 @@ const getAllVouchers = async () => {
                as: "voucher_to_voucherCondition",
                attributes: ["condition_id", "condition_key", "condition_value"],
             },
+            {
+               model: db.Employee,
+               as: "voucher_belongto_employee",
+               attributes: ["employee_id"],
+            },
          ],
          attributes: [
             "voucher_id",
@@ -29,7 +34,7 @@ const getAllVouchers = async () => {
          throw new __RESPONSE.NotFoundError({
             message: "Vouchers not found !",
             suggestion: "Please check your request",
-            request: req,
+            //request: req,
          });
       }
       return {

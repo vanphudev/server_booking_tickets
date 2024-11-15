@@ -1,52 +1,79 @@
-// "use strict";
-// const __RESPONSE = require("../../core");
-// const {validationResult} = require("express-validator");
-// const db = require("../../models");
+"use strict";
+const __RESPONSE = require("../../core");
+const {validationResult} = require("express-validator");
+const db = require("../../models");
 
-// const getAllVehicles = async () => {
-//    return await db.Vehicle.findAll({
-//       attributes: [
-//          "vehicle_id",
-//          "vehicle_code",
-//          "vehicle_license_plate",
-//          "vehicle_model",
-//          "vehicle_brand",
-//          "vehicle_capacity",
-//          "vehicle_manufacture_year",
-//          "vehicle_color",
-//          "vehicle_description",
-//       ],
-//       include: [
-//          {
-//             model: db.VehicleImage,
-//             as: "vehicle_to_vehicleImage",
-//             attributes: ["vehicle_image_id", "vehicle_image_url", "vehicle_image_description"],
-//          },
-//       ],
-//       nest: true,
-//       raw: true,
-//    })
-//       .then((vehicles) => {
-//          if (!vehicles || vehicles.length == 0) {
-//             throw new __RESPONSE.NotFoundError({
-//                message: "Resource not found - Vehicles not found !",
-//                suggestion: "Please check your request",
-//                request: req,
-//             });
-//          }
-//          return {
-//             vehicles,
-//             total: vehicles.length,
-//          };
-//       })
-//       .catch((error) => {
-//          throw new __RESPONSE.BadRequestError({
-//             message: "Error in getting all vehicles",
-//             suggestion: "Please check your request",
-//             request: req,
-//          });
-//       });
-// };
+const getAllVehicles = async () => {
+   return await db.Vehicle.findAll({
+      attributes: [
+         "vehicle_id",
+         "vehicle_code",
+         "vehicle_license_plate",
+         "vehicle_model",
+         "vehicle_brand",
+         "vehicle_capacity",
+         "vehicle_manufacture_year",
+         "vehicle_color",
+         "vehicle_description",
+         "created_at",
+         "updated_at",
+      ],
+      include: [
+         {
+            model: db.VehicleImage,
+            as: "vehicle_to_vehicleImage",
+            attributes: ["vehicle_image_id", "vehicle_image_url", "vehicle_image_description", "created_at", "updated_at"],
+         },
+         {
+            model: db.VehicleType,
+            as: "vehicleType_belongto_vehicle",
+            attributes: ["vehicle_type_id", "vehicle_type_name", "vehicle_type_description", "created_at", "updated_at"],
+         },
+         {
+            model: db.MapVehicleLayout,
+            as: "vehicle_belongto_mapVehicleLayout",
+            attributes: ["map_vehicle_layout_id", "layout_name", "created_at", "updated_at"],
+            include: [
+               {
+                  model: db.MapVehicleSeat,
+                  as: "mapVehicleLayout_to_mapVehicleSeat",
+                  attributes: [
+                     "map_vehicle_seat_id",
+                     "map_vehicle_seat_code",
+                     "map_vehicle_seat_row_no",
+                     "map_vehicle_seat_column_no",
+                     "map_vehicle_seat_floor_no",
+                     "map_vehicle_seat_lock_chair",
+                     "created_at",
+                     "updated_at",
+                     "map_vehicle_layout_id",
+                  ],
+               },
+            ],
+         },
+      ],
+   })
+      .then((vehicles) => {
+         if (!vehicles || vehicles.length == 0) {
+            throw new __RESPONSE.NotFoundError({
+               message: "Resource not found - Vehicles not found !",
+               suggestion: "Please check your request",
+               request: req,
+            });
+         }
+         return {
+            vehicles,
+            total: vehicles.length,
+         };
+      })
+      .catch((error) => {
+         throw new __RESPONSE.BadRequestError({
+            message: "Error in getting all vehicles",
+            suggestion: "Please check your request",
+            request: req,
+         });
+      });
+};
 
 // // const getVehicleById = async (req) => {
 // //    const errors = validationResult(req);
@@ -448,11 +475,11 @@
 //       });
 // };
 
-// module.exports = {
-//    getAllVehicles,
-//    getVehicleById,
-//    createVehicle,
-//    updateVehicle,
-//    deleteVehicle,
-//    findAllDeletedVehicle,
-// };
+module.exports = {
+   getAllVehicles,
+   // getVehicleById,
+   // createVehicle,
+   // updateVehicle,
+   // deleteVehicle,
+   // findAllDeletedVehicle,
+};

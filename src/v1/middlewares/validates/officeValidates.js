@@ -1,8 +1,13 @@
-const {body, query} = require("express-validator");
+const {body, query, param} = require("express-validator");
 
 const validateOfficeWithByIDToQuery = [
    query("officeId").notEmpty().withMessage("Name is required"),
    query("officeId").isInt().withMessage("Office ID must be a number"),
+];
+
+const validateOfficeWithByIDToParams = [
+   param("officeId").notEmpty().withMessage("Name is required"),
+   param("officeId").isInt().withMessage("Office ID must be a number"),
 ];
 
 const validateCreateOffice = [
@@ -39,4 +44,5 @@ module.exports = {
    validateCreateOffice,
    validateUpdateOffice,
    validateOfficeWithByIDToQuery,
+   validateOfficeWithByIDToParams,
 };

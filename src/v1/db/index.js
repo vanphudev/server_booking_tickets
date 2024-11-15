@@ -6,7 +6,18 @@ const ConnectDatabase = async () => {
       await db.sequelize.authenticate();
       console.log("Connection has been established successfully.");
    } catch (error) {
-      console.error("\nUnable to connect to the database:", error);
+      if (error.original.code === "ECONNREFUSED") {
+         console.error(
+            "\nUnable to connect to the database: ",
+            error.message,
+            "Database not found. Please create the database first."
+         );
+      }
+      console.error(
+         "\nUnable to connect to the database: ",
+         error.message,
+         "Kết nối không thành công đến cơ sở dữ liệu"
+      );
       return process.exit(1);
    }
 };

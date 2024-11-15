@@ -7,6 +7,7 @@ publicRouter.use("/districts", require("./districtAPI"));
 publicRouter.use("/office", require("./officeAPI"));
 publicRouter.use("/wards", require("./wardAPI"));
 publicRouter.use("/vouchers", require("./voucherAPI"));
+publicRouter.use("/way", require("./wayAPI"));
 publicRouter.use("/employee/auth", require("./Auth/employeeAPI"));
 
 module.exports = publicRouter;

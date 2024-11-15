@@ -14,21 +14,20 @@ const __RESPONSE = require("./core");
 const {ConnectDatabase: initDb, CloseDatabase: closedDb} = require("./db");
 const rootRouter = require("./routes");
 const logRequestTime = require("../v1/middlewares/logRequestTime");
-// const {stringify} = require("flatted");
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
 app.use(expressIp().getIpInfoMiddleware);
 app.use(device.capture());
 app.use(useragent.express());
 app.use(useragent.express());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 initDb();
 

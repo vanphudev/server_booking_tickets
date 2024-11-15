@@ -31,10 +31,11 @@ const ReasonStatus = {
 };
 
 class ErrorResponse extends Error {
-   constructor(message, status, reason, suggestion, redirectTo, request) {
+   constructor(message, status, error_code, reason, suggestion, redirectTo, request) {
       super(message || reason);
       this.status = status;
       this.error = true;
+      this.error_code = error_code;
       this.reason = reason;
       this.message = message || reason;
       this.timestamp = new Date();
@@ -69,8 +70,8 @@ class ErrorResponse extends Error {
 }
 
 class BadRequestError extends ErrorResponse {
-   constructor({message, suggestion, redirectTo, request}) {
-      super(message, StatusCode.BAD_REQUEST, ReasonStatus.BAD_REQUEST, suggestion, redirectTo, request);
+   constructor({message, suggestion, error_code, redirectTo, request}) {
+      super(message, StatusCode.BAD_REQUEST, ReasonStatus.BAD_REQUEST, error_code, suggestion, redirectTo, request);
    }
 }
 

@@ -9,5 +9,5 @@ publicRouter.use("/wards", require("./wardAPI"));
 publicRouter.use("/vouchers", require("./voucherAPI"));
 publicRouter.use("/way", require("./wayAPI"));
 publicRouter.use("/employee/auth", require("./Auth/employeeAPI"));
-
+publicRouter.use("/employee-type", require("./employeeTypeAPI"));
 module.exports = publicRouter;

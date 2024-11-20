@@ -1,0 +1,72 @@
+@hostname = localhost
+@port = 8800
+@object = driver
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@endpointPublic = api/v1/public/{{object}}
+@contentType = application/json
+# Thông tin xác thực cho private routes
+@client_id = your_client_id_here
+@token = your_token_here
+### PUBLIC ROUTES ###
+### Lấy tất cả tài xế (Public)
+GET http://{{host}}/{{endpointPublic}}/getall
+Content-Type: {{contentType}}
+### Lấy thông tin tài xế theo ID (Public)
+GET http://{{host}}/{{endpointPublic}}/getbyid?driverId=1
+Content-Type: {{contentType}}
+### Tạo tài xế mới (Public)
+POST http://{{host}}/{{endpointPublic}}/create
+Content-Type: {{contentType}}
+{
+  "license_number": "79F1-12346",
+  "experience_years": 5,
+  "employee_id": 24
+}
+### Cập nhật thông tin tài xế (Public)
+PUT http://{{host}}/{{endpointPublic}}/update/2
+Content-Type: {{contentType}}
+{
+  "license_number": "79F1-54321",
+  "experience_years": 7,
+  "employee_id": 24
+}
+### Xóa tài xế (Public)
+DELETE http://{{host}}/{{endpointPublic}}/delete/2
+Content-Type: {{contentType}}
+### PRIVATE ROUTES ###
+### Tạo tài xế mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+client_id: {{client_id}}
+Authorization: Bearer {{token}}
+{
+  "license_number": "79F1-12345",
+  "experience_years": 5,
+  "employee_id": 25
+}
+### Cập nhật thông tin tài xế
+PUT http://{{host}}/{{endpoint}}/update/2
+Content-Type: {{contentType}}
+client_id: {{client_id}}
+Authorization: Bearer {{token}}
+{
+  "license_number": "79F1-54321",
+  "experience_years": 5,
+  "employee_id": 24
+}
+### Xóa tài xế
+DELETE http://{{host}}/{{endpoint}}/delete/3
+Content-Type: {{contentType}}
+client_id: {{client_id}}
+Authorization: Bearer {{token}}
+### Lấy tất cả tài xế (Private)
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+client_id: {{client_id}}
+Authorization: Bearer {{token}}
+### Lấy thông tin tài xế theo ID (Private)
+GET http://{{host}}/{{endpoint}}/getbyid?driverId=2
+Content-Type: {{contentType}}
+client_id: {{client_id}}
+Authorization: Bearer {{token}}

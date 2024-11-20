@@ -1,0 +1,61 @@
+@hostname = localhost
+@port = 8800
+@object = payment-config
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@endpointPublic = api/v1/public/{{object}}
+@contentType = application/json
+
+### Public APIs ###
+
+### Get All Payment Configs (Public)
+GET http://{{host}}/{{endpointPublic}}/getall
+Content-Type: {{contentType}}
+
+### Get Payment Config By ID (Public)
+GET http://{{host}}/{{endpointPublic}}/getbyid?configId=22
+Content-Type: {{contentType}}
+
+### Private APIs ###
+
+### Get All Payment Configs
+GET http://{{host}}/{{endpoint}}/getall
+Content-Type: {{contentType}}
+
+### Get Payment Config By ID
+GET http://{{host}}/{{endpoint}}/getbyid?configId=22
+Content-Type: {{contentType}}
+
+### Create Payment Config
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+    "api_key": "test_api_key_123",
+    "secret_key": "test_secret_key_456",
+    "public_key": "test_public_key_789",
+    "payment_endpoint_url": "https://api.payment-gateway.com/v1/payment",
+    "transaction_timeout": 300,
+    "environment": "develop",
+    "refund_url": "https://api.payment-gateway.com/v1/refund",
+    "payment_method_id": 1
+}
+
+### Update Payment Config
+PUT http://{{host}}/{{endpoint}}/update/24
+Content-Type: {{contentType}}
+
+{
+    "api_key": "updated_api_key_123",
+    "secret_key": "updated_secret_key_456",
+    "public_key": "updated_public_key_789",
+    "payment_endpoint_url": "https://api.payment-gateway.com/v2/payment",
+    "transaction_timeout": 600,
+    "environment": "production",
+    "refund_url": "https://api.payment-gateway.com/v2/refund",
+    "payment_method_id": 2
+}
+
+### Delete Payment Config
+DELETE http://{{host}}/{{endpoint}}/delete/1
+Content-Type: {{contentType}}

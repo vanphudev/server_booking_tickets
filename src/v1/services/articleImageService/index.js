@@ -187,7 +187,7 @@ const deleteArticleImage = async (req, res) => {
       });
    }
 
-   const { articleImageId } = req.query;
+   const { articleImageId } = req.params;
 
    try {
       const articleImage = await db.ImageArticle.findOne({

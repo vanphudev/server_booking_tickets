@@ -1,8 +1,7 @@
 "use strict";
-
 const __RESPONSE = require("../../core");
 const db = require("../../models");
-
+const {validationResult} = require("express-validator");
 const getAllVouchers = async () => {
    try {
       const vouchers = await db.Voucher.findAll({
@@ -10,12 +9,28 @@ const getAllVouchers = async () => {
             {
                model: db.VoucherCondition,
                as: "voucher_to_voucherCondition",
-               attributes: ["condition_id", "condition_key", "condition_value"],
+               attributes: ["condition_id", "voucher_id", "condition_key", "condition_value"],
             },
             {
                model: db.Employee,
                as: "voucher_belongto_employee",
-               attributes: ["employee_id"],
+               attributes: [
+                  "employee_id",
+                  "employee_full_name",
+                  "employee_email",
+                  "employee_phone",
+                  "employee_username",
+                  "employee_birthday",
+                  "employee_password",
+                  "employee_profile_image",
+                  "employee_profile_image_public_id",
+                  "employee_gender",
+                  "is_first_activation",
+                  "is_locked",
+                  "last_lock_at",
+                  "office_id",
+                  "employee_type_id",
+               ],
             },
          ],
          attributes: [
@@ -90,16 +105,16 @@ const getVoucherByCode = async (req) => {
 };
 
 const createVoucher = async (req) => {
-   const {code, percentage, max_amount, usage_limit, valid_from, valid_to, create_by} = req.body;
-   // Kiểm tra xem các thông tin của voucher có đầy đủ không
-   if (!code || !percentage || !max_amount || !usage_limit || !valid_from || !valid_to || !create_by) {
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
-         message: "Voucher details are required !",
-         suggestion: "Please check your request",
+         message: "Validation failed " + errors.array()[0]?.msg + " !",
+         suggestion: "Please provide the correct data",
          request: req,
       });
    }
-   // kiểm tra xem voucher đã tồn tại chưa
+
+   const {code, percentage, max_amount, usage_limit, valid_from, valid_to, create_by} = req.body;
    const voucherExist = await db.Voucher.findOne({
       where: {
          voucher_code: code,
@@ -147,19 +162,18 @@ const createVoucher = async (req) => {
 };
 
 const updateVoucher = async (req) => {
-   const {code, percentage, max_amount, usage_limit, valid_from, valid_to, update_by} = req.body;
-   // Kiểm tra xem các thông tin của voucher có đầy đủ không
-   if (!code || !percentage || !max_amount || !usage_limit || !valid_from || !valid_to || !update_by) {
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
-         message: "Voucher details are required !",
-         suggestion: "Please check your request",
+         message: "Validation failed " + errors.array()[0]?.msg + " !",
+         suggestion: "Please provide the correct data",
          request: req,
       });
    }
-   // kiểm tra xem voucher đã tồn tại chưa
+   const {voucherId, code, percentage, max_amount, usage_limit, valid_from, valid_to, update_by} = req.body;
    const voucherExist = await db.Voucher.findOne({
       where: {
-         voucher_code: code,
+         voucher_id: voucherId,
       },
    });
    if (!voucherExist) {
@@ -169,7 +183,6 @@ const updateVoucher = async (req) => {
          request: req,
       });
    }
-   // Kiểm tra update_by có tồn tại không
    const employee = await db.Employee.findOne({
       where: {
          employee_id: update_by,
@@ -184,16 +197,17 @@ const updateVoucher = async (req) => {
    }
    const voucher = await db.Voucher.update(
       {
+         voucher_code: code,
          voucher_discount_percentage: percentage,
          voucher_discount_max_amount: max_amount,
          voucher_usage_limit: usage_limit,
          voucher_valid_from: valid_from,
          voucher_valid_to: valid_to,
-         voucher_updated_by: update_by,
+         voucher_created_by: update_by,
       },
       {
          where: {
-            voucher_code: code,
+            voucher_id: voucherId,
          },
       }
    );
@@ -208,21 +222,20 @@ const updateVoucher = async (req) => {
       voucher,
    };
 };
-
 const deleteVoucher = async (req) => {
-   const {code, delete_by} = req.body;
-   // Kiểm tra xem các thông tin của voucher có đầy đủ không
-   if (!code || !delete_by) {
+   const {Id} = req.params;
+
+   if (!Id) {
       throw new __RESPONSE.BadRequestError({
-         message: "Voucher code and delete_by are required !",
+         message: "Voucher ID is required !",
          suggestion: "Please check your request",
          request: req,
       });
    }
-   // kiểm tra xem voucher đã tồn tại chưa
+
    const voucherExist = await db.Voucher.findOne({
       where: {
-         voucher_code: code,
+         voucher_id: Id,
       },
    });
    if (!voucherExist) {
@@ -232,22 +245,10 @@ const deleteVoucher = async (req) => {
          request: req,
       });
    }
-   // Kiểm tra delete_by có tồn tại không
-   const employee = await db.Employee.findOne({
-      where: {
-         employee_id: delete_by,
-      },
-   });
-   if (!employee) {
-      throw new __RESPONSE.BadRequestError({
-         message: "Employee not found !",
-         suggestion: "Please check your request",
-         request: req,
-      });
-   }
+
    const voucher = await db.Voucher.destroy({
       where: {
-         voucher_code: code,
+         voucher_id: Id,
       },
    });
    if (!voucher) {
@@ -257,11 +258,11 @@ const deleteVoucher = async (req) => {
          request: req,
       });
    }
+
    return {
       voucher,
    };
 };
-
 module.exports = {
    getAllVouchers,
    getVoucherByCode,

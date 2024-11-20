@@ -49,7 +49,7 @@ const validateUpdateArticleImage = [
       .toInt()
 ];
 const validateArticleImageWithByIDToQuery = [
-   query("articleImageId")
+   param("articleImageId")
       .trim()
       .notEmpty().withMessage("Article Image ID is required")
       .isInt().withMessage("Article Image ID must be an integer")

@@ -49,7 +49,7 @@ const __ARTICLE_IMAGE_CONTROLLER = {
       }).send(res);
    },
    deleteArticleImage: async (req, res, next) => {
-      new __RESPONSE.OK({
+      new __RESPONSE.DELETE({
          message: "Xóa hình ảnh thành công",
          metadata: await deleteArticleImage(req),
          request: req,

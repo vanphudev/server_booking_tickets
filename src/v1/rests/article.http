@@ -3,10 +3,11 @@
 @object = article
 @host = {{hostname}}:{{port}}
 @endpoint = api/v1/private/{{object}}
+@endpointpublic = api/v1/public/{{object}}
 @contentType = application/json
 
 ### Get All article
-GET http://{{host}}/{{endpoint}}/getall HTTP/1.1
+GET http://{{host}}/{{endpointpublic}}/getall HTTP/1.1
 Content-Type: {{contentType}}
 
 ### Get article By Id
@@ -14,14 +15,14 @@ GET http://{{host}}/{{endpoint}}/getbyid?article_id=3 HTTP/1.1
 Content-Type: {{contentType}}
 
 ### Create article
-POST http://{{host}}/{{endpoint}}/create HTTP/1.1
+POST http://{{host}}/{{endpointpublic}}/create HTTP/1.1
 Content-Type: {{contentType}}
 
 {
      
-      "article_title": "Bài viết mẫu về du lịch Đà Lạt",
-      "article_description": "Khám phá những địa điểm thú vị và ẩm thực độc đáo tại Đà Lạt",
-      "article_content": "Nội dung chi tiết về chuyến du lịch Đà Lạt...",
+      "article_title": "Công nghê mới năm 2024",
+      "article_description": "Mở nguồn cảm hứng cho giới trẻ có đam mê nghệ thuật",
+      "article_content": "Nội dung chi tiết về thông tin...",
       "article_slug": "bai-viet-mau-ve-du-lich-da-lat",
       "published_at": "2024-11-04T21:00:00.000Z",  
       "is_priority": 1,  
@@ -32,17 +33,16 @@ Content-Type: {{contentType}}
 }
 
 ### Update 
-### Update 
-PUT http://{{host}}/{{endpoint}}/update?article_id=6 HTTP/1.1
+PUT http://{{host}}/{{endpointpublic}}/update?article_id=7 HTTP/1.1
 Content-Type: {{contentType}}
 
 {
-      "article_title": "Bài viết mẫu về du lịch Đà Lạt",
-      "article_description": "Tham quan những địa điểm thú vị và ẩm thực độc đáo tại Đà Lạt",
-      "article_content": "Nội dung chi tiết về chuyến du lịch Đà Lạt...",
+      "article_title": "Công nghê mới năm 2024",
+      "article_description": "Mở nguồn cảm hứng cho giới trẻ có đam mê nghệ thuật",
+      "article_content": "Nội dung chi tiết về thông tin...",
       "article_slug": "bai-viet-mau-ve-du-lich-da-lat",
       "published_at": "2024-11-04T21:00:00.000Z",  
-      "is_priority": 1,  
+      "is_priority": 0,  
       "article_type_id": 1,  
       "employee_id": 1,  
       "thumbnail_img": "https://example.com/images/dalat.jpg",  

@@ -20,14 +20,14 @@ const __VOUCHER_CONTROLLER = {
       }).send(res);
    },
    createVoucher: async (req, res, next) => {
-      new __RESPONSE.POST({
+      new __RESPONSE.CREATED({
          message: "Voucher created",
          metadata: await createVoucher(req),
          request: req,
       }).send(res);
    },
    updateVoucher: async (req, res, next) => {
-      new __RESPONSE.PUT({
+      new __RESPONSE.UPDATE({
          message: "Voucher updated",
          metadata: await updateVoucher(req),
          request: req,

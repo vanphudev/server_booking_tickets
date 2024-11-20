@@ -1,6 +1,6 @@
 @hostname = localhost
 @port = 8800
-@object = employee/auth
+@object = employee
 @host = {{hostname}}:{{port}}
 @endpoint = api/v1/private/{{object}}
 @endpointPublic = api/v1/public/{{object}}
@@ -41,7 +41,7 @@ Content-Type: {{contentType}}
 }
 
 ### Get All Employees
-GET http://{{host}}/{{endpoint}}/getall HTTP/1.1
+GET http://{{host}}/{{endpointPublic}}/getall HTTP/1.1
 Content-Type: {{contentType}}
 
 ### Get Emplyee By Code
@@ -53,30 +53,31 @@ POST http://{{host}}/{{endpointPublic}}/create HTTP/1.1
 Content-Type: {{contentType}}
 
 {
-    "employee_full_name": "Nguyễn Văn D",
-    "employee_email": "nguyenvand@example.com",
-    "employee_phone": "0912345673",
-    "employee_username": "nguyenvand123",
-    "employee_birthday": "1995-05-15",
-    "employee_password": "Password@123",
-    "employee_gender": 1,
-    "office_id": 15,
-    "employee_type_id": 1,
-    "is_first_activation": 1,
-    "is_locked": 0,
-    "employee_profile_image": null,
-    "employee_profile_image_public_id": null,
-    "last_lock_at": null
+      "employee_full_name": "Nguyễn Văn HK",
+      "employee_email": "nguyenvanhk@example.com",
+      "employee_phone": "0912345123",
+      "employee_username": "nguyenvanhk123",
+      "employee_birthday": "1995-05-30",
+      "employee_password": "Password@123",
+      "employee_gender": 1,
+      "office_id": 11,
+      "employee_type_id": 2
+   
 }
+### "is_first_activation": 1,
+#     "is_locked": 0,
+#     "employee_profile_image": null,
+#     "employee_profile_image_public_id": null,
+#     "last_lock_at": null
 ### Update Employees
-PUT http://{{host}}/{{endpointPublic}}/update/29 HTTP/1.1
+PUT http://{{host}}/{{endpointPublic}}/update/11 HTTP/1.1
 Content-Type: {{contentType}}
 
 {
-      "employee_full_name": "Nguyễn Văn D",
-      "employee_email": "nguyenvand@example.com",
+      "employee_full_name": "Nguyễn Văn K",
+      "employee_email": "nguyenvank@example.com",
       "employee_phone": "0912345673",
-      "employee_username": "nguyenvand123",
+      "employee_username": "nguyenvank123",
       "employee_birthday": "1995-05-15",
       "employee_password": "Password@123",
       "employee_gender": 1,
@@ -90,9 +91,9 @@ Content-Type: {{contentType}}
 }
 
 ### Delete Employee
-DELETE http://{{host}}/{{endpointPublic}}/delete HTTP/1.1
+DELETE http://{{host}}/{{endpointPublic}}/delete/28 HTTP/1.1
 Content-Type: {{contentType}}
 
-{
-    "employeeId": 29
-}
+# {
+#     "employeeId": 29
+# }

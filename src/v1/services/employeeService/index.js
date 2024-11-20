@@ -1,8 +1,7 @@
 "use strict";
-
 const __RESPONSE = require("../../core");
 const db = require("../../models");
-const { validationResult } = require("express-validator");  
+const {validationResult} = require("express-validator");
 const bcrypt = require("bcrypt");
 const getInfoEmployee = require("../../utils/getInforEmployee");
 
@@ -18,7 +17,20 @@ const getAllEmployee = async () => {
             {
                model: db.Office,
                as: "employee_belongto_office",
-               attributes: ["office_id"],
+               attributes: [
+                  "office_id",
+                  "office_name",
+                  "office_address",
+                  "office_phone",
+                  "office_fax",
+                  "office_description",
+                  "office_latitude",
+                  "office_longitude",
+                  "office_map_url",
+                  "is_locked",
+                  "last_lock_at",
+                  "ward_id",
+               ],
             },
          ],
          attributes: [
@@ -58,10 +70,10 @@ const getAllEmployee = async () => {
 
 const getEmployeeByIdE = async (req) => {
    try {
-      const { employeeId } = req.query;
-      
+      const {employeeId} = req.query;
+
       const employee = await db.Employee.findOne({
-         where: { employee_id: employeeId },
+         where: {employee_id: employeeId},
          include: [
             {
                model: db.EmployeeType,
@@ -98,17 +110,19 @@ const getEmployeeByIdE = async (req) => {
          throw new __RESPONSE.NotFoundError({
             message: "Không tìm thấy nhân viên!",
             suggestion: "Vui lòng kiểm tra lại ID nhân viên",
+            reason: error.message,
             request: req,
          });
       }
 
-      return { employee };
+      return {employee};
    } catch (error) {
       throw error;
    }
 };
 const createEmployee = async (req) => {
    try {
+      console.log("Request Body:", req.body);
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
          throw new __RESPONSE.BadRequestError({
@@ -132,7 +146,7 @@ const createEmployee = async (req) => {
 
       // Kiểm tra email đã tồn tại
       const existingEmail = await db.Employee.findOne({
-         where: { employee_email },
+         where: {employee_email},
       });
       if (existingEmail) {
          throw new __RESPONSE.BadRequestError({
@@ -144,7 +158,7 @@ const createEmployee = async (req) => {
 
       // Kiểm tra username đã tồn tại
       const existingUsername = await db.Employee.findOne({
-         where: { employee_username },
+         where: {employee_username},
       });
       if (existingUsername) {
          throw new __RESPONSE.BadRequestError({
@@ -156,7 +170,7 @@ const createEmployee = async (req) => {
 
       // Kiểm tra số điện thoại đã tồn tại
       const existingPhone = await db.Employee.findOne({
-         where: { employee_phone },
+         where: {employee_phone},
       });
       if (existingPhone) {
          throw new __RESPONSE.BadRequestError({
@@ -183,7 +197,7 @@ const createEmployee = async (req) => {
          is_locked: 0,
          employee_profile_image: null,
          employee_profile_image_public_id: null,
-         last_lock_at: null
+         last_lock_at: null,
       });
 
       // Trả về response đúng format
@@ -199,14 +213,13 @@ const createEmployee = async (req) => {
                "employee_gender",
                "employee_full_name",
                "office_id",
-               "employee_type_id"
+               "employee_type_id",
             ],
             object: employee,
-         })
+         }),
       };
-
    } catch (error) {
-      console.error('Service error:', error);
+      console.error("Service error:", error);
       throw error;
    }
 };
@@ -221,7 +234,7 @@ const updateEmployee = async (req) => {
          });
       }
 
-      const { employeeId } = req.params;
+      const {employeeId} = req.params;
       const {
          employee_full_name,
          employee_email,
@@ -234,7 +247,7 @@ const updateEmployee = async (req) => {
          employee_type_id,
          is_locked,
          employee_profile_image,
-         employee_profile_image_public_id
+         employee_profile_image_public_id,
       } = req.body;
 
       const employee = await db.Employee.findByPk(employeeId);
@@ -249,9 +262,9 @@ const updateEmployee = async (req) => {
       // Kiểm tra email mới có bị trùng không
       if (employee_email) {
          const existingEmail = await db.Employee.findOne({
-            where: { 
+            where: {
                employee_email,
-               employee_id: { [db.Sequelize.Op.ne]: employeeId }
+               employee_id: {[db.Sequelize.Op.ne]: employeeId},
             },
          });
          if (existingEmail) {
@@ -266,9 +279,9 @@ const updateEmployee = async (req) => {
       // Kiểm tra username mới có bị trùng không
       if (employee_username) {
          const existingUsername = await db.Employee.findOne({
-            where: { 
+            where: {
                employee_username,
-               employee_id: { [db.Sequelize.Op.ne]: employeeId }
+               employee_id: {[db.Sequelize.Op.ne]: employeeId},
             },
          });
          if (existingUsername) {
@@ -283,9 +296,9 @@ const updateEmployee = async (req) => {
       // Kiểm tra số điện thoại mới có bị trùng không
       if (employee_phone) {
          const existingPhone = await db.Employee.findOne({
-            where: { 
+            where: {
                employee_phone,
-               employee_id: { [db.Sequelize.Op.ne]: employeeId }
+               employee_id: {[db.Sequelize.Op.ne]: employeeId},
             },
          });
          if (existingPhone) {
@@ -299,19 +312,19 @@ const updateEmployee = async (req) => {
 
       // Chuẩn bị dữ liệu cập nhật
       const updateData = {
-         ...(employee_full_name && { employee_full_name }),
-         ...(employee_email && { employee_email }),
-         ...(employee_phone && { employee_phone }),
-         ...(employee_username && { employee_username }),
-         ...(employee_birthday && { employee_birthday: new Date(employee_birthday) }),
-         ...(employee_password && { employee_password: await bcrypt.hash(employee_password, 10) }),
-         ...(employee_gender !== undefined && { employee_gender: parseInt(employee_gender) }),
-         ...(office_id && { office_id: parseInt(office_id) }),
-         ...(employee_type_id && { employee_type_id: parseInt(employee_type_id) }),
-         ...(is_locked !== undefined && { is_locked: parseInt(is_locked) }),
-         ...(employee_profile_image && { employee_profile_image }),
-         ...(employee_profile_image_public_id && { employee_profile_image_public_id }),
-         ...(is_locked === 1 && { last_lock_at: new Date() })
+         ...(employee_full_name && {employee_full_name}),
+         ...(employee_email && {employee_email}),
+         ...(employee_phone && {employee_phone}),
+         ...(employee_username && {employee_username}),
+         ...(employee_birthday && {employee_birthday: new Date(employee_birthday)}),
+         ...(employee_password && {employee_password: await bcrypt.hash(employee_password, 10)}),
+         ...(employee_gender !== undefined && {employee_gender: parseInt(employee_gender)}),
+         ...(office_id && {office_id: parseInt(office_id)}),
+         ...(employee_type_id && {employee_type_id: parseInt(employee_type_id)}),
+         ...(is_locked !== undefined && {is_locked: parseInt(is_locked)}),
+         ...(employee_profile_image && {employee_profile_image}),
+         ...(employee_profile_image_public_id && {employee_profile_image_public_id}),
+         ...(is_locked === 1 && {last_lock_at: new Date()}),
       };
 
       await employee.update(updateData);
@@ -330,13 +343,13 @@ const updateEmployee = async (req) => {
                "office_id",
                "employee_type_id",
                "is_locked",
-               "last_lock_at"
+               "last_lock_at",
             ],
             object: employee,
-         })
+         }),
       };
    } catch (error) {
-      console.error('Update Employee Error:', error);
+      console.error("Update Employee Error:", error);
       throw error;
    }
 };
@@ -351,7 +364,7 @@ const deleteEmployee = async (req) => {
          });
       }
 
-      const { employeeId } = req.body;
+      const {employeeId} = req.params;
 
       if (!employeeId) {
          throw new __RESPONSE.BadRequestError({
@@ -379,7 +392,7 @@ const deleteEmployee = async (req) => {
             "employee_username",
             "employee_full_name",
             "office_id",
-            "employee_type_id"
+            "employee_type_id",
          ],
          object: employee,
       });
@@ -387,10 +400,10 @@ const deleteEmployee = async (req) => {
       await employee.destroy();
 
       return {
-         employee: employeeInfo
+         employee: employeeInfo,
       };
    } catch (error) {
-      console.error('Delete Employee Error:', error);
+      console.error("Delete Employee Error:", error);
       throw error;
    }
 };
@@ -400,5 +413,5 @@ module.exports = {
    getEmployeeByIdE,
    createEmployee,
    updateEmployee,
-   deleteEmployee
+   deleteEmployee,
 };

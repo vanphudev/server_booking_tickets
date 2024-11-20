@@ -12,5 +12,5 @@ employeeRouter.get("/getall", asyncHandler(__EMPLOYEE_CONTROLLER__.getAllEmploye
 employeeRouter.put("/update/:employeeId", validateUpdateEmployee, asyncHandler(__EMPLOYEE_CONTROLLER__.updateEmployee))
 employeeRouter.get("/getbyid", validateEmployee, asyncHandler(__EMPLOYEE_CONTROLLER__.getEmployeeByIdE))
 employeeRouter.post("/create", validateCreateEmployee, asyncHandler(__EMPLOYEE_CONTROLLER__.createEmployee))
-employeeRouter.delete("/delete", validateDeleteEmployee, asyncHandler(__EMPLOYEE_CONTROLLER__.deleteEmployee));
+employeeRouter.delete("/delete/:employeeId", validateDeleteEmployee, asyncHandler(__EMPLOYEE_CONTROLLER__.deleteEmployee));
 module.exports = employeeRouter;

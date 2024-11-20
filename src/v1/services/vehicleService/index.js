@@ -1,10 +1,67 @@
-// "use strict";
-// const __RESPONSE = require("../../core");
-// const {validationResult} = require("express-validator");
-// const db = require("../../models");
+"use strict";
+const __RESPONSE = require("../../core");
+const {validationResult} = require("express-validator");
+const db = require("../../models");
 
-// const getAllVehicles = async () => {
-//    return await db.Vehicle.findAll({
+const getAllVehicles = async () => {
+   return await db.Vehicle.findAll({
+      attributes: [
+         "vehicle_id",
+         "vehicle_code",
+         "vehicle_license_plate",
+         "vehicle_model",
+         "vehicle_brand",
+         "vehicle_capacity",
+         "vehicle_manufacture_year",
+         "vehicle_color",
+         "vehicle_description",
+      ],
+      include: [
+         {
+            model: db.VehicleImage,
+            as: "vehicle_to_vehicleImage",
+            attributes: ["vehicle_image_id", "vehicle_image_url", "vehicle_image_description"],
+         },
+      ],
+      nest: true,
+      raw: true,
+   })
+      .then((vehicles) => {
+         if (!vehicles || vehicles.length == 0) {
+            throw new __RESPONSE.NotFoundError({
+               message: "Resource not found - Vehicles not found !",
+               suggestion: "Please check your request",
+               request: req,
+            });
+         }
+         return {
+            vehicles,
+            total: vehicles.length,
+         };
+      })
+      .catch((error) => {
+         throw new __RESPONSE.BadRequestError({
+            message: "Error in getting all vehicles",
+            suggestion: "Please check your request",
+            request: req,
+         });
+      });
+};
+
+// const getVehicleById = async (req) => {
+//    const errors = validationResult(req);
+//    if (!errors.isEmpty()) {
+//       throw new __RESPONSE.BadRequestError({
+//          message: "Validation failed " + errors.array()[0]?.msg + " !",
+//          suggestion: "Please provide the correct data",
+//          request: req,
+//       });
+//    }
+//    const {vehicleId} = req.query;
+//    return await db.Vehicle.findOne({
+//       where: {
+//          vehicle_id: vehicleId,
+//       },
 //       attributes: [
 //          "vehicle_id",
 //          "vehicle_code",
@@ -26,132 +83,75 @@
 //       nest: true,
 //       raw: true,
 //    })
-//       .then((vehicles) => {
-//          if (!vehicles || vehicles.length == 0) {
+//       .then((vehicle) => {
+//          if (!vehicle) {
 //             throw new __RESPONSE.NotFoundError({
 //                message: "Resource not found - Vehicles not found !",
 //                suggestion: "Please check your request",
 //                request: req,
 //             });
 //          }
-//          return {
-//             vehicles,
-//             total: vehicles.length,
-//          };
+//          return {vehicle};
 //       })
 //       .catch((error) => {
+//          if (error instanceof __RESPONSE.NotFoundError) {
+//             throw error;
+//          }
 //          throw new __RESPONSE.BadRequestError({
-//             message: "Error in getting all vehicles",
+//             message: "Error in getting vehicle by id " + error.message,
 //             suggestion: "Please check your request",
 //             request: req,
 //          });
 //       });
 // };
 
-// // const getVehicleById = async (req) => {
-// //    const errors = validationResult(req);
-// //    if (!errors.isEmpty()) {
-// //       throw new __RESPONSE.BadRequestError({
-// //          message: "Validation failed " + errors.array()[0]?.msg + " !",
-// //          suggestion: "Please provide the correct data",
-// //          request: req,
-// //       });
-// //    }
-// //    const {vehicleId} = req.query;
-// //    return await db.Vehicle.findOne({
-// //       where: {
-// //          vehicle_id: vehicleId,
-// //       },
-// //       attributes: [
-// //          "vehicle_id",
-// //          "vehicle_code",
-// //          "vehicle_license_plate",
-// //          "vehicle_model",
-// //          "vehicle_brand",
-// //          "vehicle_capacity",
-// //          "vehicle_manufacture_year",
-// //          "vehicle_color",
-// //          "vehicle_description",
-// //       ],
-// //       include: [
-// //          {
-// //             model: db.VehicleImage,
-// //             as: "vehicle_to_vehicleImage",
-// //             attributes: ["vehicle_image_id", "vehicle_image_url", "vehicle_image_description"],
-// //          },
-// //       ],
-// //       nest: true,
-// //       raw: true,
-// //    })
-// //       .then((vehicle) => {
-// //          if (!vehicle) {
-// //             throw new __RESPONSE.NotFoundError({
-// //                message: "Resource not found - Vehicles not found !",
-// //                suggestion: "Please check your request",
-// //                request: req,
-// //             });
-// //          }
-// //          return {vehicle};
-// //       })
-// //       .catch((error) => {
-// //          if (error instanceof __RESPONSE.NotFoundError) {
-// //             throw error;
-// //          }
-// //          throw new __RESPONSE.BadRequestError({
-// //             message: "Error in getting vehicle by id " + error.message,
-// //             suggestion: "Please check your request",
-// //             request: req,
-// //          });
-// //       });
-// // };
+// const createVehicle = async (req) => {
+//     const vehicle = await db.Vehicle.create({
+//       const errors = validationResult(req);
+//       if (!errors.isEmpty()) {
+//          throw new __RESPONSE.BadRequestError({
+//             message: "Validation failed " + errors.array()[0]?.msg + " !",
+//             suggestion: "Please provide the correct data",
+//             request: req,
+//          });
+//     }
+// });
 
-// // const createVehicle = async (req) => {
-// //     const vehicle = await db.Vehicle.create({
-// //       const errors = validationResult(req);
-// //       if (!errors.isEmpty()) {
-// //          throw new __RESPONSE.BadRequestError({
-// //             message: "Validation failed " + errors.array()[0]?.msg + " !",
-// //             suggestion: "Please provide the correct data",
-// //             request: req,
-// //          });
-// //     }
-// // });
+//    const {code, license_plate, model, brand, capacity, manufacture_year, color, description} = req.body;
+//    return await db.Vehicle.create({
+//       vehicle_code: code,
+//       vehicle_license_plate: license_plate,
+//       vehicle_model: model,
+//       vehicle_brand: brand,
+//       vehicle_capacity: capacity,
+//       vehicle_manufacture_year: manufacture_year,
+//       vehicle_color: color,
+//       vehicle_description: description,
+//       is_locked: locked,
+//       last_lock_at: lockat,
+//       map_vehicle_layout_id: layoutid,
+//       office_id: officeid,
+//       vehicle_type_id: vehicle_typeid,
+//    });
+//    return {
+//       id: vehicle.vehicle_id,
+//       code: vehicle.vehicle_code,
+//       license_plate: vehicle.vehicle_license_plate,
+//       model: vehicle.vehicle_model,
+//       brand: vehicle.vehicle_brand,
+//       capacity: vehicle.vehicle_capacity,
+//       manufacture_year: vehicle.vehicle_manufacture_year,
+//       color: vehicle.vehicle_color,
+//       description: vehicle.vehicle_description,
+//       locked: vehicle.is_locked,
+//       lockat: vehicle.last_lock_at,
+//       layoutid: vehicle.map_vehicle_layout_id,
+//       officeid: vehicle.office_id,
+//       vehicle_typeid: vehicle.vehicle_type_id,
+//    };
+// };
 
-// //    const {code, license_plate, model, brand, capacity, manufacture_year, color, description} = req.body;
-// //    return await db.Vehicle.create({
-// //       vehicle_code: code,
-// //       vehicle_license_plate: license_plate,
-// //       vehicle_model: model,
-// //       vehicle_brand: brand,
-// //       vehicle_capacity: capacity,
-// //       vehicle_manufacture_year: manufacture_year,
-// //       vehicle_color: color,
-// //       vehicle_description: description,
-// //       is_locked: locked,
-// //       last_lock_at: lockat,
-// //       map_vehicle_layout_id: layoutid,
-// //       office_id: officeid,
-// //       vehicle_type_id: vehicle_typeid,
-// //    });
-// //    return {
-// //       id: vehicle.vehicle_id,
-// //       code: vehicle.vehicle_code,
-// //       license_plate: vehicle.vehicle_license_plate,
-// //       model: vehicle.vehicle_model,
-// //       brand: vehicle.vehicle_brand,
-// //       capacity: vehicle.vehicle_capacity,
-// //       manufacture_year: vehicle.vehicle_manufacture_year,
-// //       color: vehicle.vehicle_color,
-// //       description: vehicle.vehicle_description,
-// //       locked: vehicle.is_locked,
-// //       lockat: vehicle.last_lock_at,
-// //       layoutid: vehicle.map_vehicle_layout_id,
-// //       officeid: vehicle.office_id,
-// //       vehicle_typeid: vehicle.vehicle_type_id,
-// //    };
-// // };
-
-// // update
+// update
 // const updateVehicle = async (req) => {
 //    const {id} = req.params;
 //    const {
@@ -448,11 +448,11 @@
 //       });
 // };
 
-// module.exports = {
-//    getAllVehicles,
-//    getVehicleById,
-//    createVehicle,
-//    updateVehicle,
-//    deleteVehicle,
-//    findAllDeletedVehicle,
-// };
+module.exports = {
+   getAllVehicles,
+   // getVehicleById,
+   // createVehicle,
+   // updateVehicle,
+   // deleteVehicle,
+   // findAllDeletedVehicle,
+};

@@ -23,4 +23,7 @@ privateRouter.use("/group", require("./groupAPI"));
 privateRouter.use("/role-group", require("./roleGroupAPI"));
 privateRouter.use("/employee/auth", require("./Auth/employeeAPI"));
 privateRouter.use("/employee-type", require("./employeeTypeAPI"));
+privateRouter.use("/vouchers", require("./voucherAPI"));
+privateRouter.use("/review", require("./reviewAPI"));
+privateRouter.use("/employee", require("./employeeAPI"));
 module.exports = privateRouter;

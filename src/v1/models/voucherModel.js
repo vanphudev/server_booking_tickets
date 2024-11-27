@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "voucher_created_by",
             as: "voucher_belongto_employee",
          });
-         Voucher.hasMany(models.VoucherCondition, {
-            foreignKey: "voucher_id",
-            as: "voucher_to_voucherCondition",
-         });
          Voucher.hasMany(models.BookingTicket, {
             foreignKey: "voucher_id",
             as: "voucher_to_bookingTicket",

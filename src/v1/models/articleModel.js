@@ -12,20 +12,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "article_type_id",
             as: "article_belongto_articleType",
          });
-         Article.hasMany(models.ImageArticle, {
-            foreignKey: "article_id",
-            as: "article_to_imageArticle",
-         });
-         Article.hasMany(models.ArticleTag, {
-            foreignKey: "article_id",
-            as: "article_to_articleTag",
-         });
-         Article.belongsToMany(models.Tag, {
-            through: models.ArticleTag,
-            foreignKey: "article_id",
-            otherKey: "tag_id",
-            as: "article_to_tag",
-         });
       }
    }
 
@@ -82,10 +68,12 @@ module.exports = (sequelize, DataTypes) => {
             },
          },
          thumbnail_img: {
-            type: DataTypes.TEXT,
-         },
-         thumbnail_img_public_id: {
-            type: DataTypes.TEXT,
+            type: DataTypes.TEXT("long"),
+            allowNull: true,
+            validate: {
+               isBase64: true,
+               notEmpty: true,
+            },
          },
       },
       {

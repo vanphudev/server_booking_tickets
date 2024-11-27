@@ -39,6 +39,14 @@ module.exports = {
                   min: 1800,
                },
             },
+            vehicle_image: {
+               type: Sequelize.TEXT("long"),
+               allowNull: true,
+               validate: {
+                  isBase64: true,
+                  notEmpty: true,
+               },
+            },
             vehicle_color: {
                type: Sequelize.STRING(255),
             },

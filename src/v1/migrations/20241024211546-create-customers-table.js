@@ -28,11 +28,13 @@ module.exports = {
                type: Sequelize.DATEONLY,
                validate: {isAfter: "1900-01-01", isBefore: "2100-12-31"},
             },
-            customer_avatar_url: {
-               type: Sequelize.TEXT,
-            },
-            customer_avatar_public_id: {
-               type: Sequelize.TEXT,
+            customer_avatar: {
+               type: Sequelize.TEXT("long"),
+               allowNull: true,
+               validate: {
+                  isBase64: true,
+                  notEmpty: true,
+               },
             },
             customer_destination_address: {
                type: Sequelize.JSON,
@@ -46,9 +48,10 @@ module.exports = {
                defaultValue: 0,
                validate: {isIn: [[0, 1]]},
             },
-            last_login_at: {
-               type: Sequelize.DATE,
-               defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+            bonus_point: {
+               type: Sequelize.INTEGER,
+               defaultValue: 0,
+               validate: {min: 0},
             },
             created_at: {
                type: Sequelize.DATE,

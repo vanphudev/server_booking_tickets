@@ -2,25 +2,39 @@
 const express = require("express");
 const privateRouter = express.Router();
 
-// Xác thực token.
-privateRouter.use(require("../../middlewares/Auth/authUtils").authentication);
-privateRouter.use("/type-customer", require("./typeCustomerAPI"));
-privateRouter.use("/type-vehicle", require("./typeVehicleAPI"));
-privateRouter.use("/vehicle", require("./vehicleAPI"));
-privateRouter.use("/vehicleImage", require("./vehicleImageAPI"));
-privateRouter.use("/type-article", require("./typeArticleAPI"));
-privateRouter.use("/article", require("./articleAPI"));
-privateRouter.use("/articleimage", require("./articleImageAPI"));
-privateRouter.use("/type-customer", require("./typeCustomerAPI"));
-privateRouter.use("/office", require("./officeAPI"));
-privateRouter.use("/way", require("./wayAPI"));
-privateRouter.use("/officeimage", require("./officeImageAPI"));
-privateRouter.use("/map-vehicle-layout", require("./mapVehicleLayoutAPI"));
-privateRouter.use("/map-vehicle-seat", require("./mapVehicleSeatAPI"));
-privateRouter.use("/role", require("./roleAPI"));
-privateRouter.use("/payment-type", require("./paymentTypeAPI"));
-privateRouter.use("/group", require("./groupAPI"));
-privateRouter.use("/role-group", require("./roleGroupAPI"));
-privateRouter.use("/employee/auth", require("./Auth/employeeAPI"));
-privateRouter.use("/employee-type", require("./employeeTypeAPI"));
+// Middleware authentication
+const employeeAuth = require("../../middlewares/Auth/authUtils").authentication;
+const customerAuth = require("../../middlewares/Auth/authCusUtils").authentication;
+
+// Router dành cho nhân viên
+const employeeRouter = express.Router();
+employeeRouter.use(employeeAuth);
+privateRouter.use("/employee", employeeRouter);
+employeeRouter.use("/type-customer", require("./typeCustomerAPI"));
+employeeRouter.use("/type-vehicle", require("./typeVehicleAPI"));
+employeeRouter.use("/vehicle", require("./vehicleAPI"));
+employeeRouter.use("/vehicleImage", require("./vehicleImageAPI"));
+employeeRouter.use("/type-article", require("./typeArticleAPI"));
+employeeRouter.use("/article", require("./articleAPI"));
+employeeRouter.use("/articleimage", require("./articleImageAPI"));
+employeeRouter.use("/type-customer", require("./typeCustomerAPI"));
+employeeRouter.use("/office", require("./officeAPI"));
+employeeRouter.use("/way", require("./wayAPI"));
+employeeRouter.use("/officeimage", require("./officeImageAPI"));
+employeeRouter.use("/map-vehicle-layout", require("./mapVehicleLayoutAPI"));
+employeeRouter.use("/map-vehicle-seat", require("./mapVehicleSeatAPI"));
+employeeRouter.use("/role", require("./roleAPI"));
+employeeRouter.use("/payment-type", require("./paymentTypeAPI"));
+employeeRouter.use("/group", require("./groupAPI"));
+employeeRouter.use("/role-group", require("./roleGroupAPI"));
+employeeRouter.use("/employee/auth", require("./Auth/employeeAPI"));
+employeeRouter.use("/employee-type", require("./employeeTypeAPI"));
+
+// Router dành cho khách hàng
+const customerRouter = express.Router();
+customerRouter.use(customerAuth);
+privateRouter.use("/customer", customerRouter);
+customerRouter.use("/auth", require("./Auth/customerAPI"));
+// customerRouter.use("/profile", require("./customerProfileAPI"));
+
 module.exports = privateRouter;

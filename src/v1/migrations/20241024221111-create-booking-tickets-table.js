@@ -54,6 +54,14 @@ module.exports = {
                   min: 0,
                },
             },
+            booking_total_payment: {
+               type: Sequelize.DECIMAL(10, 2),
+               allowNull: false,
+               defaultValue: 0.0,
+               validate: {
+                  min: 0,
+               },
+            },
             booking_note: {
                type: Sequelize.TEXT,
             },

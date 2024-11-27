@@ -10,10 +10,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "map_vehicle_layout_id",
             as: "vehicle_belongto_mapVehicleLayout",
          });
-         Vehicle.hasMany(models.VehicleImage, {
-            foreignKey: "vehicle_id",
-            as: "vehicle_to_vehicleImage",
-         });
          Vehicle.hasMany(models.Trip, {
             foreignKey: "vehicle_id",
             as: "vehicle_to_trip",
@@ -59,6 +55,14 @@ module.exports = (sequelize, DataTypes) => {
          },
          vehicle_color: {
             type: DataTypes.STRING(255),
+         },
+         vehicle_image: {
+            type: DataTypes.TEXT("long"),
+            allowNull: true,
+            validate: {
+               isBase64: true,
+               notEmpty: true,
+            },
          },
          vehicle_description: {
             type: DataTypes.STRING(500),

@@ -71,10 +71,12 @@ module.exports = {
                },
             },
             thumbnail_img: {
-               type: Sequelize.TEXT,
-            },
-            thumbnail_img_public_id: {
-               type: Sequelize.TEXT,
+               type: Sequelize.TEXT("long"),
+               allowNull: true,
+               validate: {
+                  isBase64: true,
+                  notEmpty: true,
+               },
             },
          },
          {

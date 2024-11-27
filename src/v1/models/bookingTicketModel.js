@@ -88,6 +88,14 @@ module.exports = (sequelize, DataTypes) => {
                min: 0,
             },
          },
+         booking_total_payment: {
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: false,
+            defaultValue: 0.0,
+            validate: {
+               min: 0,
+            },
+         },
          booking_note: {
             type: DataTypes.TEXT,
          },
@@ -185,6 +193,14 @@ module.exports = (sequelize, DataTypes) => {
          deletedAt: "deleted_at",
          charset: "utf8mb4",
          collate: "utf8mb4_unicode_ci",
+         hooks: {
+            beforeSave: (booking) => {
+               const totalPrice = parseFloat(booking.booking_total_price || 0);
+               const discountAmount = parseFloat(booking.discount_amount || 0);
+               booking.booking_total_payment = Math.max(totalPrice - discountAmount, 0);
+               booking.payment_amount = booking.booking_total_payment;
+            },
+         },
       }
    );
 

@@ -3,22 +3,27 @@
 module.exports = {
    up: async (queryInterface, Sequelize) => {
       await queryInterface.createTable(
-         "vehicle_images",
+         "voucher_customers",
          {
-            vehicle_image_id: {
+            voucher_id: {
                type: Sequelize.INTEGER,
-               autoIncrement: true,
-               primaryKey: true,
-            },
-            vehicle_image_url: {
-               type: Sequelize.TEXT,
-            },
-            vehicle_image_description: {
-               type: Sequelize.STRING(500),
-            },
-            vehicle_image_public_id: {
-               type: Sequelize.TEXT,
                allowNull: false,
+               references: {
+                  model: {
+                     tableName: "vouchers",
+                  },
+                  key: "voucher_id",
+               },
+            },
+            customer_id: {
+               type: Sequelize.INTEGER,
+               allowNull: false,
+               references: {
+                  model: {
+                     tableName: "customers",
+                  },
+                  key: "customer_id",
+               },
             },
             created_at: {
                type: Sequelize.DATE,
@@ -33,15 +38,6 @@ module.exports = {
                type: Sequelize.DATE,
                defaultValue: null,
             },
-            vehicle_id: {
-               type: Sequelize.INTEGER,
-               references: {
-                  model: {
-                     tableName: "vehicles",
-                  },
-                  key: "vehicle_id",
-               },
-            },
          },
          {
             charset: "utf8mb4",
@@ -51,6 +47,6 @@ module.exports = {
    },
 
    down: async (queryInterface, Sequelize) => {
-      await queryInterface.dropTable("vehicle_images");
+      await queryInterface.dropTable("voucher_customers");
    },
 };

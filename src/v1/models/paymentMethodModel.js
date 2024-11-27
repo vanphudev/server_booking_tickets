@@ -4,17 +4,9 @@ const {Model} = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
    class PaymentMethod extends Model {
       static associate(models) {
-         PaymentMethod.belongsTo(models.PaymentType, {
-            foreignKey: "payment_type_id",
-            as: "paymentMethod_belongto_paymentType",
-         });
          PaymentMethod.hasMany(models.BookingTicket, {
             foreignKey: "payment_method_id",
             as: "paymentMethod_to_bookingTicket",
-         });
-         PaymentMethod.hasOne(models.PaymentConfig, {
-            foreignKey: "payment_method_id",
-            as: "paymentMethod_onetoOne_paymentConfig",
          });
       }
    }
@@ -36,8 +28,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true,
          },
-         payment_method_avatar_url: DataTypes.TEXT,
-         payment_method_avatar_public_id: DataTypes.TEXT,
          is_locked: {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,
@@ -52,14 +42,6 @@ module.exports = (sequelize, DataTypes) => {
          payment_method_description: {
             type: DataTypes.TEXT,
             allowNull: true,
-         },
-         payment_type_id: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-               model: "PaymentType",
-               key: "payment_type_id",
-            },
          },
       },
       {

@@ -33,7 +33,7 @@ initDb();
 
 app.use(
    cors({
-      origin: "http://localhost:8801",
+      origin: "*",
       credentials: true,
    })
 );

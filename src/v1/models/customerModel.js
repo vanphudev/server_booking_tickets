@@ -29,6 +29,16 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "customer_id",
             as: "customer_to_keyStoreCustomer",
          });
+         Customer.hasMany(models.VoucherCustomer, {
+            foreignKey: "customer_id",
+            as: "customer_to_voucherCustomer",
+         });
+         Customer.belongsToMany(models.Voucher, {
+            through: models.VoucherCustomer,
+            foreignKey: "customer_id",
+            otherKey: "voucher_id",
+            as: "customer_to_voucher",
+         });
       }
    }
    Customer.init(
@@ -55,8 +65,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATEONLY,
             validate: {isAfter: "1900-01-01", isBefore: "2100-12-31"},
          },
-         customer_avatar_url: DataTypes.TEXT,
-         customer_avatar_public_id: DataTypes.TEXT,
+         customer_avatar: {
+            type: DataTypes.TEXT("long"),
+            validate: {
+               isBase64: true,
+               notEmpty: true,
+            },
+         },
          customer_destination_address: {
             type: DataTypes.JSON,
             defaultValue: '{"province": "value_province", "district": "value_district", "wards": "value_wards"}',

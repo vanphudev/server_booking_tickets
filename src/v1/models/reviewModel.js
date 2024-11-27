@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "customer_id",
             as: "review_belongto_customer",
          });
-         Review.hasMany(models.ReviewImage, {
-            foreignKey: "review_id",
-            as: "review_to_reviewImage",
-         });
       }
    }
 

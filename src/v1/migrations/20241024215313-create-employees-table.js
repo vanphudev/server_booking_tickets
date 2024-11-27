@@ -47,12 +47,11 @@ module.exports = {
                allowNull: false,
             },
             employee_profile_image: {
-               type: Sequelize.TEXT,
+               type: Sequelize.TEXT("long"),
                allowNull: true,
-            },
-            employee_profile_image_public_id: {
-               type: Sequelize.TEXT,
-               allowNull: true,
+               validate: {
+                  isBase64: true,
+               },
             },
             employee_gender: {
                type: Sequelize.TINYINT(1),
@@ -60,18 +59,6 @@ module.exports = {
                validate: {
                   isIn: [[0, 1, -1]],
                },
-            },
-            access_token: {
-               type: Sequelize.TEXT,
-               allowNull: true,
-            },
-            refresh_token: {
-               type: Sequelize.TEXT,
-               allowNull: true,
-            },
-            last_refresh_token: {
-               type: Sequelize.DATE,
-               defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
             },
             is_first_activation: {
                type: Sequelize.TINYINT(1),

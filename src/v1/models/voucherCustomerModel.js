@@ -2,22 +2,21 @@
 const {Model} = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-   class VoucherCondition extends Model {
+   class VoucherCustomer extends Model {
       static associate(models) {
-         VoucherCondition.belongsTo(models.Voucher, {
+         VoucherCustomer.belongsTo(models.Customer, {
+            foreignKey: "customer_id",
+            as: "voucherCustomer_belongto_customer",
+         });
+         VoucherCustomer.belongsTo(models.Voucher, {
             foreignKey: "voucher_id",
-            as: "voucherCondition_belongto_voucher",
+            as: "voucherCustomer_belongto_voucher",
          });
       }
    }
 
-   VoucherCondition.init(
+   VoucherCustomer.init(
       {
-         condition_id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-         },
          voucher_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -26,20 +25,19 @@ module.exports = (sequelize, DataTypes) => {
                key: "voucher_id",
             },
          },
-         condition_key: {
-            type: DataTypes.STRING(255),
+         customer_id: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
-         },
-         condition_value: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
+            references: {
+               model: "Customer",
+               key: "customer_id",
+            },
          },
       },
       {
          sequelize,
-         modelName: "VoucherCondition",
-         tableName: "voucher_conditions",
+         modelName: "VoucherCustomer",
+         tableName: "voucher_customers",
          underscored: true,
          timestamps: true,
          paranoid: true,
@@ -47,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
          indexes: [
             {
                unique: true,
-               fields: ["condition_id", "condition_key"],
+               fields: ["voucher_id", "customer_id"],
             },
          ],
          createdAt: "created_at",
@@ -58,5 +56,5 @@ module.exports = (sequelize, DataTypes) => {
       }
    );
 
-   return VoucherCondition;
+   return VoucherCustomer;
 };

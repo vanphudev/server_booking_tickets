@@ -6,7 +6,7 @@ module.exports = (sequelize) => {
          RefreshKeyUsedCustomer.belongsTo(models.KeyStoreCustomer, {
             foreignKey: "key_store_customer_id",
             as: "refreshKeyUsedCustomer_belongto_keyStoreCustomer",
-            onDelete: 'CASCADE',
+            onDelete: "CASCADE",
          });
       }
    }
@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
                model: "KeyStoreCustomer",
                key: "key_store_customer_id",
             },
-            onDelete: 'CASCADE',
+            onDelete: "CASCADE",
          },
          refreshkey_used_customer_key: {
             type: DataTypes.TEXT,

@@ -2,7 +2,14 @@
 
 const __RESPONSE = require("../../core");
 const {logOut, signIn, handlerRefreshToken, getEmployeeById} = require("../../services/accessService/employeeAccess");
-const {getAllEmployee, getEmployeeByIdE, createEmployee, updateEmployee, deleteEmployee}= require("../../services/employeeService/")
+const {
+   getAllEmployee,
+   getEmployeeByIdE,
+   createEmployee,
+   updateEmployee,
+   deleteEmployee,
+} = require("../../services/employeeService/");
+
 const __EMPLOYEE_CONTROLLER = {
    logOut: async (req, res, next) => {
       new __RESPONSE.DELETE({
@@ -32,7 +39,7 @@ const __EMPLOYEE_CONTROLLER = {
          request: req,
       }).send(res);
    },
-   
+
    // get all employees
    getAllEmployee: async (req, res, next) => {
       new __RESPONSE.GET({
@@ -41,6 +48,7 @@ const __EMPLOYEE_CONTROLLER = {
          request: req,
       }).send(res);
    },
+
    getEmployeeByIdE: async (req, res, next) => {
       new __RESPONSE.GET({
          message: "Employees information",
@@ -48,6 +56,7 @@ const __EMPLOYEE_CONTROLLER = {
          request: req,
       }).send(res);
    },
+
    createEmployee: async (req, res, next) => {
       new __RESPONSE.CREATED({
          message: "Employee created",
@@ -55,6 +64,7 @@ const __EMPLOYEE_CONTROLLER = {
          request: req,
       }).send(res);
    },
+   
    updateEmployee: async (req, res, next) => {
       new __RESPONSE.UPDATE({
          message: "Employee updated",

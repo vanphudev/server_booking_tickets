@@ -5,6 +5,19 @@
 @endpoint = api/v1/private/{{object}}
 @endpointPublic = api/v1/public/{{object}}
 @contentType = application/json
+# Thông tin xác thực cho private routes
+@client_id = your_client_id_here
+@token = your_token_here
+### PUBLIC ROUTES ###
+### Lấy tất cả tài xế (Public)
+GET http://{{host}}/{{endpointPublic}}/getall
+Content-Type: {{contentType}}
+### Lấy thông tin tài xế theo ID (Public)
+GET http://{{host}}/{{endpointPublic}}/getbyid?driverId=1
+Content-Type: {{contentType}}
+### Tạo tài xế mới (Public)
+POST http://{{host}}/{{endpointPublic}}/create
+Content-Type: {{contentType}}
 
 # Thông tin xác thực cho private routes
 @client_id = your_client_id_here
@@ -42,8 +55,15 @@ Content-Type: {{contentType}}
 ### Xóa tài xế (Public)
 DELETE http://{{host}}/{{endpointPublic}}/delete/2
 Content-Type: {{contentType}}
+### PRIVATE ROUTES ###
+
+
+### Xóa tài xế (Public)
+DELETE http://{{host}}/{{endpointPublic}}/delete/2
+Content-Type: {{contentType}}
 
 ### PRIVATE ROUTES ###
+
 
 ### Tạo tài xế mới
 POST http://{{host}}/{{endpoint}}/create
@@ -51,7 +71,6 @@ Content-Type: {{contentType}}
 client_id: {{client_id}}
 Authorization: Bearer {{token}}
 
-{
   "license_number": "79F1-12345",
   "experience_years": 5,
   "employee_id": 25

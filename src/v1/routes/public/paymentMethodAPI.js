@@ -25,9 +25,15 @@ rootRouter.delete("/delete/:id",
     asyncHandler(__PAYMENT_METHOD_CONTROLLER.deletePaymentMethod)
 );
 
+rootRouter.get("/getall", 
+    asyncHandler(__PAYMENT_METHOD_CONTROLLER.getAllPaymentMethod)
+);
+
+
 rootRouter.get("/all", 
     asyncHandler(__PAYMENT_METHOD_CONTROLLER.getAllPaymentMethod)
 );
+
 
 rootRouter.get("/getbyid", 
     validatePaymentMethodWithIdInQuery, 

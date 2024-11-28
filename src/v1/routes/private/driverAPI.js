@@ -25,9 +25,15 @@ rootRouter.delete("/delete/:id",
    asyncHandler(__DRIVER_CONTROLLER.deleteDriver)
 );
 
+rootRouter.get("/getall", 
+   asyncHandler(__DRIVER_CONTROLLER.getAllDrivers)
+);
+
+
 rootRouter.get("/all", 
    asyncHandler(__DRIVER_CONTROLLER.getAllDrivers)
 );
+
 
 rootRouter.get("/getbyid", 
    validateDriverWithIdInQuery, 

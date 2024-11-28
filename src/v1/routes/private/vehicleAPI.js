@@ -13,7 +13,7 @@ rootRouter
    .get("/getbyid", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.getVehicleById))
    .post("/create", validateCreateVehicle, asyncHandler(__VEHICLE_CONTROLLER.createVehicle))
    .put("/update", validateUpdateVehicle, asyncHandler(__VEHICLE_CONTROLLER.updateVehicle))
-   .delete("/delete", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
+   .delete("/delete/:vehicleId", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
    .get("/getalldeleted", asyncHandler(__VEHICLE_CONTROLLER.findAllDeletedVehicle));
 
 

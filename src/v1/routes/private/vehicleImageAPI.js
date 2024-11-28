@@ -11,7 +11,7 @@ const {
 const {createUploadMiddleware} = require("../../utils/uploadImages");
 
 const __FOLDER__ = "vehicle_images";
-const __MAX_FILES__ = 5;
+const __MAX_FILES__ = 10;
 
 const vehicleImageUpload = createUploadMiddleware({
    maxFiles: __MAX_FILES__,
@@ -22,10 +22,13 @@ rootRouter
    .get("/getall", asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getAllVehicleImages))
    .get("/getalldeleted", asyncHandler(__VEHICLE_IMAGE_CONTROLLER.findAllDeleteVehicleImages))
    .get("/getbyid",validateVehicleImageWithByIDToQuery , asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getVehicleImageById))
-   .put("/update", validateUpdateVehicleImage, asyncHandler(__VEHICLE_IMAGE_CONTROLLER.updateVehicleImage))
-   .get("/getbyid", validateVehicleImageWithByIDToQuery, asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getVehicleImageById))
+   .put("/update",  validateUpdateVehicleImage,
+      asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getVehicleByVehicleId),
+      vehicleImageUpload,
+      validateUpdateVehicleImage, asyncHandler(__VEHICLE_IMAGE_CONTROLLER.updateVehicleImage))
+
    .post(
-      "/create/:vehicleId",
+      "/create",
       validateCreateVehicleImage,
       asyncHandler(__VEHICLE_IMAGE_CONTROLLER.getVehicleByVehicleId),
       vehicleImageUpload,

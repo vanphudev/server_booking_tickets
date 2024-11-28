@@ -1,7 +1,5 @@
 const { body, query, param } = require("express-validator");
 const { validationResult } = require("express-validator");
-
-// Hàm validateResult
 const validateResult = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -15,7 +13,6 @@ const validateResult = (req, res, next) => {
     }
     next();
 };
-
 const validatePaymentTypeWithIdInQuery = [
     query("typeId")
         .notEmpty().withMessage("Payment Type ID is required")

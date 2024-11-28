@@ -2,7 +2,6 @@
 const __RESPONSE = require("../../core");
 const {validationResult} = require("express-validator");
 const db = require("../../models");
-
 const getAllDrivers = async () => {
    try {
       const drivers = await db.Driver.findAll({
@@ -19,6 +18,21 @@ const getAllDrivers = async () => {
                model: db.Employee,
                as: "driver_onetoOne_employee",
                attributes: [
+                    "employee_id",
+                    "employee_full_name",
+                    "employee_email",
+                    "employee_phone",
+                    "employee_username",
+                    "employee_birthday",
+                    "employee_password",
+                    "employee_profile_image",
+                    "employee_profile_image_public_id",
+                    "employee_gender",
+                    "is_first_activation",
+                    "is_locked",
+                    "last_lock_at",
+                    "office_id",
+                    "employee_type_id",
                   "employee_id",
                   "employee_full_name",
                   "employee_email",
@@ -36,7 +50,6 @@ const getAllDrivers = async () => {
          },
          order: [["driver_id", "ASC"]],
       });
-
       return {drivers, total: drivers.length};
    } catch (error) {
       console.error("getAllDrivers Error:", error);
@@ -47,7 +60,6 @@ const getAllDrivers = async () => {
       });
    }
 };
-
 const getDriverById = async (req) => {
    try {
       const errors = validationResult(req);
@@ -57,7 +69,6 @@ const getDriverById = async (req) => {
             suggestion: "Please provide the correct data",
          });
       }
-
       const {driverId} = req.query;
       const driver = await db.Driver.findOne({
          where: {
@@ -90,14 +101,12 @@ const getDriverById = async (req) => {
             },
          ],
       });
-
       if (!driver) {
          throw new __RESPONSE.NotFoundError({
             message: "Driver not found",
             suggestion: "Please check the driver ID",
          });
       }
-
       return {driver};
    } catch (error) {
       console.error("getDriverById Error:", error);
@@ -109,7 +118,6 @@ const getDriverById = async (req) => {
       });
    }
 };
-
 const createDriver = async (req) => {
    try {
       const errors = validationResult(req);
@@ -119,6 +127,8 @@ const createDriver = async (req) => {
             suggestion: "Please provide the correct data",
          });
       }
+
+      const {license_number, experience_years, employee_id} = req.body;
 
       const {license_number, experience_years, employee_id} = req.body;
 
@@ -136,13 +146,11 @@ const createDriver = async (req) => {
             suggestion: "Please check the employee ID",
          });
       }
-
       const driver = await db.Driver.create({
          driver_license_number: license_number,
          driver_experience_years: experience_years,
          employee_id: employee_id,
       });
-
       const newDriver = await db.Driver.findOne({
          where: {driver_id: driver.driver_id},
          attributes: [
@@ -168,7 +176,6 @@ const createDriver = async (req) => {
             },
          ],
       });
-
       return {driver: newDriver};
    } catch (error) {
       console.error("createDriver Error:", error);
@@ -185,7 +192,6 @@ const createDriver = async (req) => {
       });
    }
 };
-
 const updateDriver = async (req) => {
    try {
       const errors = validationResult(req);
@@ -195,24 +201,23 @@ const updateDriver = async (req) => {
             suggestion: "Please provide the correct data",
          });
       }
-
       const id = parseInt(req.params.id);
       const {license_number, experience_years, employee_id} = req.body;
 
+      const id = parseInt(req.params.id);
+      const {license_number, experience_years, employee_id} = req.body;
       const driver = await db.Driver.findOne({
          where: {
             driver_id: id,
             deleted_at: null
          },
       });
-
       if (!driver) {
          throw new __RESPONSE.NotFoundError({
             message: "Driver not found",
             suggestion: "Please check the driver ID",
          });
       }
-
       if (employee_id) {
          const employee = await db.Employee.findOne({
             where: {
@@ -227,13 +232,11 @@ const updateDriver = async (req) => {
             });
          }
       }
-
       await driver.update({
          driver_license_number: license_number || driver.driver_license_number,
          driver_experience_years: experience_years || driver.driver_experience_years,
          employee_id: employee_id || driver.employee_id,
       });
-
       const updatedDriver = await db.Driver.findOne({
          where: {driver_id: id},
          attributes: [
@@ -259,7 +262,6 @@ const updateDriver = async (req) => {
             },
          ],
       });
-
       return {driver: updatedDriver};
    } catch (error) {
       console.error("updateDriver Error:", error);
@@ -276,7 +278,6 @@ const updateDriver = async (req) => {
       });
    }
 };
-
 const deleteDriver = async (req) => {
    try {
       const errors = validationResult(req);
@@ -286,7 +287,6 @@ const deleteDriver = async (req) => {
             suggestion: "Please provide the correct data",
          });
       }
-
       const id = parseInt(req.params.id);
       const driver = await db.Driver.findOne({
          where: {
@@ -294,14 +294,12 @@ const deleteDriver = async (req) => {
             deleted_at: null
          },
       });
-
       if (!driver) {
          throw new __RESPONSE.NotFoundError({
             message: "Driver not found",
             suggestion: "Please check the driver ID",
          });
       }
-
       await driver.destroy();
       return {message: "Driver deleted successfully"};
    } catch (error) {

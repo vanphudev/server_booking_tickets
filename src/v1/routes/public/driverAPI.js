@@ -10,6 +10,27 @@ const {
    validateDeleteDriver,
 } = require("../../middlewares/validates/driverValidates");
 
+rootRouter.post("/create", 
+   validateCreateDriver, 
+   asyncHandler(__DRIVER_CONTROLLER.createDriver)
+);
+rootRouter.put("/update/:id", 
+   validateUpdateDriver, 
+   asyncHandler(__DRIVER_CONTROLLER.updateDriver)
+);
+rootRouter.delete("/delete/:id", 
+   validateDeleteDriver, 
+   asyncHandler(__DRIVER_CONTROLLER.deleteDriver)
+);
+rootRouter.get("/getall", 
+   asyncHandler(__DRIVER_CONTROLLER.getAllDrivers)
+);
+rootRouter.get("/getbyid", 
+   validateDriverWithIdInQuery, 
+   asyncHandler(__DRIVER_CONTROLLER.getDriverById)
+);
+
+
 // Đảm bảo tất cả các route đều được bọc trong try-catch
 rootRouter.post("/create", 
    validateCreateDriver, 
@@ -44,5 +65,6 @@ rootRouter.get("/getbyid",
       await __DRIVER_CONTROLLER.getDriverById(req, res);
    })
 );
+
 
 module.exports = rootRouter;

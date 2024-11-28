@@ -3,6 +3,12 @@
 @object = payment-method
 @host = {{hostname}}:{{port}}
 @endpoint = api/v1/private/{{object}}
+@endpointPublic = api/v1/public/{{object}}
+@contentType = application/json
+
+### Private APIs ###
+
+### Create Payment Method
 
 @endpointPublic = api/v1/public/{{object}}
 
@@ -13,6 +19,48 @@ POST http://{{host}}/{{endpoint}}/create
 Content-Type: {{contentType}}
 
 {
+    "payment_method_code": "MOMO 1",
+    "payment_method_name": "Ví điện tử MoMo 1",
+    "is_locked": 0,
+    "last_lock_at": null,
+    "payment_method_description": "Thanh toán qua ví điện tử MoMo",
+    "payment_type_id": 1
+}
+
+### Update Payment Method
+PUT http://{{host}}/{{endpoint}}/update/26
+Content-Type: {{contentType}}
+
+{
+    "payment_method_code": "MOMO_UPDATE",
+    "payment_method_name": "MoMo E-Wallet",
+    "is_locked": 1,
+    "last_lock_at": "2024-03-16T08:00:00.000Z",
+    "payment_method_description": "Thanh toán qua ví điện tử MoMo - Đã cập nhật",
+    "payment_type_id": 1
+}
+
+### Get All Payment Methods
+GET http://{{host}}/{{endpoint}}/getall
+Content-Type: {{contentType}}
+
+### Get Payment Method By ID
+GET http://{{host}}/{{endpoint}}/getbyid?methodId=23
+Content-Type: {{contentType}}
+
+### Delete Payment Method
+DELETE http://{{host}}/{{endpoint}}/delete/25
+Content-Type: {{contentType}}
+
+
+### Public APIs ###
+### Get All Payment Methods (Public)
+GET http://{{host}}/{{endpointPublic}}/getall
+Content-Type: {{contentType}}
+
+### Get Payment Method By ID (Public)
+GET http://{{host}}/{{endpointPublic}}/getbyid?methodId=22
+
   "code": "Zalo",
   "name": "Ví điện tử ",
   "islocked": false,

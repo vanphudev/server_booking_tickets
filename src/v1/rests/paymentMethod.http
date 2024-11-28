@@ -3,7 +3,9 @@
 @object = payment-method
 @host = {{hostname}}:{{port}}
 @endpoint = api/v1/private/{{object}}
+
 @endpointPublic = api/v1/public/{{object}}
+
 @contentType = application/json
 
 ### Tạo phương thức thanh toán mới
@@ -39,6 +41,7 @@ Content-Type: {{contentType}}
 ### Lấy tất cả phương thức thanh toán
 GET http://{{host}}/{{endpoint}}/all
 Content-Type: {{contentType}}
+
 
 
 ### Lấy phương thức thanh toán theo ID
@@ -82,4 +85,8 @@ Content-Type: {{contentType}}
 
 ### Xóa phương thức thanh toán
 DELETE http://{{host}}/{{endpointPublic}}/delete/29
+
+### Lấy phương thức thanh toán theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?methodId=22
+
 Content-Type: {{contentType}}

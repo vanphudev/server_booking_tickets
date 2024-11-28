@@ -28,8 +28,6 @@ const getAllWays = async (req) => {
             },
          },
       ],
-      nest: true,
-      raw: true,
    })
       .then((ways) => {
          if (!ways) {
@@ -39,21 +37,8 @@ const getAllWays = async (req) => {
                request: req,
             });
          }
-         const groupedWays = ways.reduce((acc, current) => {
-            const wayId = current.way_id;
-            if (!acc[wayId]) {
-               acc[wayId] = {
-                  way_id: current.way_id,
-                  way_name: current.way_name,
-                  way_description: current.way_description,
-                  offices: [],
-               };
-            }
-            acc[wayId].offices.push(current.way_to_office);
-            return acc;
-         }, {});
          return {
-            ways: Object.values(groupedWays),
+            ways: ways,
             total: ways.length,
          };
       })
@@ -75,6 +60,7 @@ const getWayById = async (req) => {
          request: req,
       });
    }
+
    const {wayId} = req.query;
    return await db.Way.findAll({
       where: {
@@ -153,6 +139,7 @@ const createWay = async (req) => {
          request: req,
       });
    }
+
    const {name, description} = req.body;
    return await db.Way.create({
       way_name: name,

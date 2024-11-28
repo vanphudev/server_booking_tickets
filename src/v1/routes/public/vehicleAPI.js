@@ -16,6 +16,6 @@ rootRouter
    .put("/update", validateUpdateVehicle, asyncHandler(__VEHICLE_CONTROLLER.updateVehicle))
    .delete("/delete", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
    .get("/getalldeleted", asyncHandler(__VEHICLE_CONTROLLER.findAllDeletedVehicle));
-
+   .get("/getall", asyncHandler(__VEHICLE_CONTROLLER.getAllVehicles));
 
 module.exports = rootRouter;

@@ -10,7 +10,6 @@ const {
 } = require("../../middlewares/validates/wayValidates");
 
 rootRouter
-   .get("/getall", asyncHandler(__WAY_CONTROLLER__.getAllWays))
    .get("/getalldeleted", asyncHandler(__WAY_CONTROLLER__.findAllDeletedWay))
    .put("/update", validateUpdateWay, asyncHandler(__WAY_CONTROLLER__.updateWay))
    .get("/getbyid", validateWayWithByIDToQuery, asyncHandler(__WAY_CONTROLLER__.getWayById))

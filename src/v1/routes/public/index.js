@@ -12,4 +12,8 @@ publicRouter.use("/payment-method", require("./paymentMethodAPI"));
 publicRouter.use("/driver", require("./driverAPI"));
 publicRouter.use("/employee/auth", require("./Auth/employeeAPI"));
 publicRouter.use("/employee-type", require("./employeeTypeAPI"));
+publicRouter.use("/way", require("./wayAPI"));
+publicRouter.use("/employee/auth", require("./Auth/employeeAPI"));
+publicRouter.use("/employee-type", require("./employeeTypeAPI"));
+publicRouter.use("/vehicle", require("./vehicleAPI"));
 module.exports = publicRouter;

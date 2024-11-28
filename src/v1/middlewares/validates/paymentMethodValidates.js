@@ -1,5 +1,6 @@
 const {body, query, param} = require("express-validator");
 const {validationResult} = require("express-validator");
+
 // Hàm validateResult
 const validateResult = (req, res, next) => {
    const errors = validationResult(req);
@@ -14,6 +15,7 @@ const validateResult = (req, res, next) => {
    }
    next();
 };
+
 const validatePaymentMethodWithIdInQuery = [
    query("methodId")
       .notEmpty()
@@ -22,6 +24,7 @@ const validatePaymentMethodWithIdInQuery = [
       .withMessage("Payment Method ID must be a number"),
    validateResult,
 ];
+
 const validateCreatePaymentMethod = [
    body("code")
       .notEmpty()
@@ -61,6 +64,7 @@ const validateCreatePaymentMethod = [
       .withMessage("Payment type ID must be a number"),
    validateResult,
 ];
+
 const validateUpdatePaymentMethod = [
    param("id")
       .notEmpty()
@@ -90,6 +94,7 @@ const validateUpdatePaymentMethod = [
    body("paymenttypeid").optional().isInt().withMessage("Payment type ID must be a number"),
    validateResult,
 ];
+
 const validateDeletePaymentMethod = [
    param("id")
       .notEmpty()
@@ -98,9 +103,11 @@ const validateDeletePaymentMethod = [
       .withMessage("Payment Method ID must be a number"),
    validateResult,
 ];
+
 module.exports = {
    validatePaymentMethodWithIdInQuery,
    validateCreatePaymentMethod,
    validateUpdatePaymentMethod,
    validateDeletePaymentMethod,
+
 };

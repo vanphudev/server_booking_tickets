@@ -1,11 +1,16 @@
-const {body, query, param} = require("express-validator");
+const {body, query, param, header} = require("express-validator");
 
 const validateCreateOfficeImage = [
-   param("officeId").notEmpty().withMessage("Office ID is required"),
-   param("officeId").isInt().withMessage("Office ID must be an integer"),
+   header("officeid").notEmpty().withMessage("Office ID is required"),
+   header("officeid").isInt().withMessage("Office ID must be an integer"),
+   header("officename").notEmpty().withMessage("Office Name is required"),
 ];
 
-const validateUpdateOfficeImage = [param("officeImageId").notEmpty().withMessage("Office Image ID is required")];
+const validateUpdateOfficeImage = [
+   header("officeid").notEmpty().withMessage("Office ID is required"),
+   header("officeid").isInt().withMessage("Office ID must be an integer"),
+   header("officename").notEmpty().withMessage("Office Name is required"),
+];
 
 const validateOfficeImageWithByIDToQuery = [
    query("officeImageId").notEmpty().withMessage("Office Image ID is required"),

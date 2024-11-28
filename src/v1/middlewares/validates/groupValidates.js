@@ -1,5 +1,6 @@
 const {body, query, param} = require("express-validator");
 const {validationResult} = require("express-validator");
+
 // Hàm validateResult
 const validateResult = (req, res, next) => {
    const errors = validationResult(req);
@@ -21,6 +22,7 @@ const validateGroupWithIdInQuery = [
       .toInt(), // Chuyển đổi sang số
    validateResult,
 ];
+
 const validateCreateGroup = [
    body("name").notEmpty().withMessage("Group name is required"),
    body("description").notEmpty().withMessage("Group description is required"),
@@ -40,14 +42,20 @@ const validateUpdateGroup = [
    }),
    validateResult,
 ];
+
 const validateDeleteGroup = [
    param("id").notEmpty().withMessage("Group ID is required"),
    param("id").isInt().withMessage("Group ID must be a number"),
    validateResult,
 ];
+
 module.exports = {
    validateCreateGroup,
    validateUpdateGroup,
    validateGroupWithIdInQuery,
    validateDeleteGroup,
+
 };
+
+
+

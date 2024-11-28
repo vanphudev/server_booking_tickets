@@ -1,6 +1,7 @@
 "use strict";
 const __RESPONSE = require("../../core");
 const {validationResult} = require("express-validator");
+const {handleUpload, deleteImage} = require("../../utils/uploadImages");
 const db = require("../../models");
 
 const getAllOffices = async (req) => {
@@ -205,45 +206,48 @@ const updateOffice = async (req) => {
          request: req,
       });
    }
-   const {officeId, name, address, phone, fax, description, latitude, longitude, map_url} = req.body;
+   const {
+      officeId,
+      name,
+      address,
+      phone,
+      fax,
+      description,
+      latitude,
+      longitude,
+      map_url,
+      isLocked,
+      lastLockAt,
+      wardId,
+   } = req.body;
+
    const office = await db.Office.findOne({
       where: {
          office_id: officeId,
       },
-      attributes: [
-         "office_id",
-         "office_name",
-         "office_address",
-         "office_phone",
-         "office_fax",
-         "office_description",
-         "office_latitude",
-         "office_longitude",
-         "office_map_url",
-      ],
-      include: [
-         {
-            model: db.OfficeImage,
-            as: "office_to_officeImage",
-            attributes: ["office_image_id", "office_image_url", "office_image_description"],
-         },
-      ],
-      nest: true,
-      raw: true,
    });
+
    if (!office) {
       throw new __RESPONSE.NotFoundError({
-         message: "Resource not found - Offices not found !",
+         message: "Resource not found - Office not found !",
          suggestion: "Please check your request",
          request: req,
       });
    }
+
    return await office
       .update({
          office_name: name,
          office_address: address,
          office_phone: phone,
          office_fax: fax,
+         office_description: description,
+         office_latitude: latitude,
+         office_longitude: longitude,
+         office_map_url: map_url,
+         ward_id: wardId,
+         is_locked: isLocked && isLocked == 1 ? 1 : 0,
+         last_lock_at: isLocked && isLocked == 1 ? new Date() : null,
       })
       .then((office) => {
          if (!office) {
@@ -280,19 +284,43 @@ const deleteOffice = async (req) => {
          request: req,
       });
    }
-   const {officeId} = req.query;
+
+   const {officeId} = req.params;
    const office = await db.Office.findOne({
       where: {
          office_id: officeId,
       },
    });
+
    if (!office) {
       throw new __RESPONSE.NotFoundError({
-         message: "Resource not found - Offices not found !",
+         message: "Resource not found - Office not found !",
          suggestion: "Please check your request",
          request: req,
       });
    }
+
+   const officeImages = await db.OfficeImage.findAll({
+      where: {
+         office_id: officeId,
+      },
+   });
+
+   try {
+      if (officeImages && officeImages.length > 0) {
+         officeImages.forEach(async (image) => {
+            await image.destroy();
+            await deleteImage(image.office_image_public_id);
+         });
+      }
+   } catch (error) {
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in deleting office images",
+         suggestion: "Please check your request",
+         request: req,
+      });
+   }
+
    return await office
       .destroy()
       .then((office) => {

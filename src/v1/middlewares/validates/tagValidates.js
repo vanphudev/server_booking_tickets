@@ -1,5 +1,6 @@
 const {body, query, param} = require("express-validator");
 const {validationResult} = require("express-validator");
+
 // Hàm validateResult
 const validateResult = (req, res, next) => {
    const errors = validationResult(req);
@@ -14,11 +15,13 @@ const validateResult = (req, res, next) => {
    }
    next();
 };
+
 const validateTagWithIdInQuery = [
    query("tagId").notEmpty().withMessage("Tag ID is required"),
    query("tagId").isInt().withMessage("Tag ID must be a number"),
    validateResult,
 ];
+
 const validateCreateTag = [
    body("tag_name")
       .notEmpty().withMessage("Tag name is required")
@@ -28,6 +31,7 @@ const validateCreateTag = [
       .isLength({ max: 500 }).withMessage("Tag description cannot exceed 500 characters"),
    validateResult,
 ];
+
 const validateUpdateTag = [
    param("id").notEmpty().withMessage("Tag ID is required"),
    param("id").isInt().withMessage("Tag ID must be a number"),
@@ -39,11 +43,13 @@ const validateUpdateTag = [
       .isLength({ max: 500 }).withMessage("Tag description cannot exceed 500 characters"),
    validateResult,
 ];
+
 const validateDeleteTag = [
    param("id").notEmpty().withMessage("Tag ID is required"),
    param("id").isInt().withMessage("Tag ID must be a number"),
    validateResult,
 ];
+
 module.exports = {
    validateCreateTag,
    validateUpdateTag,

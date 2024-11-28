@@ -12,18 +12,24 @@ cloudinary.config({
    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const createUploadMiddleware = ({maxFiles = 5, customFolder = "others"}) => {
+const createUploadMiddleware = ({maxFiles = 10, customFolder = "others"}) => {
    const storage = new CloudinaryStorage({
       cloudinary: cloudinary,
       params: async (req, file) => {
          const dynamicFolder = process.env.CLOUDINARY_CLOUD_FOLDER + customFolder;
+         let format = file.mimetype.split("/")[1];
+         if (format === "svg+xml") {
+            format = "svg";
+         }
          return {
             folder: dynamicFolder,
-            format: file.mimetype.split("/")[1],
-            public_id: `${Date.now()}_${normalizeVietnameseString(req.body.officeName)}_${normalizeVietnameseString(
-               req.params.officeId
-            )}_${crypto.randomBytes(32).toString("hex")}`,
-            allowed_formats: ["jpg", "png", "jpeg", "svg", "webp", "ico"],
+            format: format,
+            public_id: `${Date.now()}_${normalizeVietnameseString(
+               decodeURIComponent(req.headers?.officename) || "error_name"
+            )}_${normalizeVietnameseString(req.headers?.officeid || "error_id")}_${crypto
+               .randomBytes(32)
+               .toString("hex")}`,
+            allowed_formats: ["jpg", "png", "jpeg", "svg", "webp", "ico", "gif", "tiff", "bmp", "avif", "svg+xml"],
          };
       },
    });
@@ -38,7 +44,7 @@ const createUploadMiddleware = ({maxFiles = 5, customFolder = "others"}) => {
          }
       },
       limits: {
-         fileSize: 6 * 1024 * 1024,
+         fileSize: 1024 * 1024 * 100,
       },
    }).array("images", maxFiles);
 
@@ -47,27 +53,21 @@ const createUploadMiddleware = ({maxFiles = 5, customFolder = "others"}) => {
          uploadMultiple(req, res, async function (err) {
             if (err) {
                throw new __RESPONSE.BadRequestError({
-                  message: "Lỗi khi upload ảnh - " + err.msg,
-                  reason: err.msg,
+                  message: "Lỗi khi upload ảnh - " + err.message.toString(),
+                  reason: err.message.toString(),
                   suggestion: "Vui lòng kiểm tra lại file upload",
                   request: req,
                });
             }
-            if (!req.files || req.files.length === 0) {
-               throw new __RESPONSE.BadRequestError({
-                  message: "Không có file nào được upload",
-                  reason: "No files uploaded",
-                  suggestion: "Vui lòng chọn ít nhất một file ảnh",
-                  request: req,
-               });
-            }
-
             const uploadedFiles = req.files;
-            req.uploadedImages = uploadedFiles.map((file) => ({
-               url: file.path,
-               public_id: file.filename,
-               original_name: file.originalname,
-            }));
+            req.uploadedImages =
+               uploadedFiles && uploadedFiles.length > 0
+                  ? uploadedFiles.map((file) => ({
+                       url: file.path,
+                       public_id: file.filename,
+                       original_name: file.originalname,
+                    }))
+                  : [];
             next();
          });
       } catch (error) {
@@ -76,4 +76,16 @@ const createUploadMiddleware = ({maxFiles = 5, customFolder = "others"}) => {
    };
 };
 
-module.exports = {createUploadMiddleware};
+const deleteImage = async (public_id) => {
+   return new Promise((resolve, reject) => {
+      cloudinary.uploader.destroy(public_id, (error, result) => {
+         if (error) {
+            reject(error);
+         } else {
+            resolve(result);
+         }
+      });
+   });
+};
+
+module.exports = {createUploadMiddleware, deleteImage};

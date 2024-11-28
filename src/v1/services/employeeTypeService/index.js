@@ -2,6 +2,10 @@
 const __RESPONSE = require("../../core");
 const db = require("../../models");
 const { validationResult } = require("express-validator");  
+
+const __RESPONSE = require("../../core");
+const db = require("../../models");
+const { validationResult } = require("express-validator");  
 // Get all employee types
 const getAllTypeEmployee = async () => {
    try {
@@ -35,6 +39,7 @@ const createEmployeeType = async (req) => {
             request: req,
          });
       }
+
       const { employee_type_name, employee_type_description } = req.body;
       // Kiểm tra tên loại nhân viên đã tồn tại
       const existingType = await db.EmployeeType.findOne({
@@ -71,7 +76,9 @@ const updateEmployeeType = async (req) => {
             request: req,
          });
       }
+
       const { employee_type_id, employee_type_name, employee_type_description } = req.body;
+
       const employeeType = await db.EmployeeType.findByPk(employee_type_id);
       if (!employeeType) {
          throw new __RESPONSE.NotFoundError({
@@ -120,7 +127,6 @@ const deleteEmployeeType = async (req) => {
             request: req,
          });
       }
-      const { employee_type_id } = req.body;
       const employeeType = await db.EmployeeType.findByPk(employee_type_id);
       if (!employeeType) {
          throw new __RESPONSE.NotFoundError({
@@ -140,7 +146,6 @@ const deleteEmployeeType = async (req) => {
             request: req,
          });
       }
-      await employeeType.destroy();
       return {
          employeeType
       };

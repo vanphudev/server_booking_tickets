@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
          tableName: "office_images",
          underscored: true,
          timestamps: true,
-         paranoid: true,
+         paranoid: false,
          freezeTableName: true,
          indexes: [
             {

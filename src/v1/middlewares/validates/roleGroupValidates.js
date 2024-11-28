@@ -1,5 +1,10 @@
+
 const {body, query, param} = require("express-validator");
 const {validationResult} = require("express-validator");
+
+const { body, query, param } = require("express-validator");
+const { validationResult } = require("express-validator");
+
 // Hàm validateResult
 const validateResult = (req, res, next) => {
    const errors = validationResult(req);
@@ -14,6 +19,7 @@ const validateResult = (req, res, next) => {
    }
    next();
 };
+
 const validateRoleGroupWithIdsInQuery = [
    query("roleId").notEmpty().withMessage("Role ID is required").isInt().withMessage("Role ID must be a number"),
    query("groupId").notEmpty().withMessage("Group ID is required").isInt().withMessage("Group ID must be a number"),
@@ -24,6 +30,37 @@ const validateCreateRoleGroup = [
    body("groupId").notEmpty().withMessage("Group ID is required").isInt().withMessage("Group ID must be a number"),
    validateResult,
 ];
+
+
+const validateRoleGroupWithIdsInQuery = [
+   query("roleId")
+      .notEmpty()
+      .withMessage("Role ID is required")
+      .isInt()
+      .withMessage("Role ID must be a number"),
+   query("groupId")
+      .notEmpty()
+      .withMessage("Group ID is required")
+      .isInt()
+      .withMessage("Group ID must be a number"),
+   validateResult,
+];
+
+const validateCreateRoleGroup = [
+   body("roleId")
+      .notEmpty()
+      .withMessage("Role ID is required")
+      .isInt()
+      .withMessage("Role ID must be a number"),
+   body("groupId")
+      .notEmpty()
+      .withMessage("Group ID is required")
+      .isInt()
+      .withMessage("Group ID must be a number"),
+   validateResult,
+];
+
+
 const validateUpdateRoleGroup = [
    param("oldRoleId")
       .notEmpty()
@@ -35,6 +72,7 @@ const validateUpdateRoleGroup = [
       .withMessage("Old Group ID is required")
       .isInt()
       .withMessage("Old Group ID must be a number"),
+
    body("newRoleId").optional().isInt().withMessage("New Role ID must be a number"),
    body("newGroupId").optional().isInt().withMessage("New Group ID must be a number"),
    validateResult,
@@ -44,6 +82,33 @@ const validateDeleteRoleGroup = [
    param("groupId").notEmpty().withMessage("Group ID is required").isInt().withMessage("Group ID must be a number"),
    validateResult,
 ];
+
+   body("newRoleId")
+      .optional()
+      .isInt()
+      .withMessage("New Role ID must be a number"),
+   body("newGroupId")
+      .optional()
+      .isInt()
+      .withMessage("New Group ID must be a number"),
+   validateResult,
+];
+
+const validateDeleteRoleGroup = [
+   param("roleId")
+      .notEmpty()
+      .withMessage("Role ID is required")
+      .isInt()
+      .withMessage("Role ID must be a number"),
+   param("groupId")
+      .notEmpty()
+      .withMessage("Group ID is required")
+      .isInt()
+      .withMessage("Group ID must be a number"),
+   validateResult,
+];
+
+
 module.exports = {
    validateRoleGroupWithIdsInQuery,
    validateCreateRoleGroup,

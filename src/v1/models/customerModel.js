@@ -56,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: {isAfter: "1900-01-01", isBefore: "2100-12-31"},
          },
          customer_avatar_url: DataTypes.TEXT,
+         customer_avatar_public_id: DataTypes.TEXT,
          customer_destination_address: {
             type: DataTypes.JSON,
             defaultValue: '{"province": "value_province", "district": "value_district", "wards": "value_wards"}',
@@ -67,12 +68,6 @@ module.exports = (sequelize, DataTypes) => {
             validate: {isIn: [[0, 1]]},
          },
          last_login_at: {
-            type: DataTypes.DATE(6),
-            allowNull: true,
-         },
-         access_token: DataTypes.TEXT,
-         refresh_token: DataTypes.TEXT,
-         last_refresh_token: {
             type: DataTypes.DATE(6),
             allowNull: true,
          },

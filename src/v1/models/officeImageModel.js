@@ -23,10 +23,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
          },
          office_image_description: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.TEXT,
          },
-         office_image_type: {
-            type: DataTypes.STRING(50),
+         office_image_public_id: {
+            type: DataTypes.TEXT,
+            allowNull: false,
          },
          office_id: {
             type: DataTypes.INTEGER,
@@ -43,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
          tableName: "office_images",
          underscored: true,
          timestamps: true,
-         paranoid: true,
+         paranoid: false,
          freezeTableName: true,
          indexes: [
             {

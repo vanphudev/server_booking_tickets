@@ -1,0 +1,48 @@
+@hostname = localhost
+@port = 8800
+@object = vouchers
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/public/{{object}}
+@endpointPrivate = api/v1/private/{{object}}
+@contentType = application/json
+
+### Get All Vouchers
+GET http://{{host}}/{{endpoint}}/getall HTTP/1.1
+Content-Type: {{contentType}}
+
+### Get Voucher By Code
+GET http://{{host}}/{{endpoint}}/getByCode?code=AAA HTTP/1.1
+Content-Type: {{contentType}}
+
+### Create Voucher
+POST http://{{host}}/{{endpoint}}/create HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+   "code": "MMLE14",
+   "percentage": 10,
+   "max_amount": 20,
+   "usage_limit": 1,
+   "valid_from": "2021-12-30",
+   "valid_to": "2022-01-31",
+   "create_by": 2
+}
+
+### Update Voucher
+PUT http://{{host}}/{{endpoint}}/update HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+   "voucherId": 18,
+   "code": "LEE01",
+   "percentage": 10,
+   "max_amount": 44,
+   "usage_limit": 1,
+   "valid_from": "2021-12-30",
+   "valid_to": "2022-01-31",
+   "update_by": 2
+}
+
+### Delete Voucher
+DELETE http://{{host}}/{{endpoint}}/delete/17 HTTP/1.1
+Content-Type: {{contentType}}

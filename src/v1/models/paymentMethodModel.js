@@ -36,6 +36,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true,
          },
+         payment_method_avatar_url: DataTypes.TEXT,
+         payment_method_avatar_public_id: DataTypes.TEXT,
          is_locked: {
             type: DataTypes.TINYINT(1),
             defaultValue: 0,

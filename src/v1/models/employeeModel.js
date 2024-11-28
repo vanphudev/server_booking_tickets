@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             as: "employee_onetoOne_driver",
          });
          Employee.hasMany(models.Voucher, {
-            foreignKey: "employee_id",
+            foreignKey: "voucher_created_by",
             as: "employee_to_voucher",
          });
          Employee.hasMany(models.TripEmployee, {
@@ -95,24 +95,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: true,
          },
+         employee_profile_image_public_id: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+         },
          employee_gender: {
             type: DataTypes.TINYINT(1),
             allowNull: true,
             validate: {
                isIn: [[0, 1, -1]],
             },
-         },
-         access_token: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-         },
-         refresh_token: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-         },
-         last_refresh_token: {
-            type: DataTypes.DATE(6),
-            defaultValue: DataTypes.NOW,
          },
          is_first_activation: {
             type: DataTypes.TINYINT(1),

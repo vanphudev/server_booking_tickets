@@ -7,8 +7,8 @@ const StatusCode = {
    UNAUTHORIZED: 401, // Cần xác thực để truy cập tài nguyên.
    FORBIDDEN: 403, // Không được phép truy cập tài nguyên.
    NOT_FOUND: 404, // Không tìm thấy tài nguyên.
+   REFRESH_TOKEN: 419, // Cần cung cấp mã thông báo mới để truy cập tài nguyên.
    CONFLICT: 409, // Xung đột với tài nguyên hiện tại của máy chủ.
-   NOT_FOUND_USER: 405, // Không tìm thấy người dùng.
    METHOD_NOT_ALLOWED: 405, // Phương thức không được phép.
    INTERNAL_SERVER_ERROR: 500, // Lỗi xảy ra trên máy chủ.
    NOT_IMPLEMENTED: 501, // Chưa được triển khai.
@@ -23,51 +23,55 @@ const ReasonStatus = {
    NOT_FOUND: "Not Found",
    CONFLICT: "Conflict",
    INTERNAL_SERVER_ERROR: "Internal Server Error",
-   NOT_FOUND_USER: "User Not Found",
    METHOD_NOT_ALLOWED: "Method Not Allowed",
    NOT_IMPLEMENTED: "Not Implemented",
+   REFRESH_TOKEN: "Refresh Token",
    BAD_GATEWAY: "Bad Gateway",
    SERVICE_UNAVAILABLE: "Service Unavailable",
 };
 
 class ErrorResponse extends Error {
-   constructor(message, status, reason, suggestion, redirectTo, request) {
+   constructor(message, status, error_code, reason, suggestion, redirectTo, request) {
       super(message || reason);
       this.status = status;
       this.error = true;
+      this.error_code = error_code;
       this.reason = reason;
       this.message = message || reason;
       this.timestamp = new Date();
-      this.details = {
-         requestedUrl: request?.originalUrl || "",
-         suggestion: suggestion || "",
-         redirectTo: redirectTo || "",
-         browser:
-            {
-               userAgent: request?.headers["user-agent"] || "",
-               ip: request?.ip || "",
-               ipInfo: request?.ipInfo || "",
-               host: request?.hostname || "",
-               origin: request?.headers.origin || "",
-               referer: request?.headers.referer || "",
-               location: request?.headers.location || "",
-               device: request?.device.type || "",
-               browser_details: {
-                  name: request?.useragent?.browser || "",
-                  version: request?.useragent?.version || "",
-                  os: request?.useragent?.os || "",
-                  platform: request?.useragent?.platform || "",
-                  source: request?.useragent?.source || "",
-               },
-               geo: geoip.lookup(request?.ip),
-            } || "",
-      };
+      this.details = request
+         ? {
+              requestedUrl: request?.originalUrl || "",
+              suggestion: suggestion || "",
+              requestTime: request?.requestTime || "",
+              redirectTo: redirectTo || "",
+              browser:
+                 {
+                    userAgent: request?.headers["user-agent"] || "",
+                    ip: request?.ip || "",
+                    ipInfo: request?.ipInfo || "",
+                    host: request?.hostname || "",
+                    origin: request?.headers.origin || "",
+                    referer: request?.headers.referer || "",
+                    location: request?.headers.location || "",
+                    device: request?.device.type || "",
+                    browser_details: {
+                       name: request?.useragent?.browser || "",
+                       version: request?.useragent?.version || "",
+                       os: request?.useragent?.os || "",
+                       platform: request?.useragent?.platform || "",
+                       source: request?.useragent?.source || "",
+                    },
+                    geo: geoip.lookup(request?.ip),
+                 } || "",
+           }
+         : {};
    }
 }
 
 class BadRequestError extends ErrorResponse {
-   constructor({message, suggestion, redirectTo, request}) {
-      super(message, StatusCode.BAD_REQUEST, ReasonStatus.BAD_REQUEST, suggestion, redirectTo, request);
+   constructor({message, suggestion, error_code, redirectTo, request}) {
+      super(message, StatusCode.BAD_REQUEST, ReasonStatus.BAD_REQUEST, error_code, suggestion, redirectTo, request);
    }
 }
 
@@ -80,6 +84,12 @@ class UnauthorizedError extends ErrorResponse {
 class ForbiddenError extends ErrorResponse {
    constructor({message, suggestion, redirectTo, request}) {
       super(message, StatusCode.FORBIDDEN, ReasonStatus.FORBIDDEN, suggestion, redirectTo, request);
+   }
+}
+
+class RefreshToken extends ErrorResponse {
+   constructor({message, suggestion, redirectTo, request}) {
+      super(message, StatusCode.REFRESH_TOKEN, ReasonStatus.REFRESH_TOKEN, suggestion, redirectTo, request);
    }
 }
 
@@ -136,24 +146,14 @@ class ServiceUnavailableError extends ErrorResponse {
    }
 }
 
-class NotFoundUserError extends ErrorResponse {
-   constructor({message, suggestion, redirectTo, request}) {
-      super(message, StatusCode.NOT_FOUND_USER, ReasonStatus.NOT_FOUND_USER, {
-         suggestion,
-         redirectTo,
-         request,
-      });
-   }
-}
-
 module.exports = {
    ErrorResponse,
    NotFoundError,
    InternalServerError,
    BadRequestError,
    UnauthorizedError,
+   RefreshToken,
    ForbiddenError,
-   NotFoundUserError,
    ConflictError,
    MethodNotAllowedError,
    NotImplementedError,

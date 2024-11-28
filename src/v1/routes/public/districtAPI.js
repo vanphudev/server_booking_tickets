@@ -4,6 +4,6 @@ const asyncHandler = require("../../middlewares/handleError");
 const __DISTRICT_CONTROLLER__ = require("../../controllers/districtController");
 
 districtRouter.get("/getall", asyncHandler(__DISTRICT_CONTROLLER__.getDistricts));
-districtRouter.get("/getById", asyncHandler(__DISTRICT_CONTROLLER__.getDistrictsByIdProvince));
+districtRouter.get("/getbyprovinceid/:provinceId", asyncHandler(__DISTRICT_CONTROLLER__.getDistrictsByIdProvince));
 
 module.exports = districtRouter;

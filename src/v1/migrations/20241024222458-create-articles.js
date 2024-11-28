@@ -73,6 +73,9 @@ module.exports = {
             thumbnail_img: {
                type: Sequelize.TEXT,
             },
+            thumbnail_img_public_id: {
+               type: Sequelize.TEXT,
+            },
          },
          {
             charset: "utf8mb4",

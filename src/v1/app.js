@@ -14,20 +14,20 @@ const __RESPONSE = require("./core");
 const {ConnectDatabase: initDb, CloseDatabase: closedDb} = require("./db");
 const rootRouter = require("./routes");
 const logRequestTime = require("../v1/middlewares/logRequestTime");
-const {stringify} = require("flatted");
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(compression());
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
 app.use(expressIp().getIpInfoMiddleware);
 app.use(device.capture());
 app.use(useragent.express());
+app.use(useragent.express());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 initDb();
 
@@ -56,7 +56,7 @@ app.use("/api/v1", rootRouter);
 
 app.use((req, res, next) => {
    const error = new __RESPONSE.NotFoundError({
-      message: "Not Found",
+      message: "Route not found - Method Not Allowed!",
       suggestion: "Please check your request",
       request: req,
    });
@@ -64,16 +64,16 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-   if (error.status) {
-      return res.status(error.status).json(error);
-   }
-   return res.status(500).json(
-      new __RESPONSE.InternalServerError({
-         message: error.message || "Internal Server Error",
-         suggestion: "Please try again later or contact the administrator",
-         request: req,
-      })
-   );
+   console.log(error);
+   const statusCode = error.status || 500;
+   return res.status(statusCode).json({
+      status: statusCode || 500,
+      error: error.error || "Internal Server Error !",
+      message: error.message || "Internal Server Error !",
+      reason: error.reason || "Please check your request and try again !",
+      timestamp: error.timestamp || new Date(),
+      details: error.details || null,
+   });
 });
 
 module.exports = app;

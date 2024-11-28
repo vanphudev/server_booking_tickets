@@ -23,9 +23,9 @@ module.exports = {
                type: Sequelize.TEXT,
                allowNull: false,
             },
-            review_image_type: {
-               type: Sequelize.STRING(50),
-               allowNull: true,
+            review_image_public_id: {
+               type: Sequelize.TEXT,
+               allowNull: false,
             },
             created_at: {
                type: Sequelize.DATE,

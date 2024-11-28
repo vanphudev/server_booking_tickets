@@ -1,7 +1,7 @@
 "use strict";
 const __RESPONSE = require("../../core");
 const db = require("../../models");
-const { validationResult } = require("express-validator");  
+const {validationResult} = require("express-validator");
 
 const __RESPONSE = require("../../core");
 const db = require("../../models");
@@ -10,21 +10,17 @@ const { validationResult } = require("express-validator");
 const getAllTypeEmployee = async () => {
    try {
       const employeeTypes = await db.EmployeeType.findAll({
-         attributes: [
-            "employee_type_id",
-            "employee_type_name",
-            "employee_type_description",
-         ],
+         attributes: ["employee_type_id", "employee_type_name", "employee_type_description"],
          nest: true,
          raw: true,
       });
-      
+
       return {
          employeeTypes,
          total: employeeTypes.length,
       };
    } catch (error) {
-      console.error('Get All Employee Types Error:', error);
+      console.error("Get All Employee Types Error:", error);
       throw error;
    }
 };
@@ -40,12 +36,13 @@ const createEmployeeType = async (req) => {
          });
       }
 
+      const {employee_type_name, employee_type_description} = req.body;
       const { employee_type_name, employee_type_description } = req.body;
       // Kiểm tra tên loại nhân viên đã tồn tại
       const existingType = await db.EmployeeType.findOne({
-         where: { employee_type_name }
+         where: {employee_type_name},
       });
-      
+
       if (existingType) {
          throw new __RESPONSE.BadRequestError({
             message: "Tên loại nhân viên đã tồn tại!",
@@ -55,13 +52,13 @@ const createEmployeeType = async (req) => {
       }
       const employeeType = await db.EmployeeType.create({
          employee_type_name,
-         employee_type_description
+         employee_type_description,
       });
       return {
-         employeeType
+         employeeType,
       };
    } catch (error) {
-      console.error('Create Employee Type Error:', error);
+      console.error("Create Employee Type Error:", error);
       throw error;
    }
 };
@@ -77,7 +74,7 @@ const updateEmployeeType = async (req) => {
          });
       }
 
-      const { employee_type_id, employee_type_name, employee_type_description } = req.body;
+      const {employee_type_id, employee_type_name, employee_type_description} = req.body;
 
       const employeeType = await db.EmployeeType.findByPk(employee_type_id);
       if (!employeeType) {
@@ -90,12 +87,12 @@ const updateEmployeeType = async (req) => {
       // Kiểm tra tên mới có bị trùng không
       if (employee_type_name) {
          const existingType = await db.EmployeeType.findOne({
-            where: { 
+            where: {
                employee_type_name,
-               employee_type_id: { [db.Sequelize.Op.ne]: employee_type_id }
-            }
+               employee_type_id: {[db.Sequelize.Op.ne]: employee_type_id},
+            },
          });
-         
+
          if (existingType) {
             throw new __RESPONSE.BadRequestError({
                message: "Tên loại nhân viên đã tồn tại!",
@@ -105,14 +102,14 @@ const updateEmployeeType = async (req) => {
          }
       }
       await employeeType.update({
-         ...(employee_type_name && { employee_type_name }),
-         ...(employee_type_description && { employee_type_description })
+         ...(employee_type_name && {employee_type_name}),
+         ...(employee_type_description && {employee_type_description}),
       });
       return {
-         employeeType
+         employeeType,
       };
    } catch (error) {
-      console.error('Update Employee Type Error:', error);
+      console.error("Update Employee Type Error:", error);
       throw error;
    }
 };
@@ -127,6 +124,8 @@ const deleteEmployeeType = async (req) => {
             request: req,
          });
       }
+
+      const {employee_type_id} = req.body;
       const employeeType = await db.EmployeeType.findByPk(employee_type_id);
       if (!employeeType) {
          throw new __RESPONSE.NotFoundError({
@@ -137,7 +136,7 @@ const deleteEmployeeType = async (req) => {
       }
       // Kiểm tra xem có nhân viên nào đang sử dụng loại này không
       const employeeCount = await db.Employee.count({
-         where: { employee_type_id }
+         where: {employee_type_id},
       });
       if (employeeCount > 0) {
          throw new __RESPONSE.BadRequestError({
@@ -147,10 +146,10 @@ const deleteEmployeeType = async (req) => {
          });
       }
       return {
-         employeeType
+         employeeType,
       };
    } catch (error) {
-      console.error('Delete Employee Type Error:', error);
+      console.error("Delete Employee Type Error:", error);
       throw error;
    }
 };
@@ -158,5 +157,5 @@ module.exports = {
    getAllTypeEmployee,
    createEmployeeType,
    updateEmployeeType,
-   deleteEmployeeType
+   deleteEmployeeType,
 };

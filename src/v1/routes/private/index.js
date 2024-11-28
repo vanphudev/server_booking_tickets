@@ -27,6 +27,9 @@ privateRouter.use("/driver", require("./driverAPI"));
 privateRouter.use("/tag", require("./tagAPI"));
 privateRouter.use("/employee/auth", require("./Auth/employeeAPI"));
 privateRouter.use("/employee-type", require("./employeeTypeAPI"));
+privateRouter.use("/vouchers", require("./voucherAPI"));
+privateRouter.use("/review", require("./reviewAPI"));
+privateRouter.use("/employee", require("./employeeAPI"));
 
 privateRouter.use("/driver", require("./driverAPI"));
 

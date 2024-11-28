@@ -1,16 +1,23 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("../handleError");
+const crypto = require("crypto");
 const __RESPONSE = require("../../core");
 const db = require("../../models");
 
-const EXPIRES_IN_ACCESS_TOKEN = "20m";
+const EXPIRES_IN_ACCESS_TOKEN = "1m";
 const EXPIRES_IN_REFRESH_TOKEN = "20d";
 
 const createTokenPair = async (payload, publicKey, privateKey) => {
+   const jti = crypto.randomBytes(16).toString("hex");
+   const tokenPayload = {
+      ...payload,
+      jti,
+      iat: Math.floor(Date.now() / 1000),
+   };
    try {
-      const accessToken = jwt.sign(payload, publicKey, {expiresIn: EXPIRES_IN_ACCESS_TOKEN});
-      const refreshToken = jwt.sign(payload, privateKey, {expiresIn: EXPIRES_IN_REFRESH_TOKEN});
+      const accessToken = jwt.sign(tokenPayload, publicKey, {expiresIn: EXPIRES_IN_ACCESS_TOKEN});
+      const refreshToken = jwt.sign(tokenPayload, privateKey, {expiresIn: EXPIRES_IN_REFRESH_TOKEN});
       return {accessToken, refreshToken};
    } catch (error) {
       throw new __RESPONSE.BadRequestError({

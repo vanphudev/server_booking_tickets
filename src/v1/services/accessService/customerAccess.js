@@ -44,7 +44,10 @@ const handlerRefreshTokenCustomer = async (req, res) => {
       });
    }
    const {refreshToken, customerId} = req.body;
+   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> refreshToken TRƯỚC KHI TÌM", refreshToken);
+   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> customerId TRƯỚC KHI TÌM", customerId);
    const foundKeyTokenUsed = await findRefreshTokenUsed(refreshToken, customerId);
+   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> foundKeyTokenUsed SAU KHI TÌM", foundKeyTokenUsed);
    if (foundKeyTokenUsed) {
       const keyToken = await removeKeyByCustomerId(customerId);
       if (keyToken.deletedCount === 0) {

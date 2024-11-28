@@ -82,10 +82,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
             validate: {isIn: [[0, 1]]},
          },
-         last_login_at: {
-            type: DataTypes.DATE(6),
-            allowNull: true,
-         },
          customer_type_id: {
             type: DataTypes.INTEGER,
             references: {

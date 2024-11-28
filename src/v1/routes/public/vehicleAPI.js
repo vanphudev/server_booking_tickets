@@ -10,7 +10,12 @@ const {
 } = require("../../middlewares/validates/vehicleValidates");
 
 rootRouter
+   .get("/getall", asyncHandler(__VEHICLE_CONTROLLER.getAllVehicles))
+   .get("/getbyid", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.getVehicleById))
+   .post("/create", validateCreateVehicle, asyncHandler(__VEHICLE_CONTROLLER.createVehicle))
+   .put("/update", validateUpdateVehicle, asyncHandler(__VEHICLE_CONTROLLER.updateVehicle))
+   .delete("/delete", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
+   .get("/getalldeleted", asyncHandler(__VEHICLE_CONTROLLER.findAllDeletedVehicle));
    .get("/getall", asyncHandler(__VEHICLE_CONTROLLER.getAllVehicles));
-
 
 module.exports = rootRouter;

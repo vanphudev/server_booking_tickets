@@ -109,4 +109,5 @@ module.exports = {
    validateCreatePaymentMethod,
    validateUpdatePaymentMethod,
    validateDeletePaymentMethod,
+
 };

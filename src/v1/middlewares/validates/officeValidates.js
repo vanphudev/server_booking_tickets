@@ -1,8 +1,13 @@
-const {body, query} = require("express-validator");
+const {body, query, param} = require("express-validator");
 
 const validateOfficeWithByIDToQuery = [
    query("officeId").notEmpty().withMessage("Name is required"),
    query("officeId").isInt().withMessage("Office ID must be a number"),
+];
+
+const validateOfficeWithByIDToParams = [
+   param("officeId").notEmpty().withMessage("Name is required"),
+   param("officeId").isInt().withMessage("Office ID must be a number"),
 ];
 
 const validateCreateOffice = [
@@ -14,6 +19,7 @@ const validateCreateOffice = [
    body("latitude").notEmpty().withMessage("Latitude is required"),
    body("longitude").notEmpty().withMessage("Longitude is required"),
    body("map_url").notEmpty().withMessage("Map URL is required"),
+   body("wardId").notEmpty().withMessage("Map URL is required"),
    body("map_url").isURL().withMessage("Map URL must be a valid URI"),
    body("phone").isMobilePhone("vi-VN").withMessage("Phone must be a valid phone number"),
    body("fax").isMobilePhone("vi-VN").withMessage("Fax must be a valid phone number"),
@@ -38,4 +44,5 @@ module.exports = {
    validateCreateOffice,
    validateUpdateOffice,
    validateOfficeWithByIDToQuery,
+   validateOfficeWithByIDToParams,
 };

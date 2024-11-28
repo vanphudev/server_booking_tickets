@@ -13,7 +13,6 @@ Content-Disposition: form-data; name="officeName"
 
 Văn phòng bến xe miền đông, Hà Nội
 
---MfnBoundry
 Content-Disposition: form-data; name="images"; filename="Screenshot 2024-11-04 141249.png"
 Content-Type: image/png
 
@@ -24,5 +23,14 @@ Content-Disposition: form-data; name="images"; filename="Screenshot 2024-11-04 1
 Content-Type: image/png
 
 < E:\BT_KTLT\Screenshot 2024-11-04 141249.png
+Content-Disposition: form-data; name="images"; filename="huit.png"
+Content-Type: image/png
+
+< C:\Users\ACER\Pictures\Camera Roll\huit.png
+
+Content-Disposition: form-data; name="images"; filename="huit.png"
+Content-Type: image/png
+
+< C:\Users\ACER\Pictures\Camera Roll\huit.png
 
 --MfnBoundry--

@@ -7,6 +7,7 @@ const StatusCode = {
    UNAUTHORIZED: 401, // Cần xác thực để truy cập tài nguyên.
    FORBIDDEN: 403, // Không được phép truy cập tài nguyên.
    NOT_FOUND: 404, // Không tìm thấy tài nguyên.
+   REFRESH_TOKEN: 419, // Cần cung cấp mã thông báo mới để truy cập tài nguyên.
    CONFLICT: 409, // Xung đột với tài nguyên hiện tại của máy chủ.
    METHOD_NOT_ALLOWED: 405, // Phương thức không được phép.
    INTERNAL_SERVER_ERROR: 500, // Lỗi xảy ra trên máy chủ.
@@ -24,15 +25,17 @@ const ReasonStatus = {
    INTERNAL_SERVER_ERROR: "Internal Server Error",
    METHOD_NOT_ALLOWED: "Method Not Allowed",
    NOT_IMPLEMENTED: "Not Implemented",
+   REFRESH_TOKEN: "Refresh Token",
    BAD_GATEWAY: "Bad Gateway",
    SERVICE_UNAVAILABLE: "Service Unavailable",
 };
 
 class ErrorResponse extends Error {
-   constructor(message, status, reason, suggestion, redirectTo, request) {
+   constructor(message, status, error_code, reason, suggestion, redirectTo, request) {
       super(message || reason);
       this.status = status;
       this.error = true;
+      this.error_code = error_code;
       this.reason = reason;
       this.message = message || reason;
       this.timestamp = new Date();
@@ -67,8 +70,8 @@ class ErrorResponse extends Error {
 }
 
 class BadRequestError extends ErrorResponse {
-   constructor({message, suggestion, redirectTo, request}) {
-      super(message, StatusCode.BAD_REQUEST, ReasonStatus.BAD_REQUEST, suggestion, redirectTo, request);
+   constructor({message, suggestion, error_code, redirectTo, request}) {
+      super(message, StatusCode.BAD_REQUEST, ReasonStatus.BAD_REQUEST, error_code, suggestion, redirectTo, request);
    }
 }
 
@@ -81,6 +84,12 @@ class UnauthorizedError extends ErrorResponse {
 class ForbiddenError extends ErrorResponse {
    constructor({message, suggestion, redirectTo, request}) {
       super(message, StatusCode.FORBIDDEN, ReasonStatus.FORBIDDEN, suggestion, redirectTo, request);
+   }
+}
+
+class RefreshToken extends ErrorResponse {
+   constructor({message, suggestion, redirectTo, request}) {
+      super(message, StatusCode.REFRESH_TOKEN, ReasonStatus.REFRESH_TOKEN, suggestion, redirectTo, request);
    }
 }
 
@@ -143,6 +152,7 @@ module.exports = {
    InternalServerError,
    BadRequestError,
    UnauthorizedError,
+   RefreshToken,
    ForbiddenError,
    ConflictError,
    MethodNotAllowedError,

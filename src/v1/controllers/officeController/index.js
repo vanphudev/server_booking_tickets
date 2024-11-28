@@ -14,7 +14,7 @@ const __OFFICE_CONTROLLER = {
    getAllOffices: async (req, res, next) => {
       new __RESPONSE.GET({
          message: "List of all offices",
-         metadata: await getAllOffices(),
+         metadata: await getAllOffices(req),
          request: req,
       }).send(res);
    },

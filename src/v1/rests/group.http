@@ -1,0 +1,38 @@
+@hostname = localhost
+@port = 8800
+@object = group
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo nhóm mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "name": "Admin Group",
+  "description": "Group for administrators with full access.",
+  "locked": false
+}
+
+### Cập nhật nhóm
+PUT http://{{host}}/{{endpoint}}/update/33
+Content-Type: {{contentType}}
+
+{
+  "name": "Developer Group",
+  "description": "Group for development team members",
+  "locked": 0
+}
+
+### Xóa nhóm
+DELETE http://{{host}}/{{endpoint}}/delete/33
+Content-Type: {{contentType}}
+
+### Lấy tất cả nhóm
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy nhóm theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?groupId=22
+Content-Type: {{contentType}}

@@ -1,21 +1,14 @@
-const {body, query, param} = require("express-validator");
+const {body, query, param, header} = require("express-validator");
 const validateCreateVehicleImage = [
-   param("vehicleId").notEmpty().withMessage("Vehicle ID is required"),
-   param("vehicleId").isInt().withMessage("Vehicle ID must be an integer"),
+   header("vehicleid").notEmpty().withMessage("Vehicle ID is required"),
+   header("vehicleid").isInt().withMessage("Vehicle ID must be an integer"),
+   header("vehiclecode").notEmpty().withMessage("Vehicle Name is required"),
 ];
 
 const validateUpdateVehicleImage = [
-   query("vehicleImageId")
-      .notEmpty().withMessage("Vehicle Image ID is required")
-      .isInt().withMessage("Vehicle Image ID must be an integer"),
-   body("vehicle_image_description")
-      .optional()
-      .isString().withMessage("Description must be a string")
-      .trim()
-      .isLength({ min: 3, max: 255 }).withMessage("Description length must be between 3 and 255 characters"),
-   body("vehicle_id")
-      .optional()
-      .isInt().withMessage("Vehicle ID must be an integer")
+   header("vehicleid").notEmpty().withMessage("Vehicle ID is required"),
+   header("vehicleid").isInt().withMessage("Vehicle ID must be an integer"),
+   header("vehiclecode").notEmpty().withMessage("Vehicle Name is required"),
 ];
 
 const validateVehicleImageWithByIDToQuery = [

@@ -1,0 +1,36 @@
+@hostname = localhost
+@port = 8800
+@object = role-group
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo role group mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "roleId": 28,
+  "groupId": 27
+}
+
+### Cập nhật role group
+PUT http://{{host}}/{{endpoint}}/update/28/27
+Content-Type: {{contentType}}
+
+{
+  "newRoleId": 23,
+  "newGroupId": 24
+}
+
+### Xóa role group
+DELETE http://{{host}}/{{endpoint}}/delete/28/27
+Content-Type: {{contentType}}
+
+### Lấy tất cả role group
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy role group theo roleId và groupId
+GET http://{{host}}/{{endpoint}}/getbyid?roleId=23&groupId=27
+Content-Type: {{contentType}}

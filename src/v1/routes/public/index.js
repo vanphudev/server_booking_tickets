@@ -7,11 +7,26 @@ publicRouter.use("/districts", require("./districtAPI"));
 publicRouter.use("/office", require("./officeAPI"));
 publicRouter.use("/wards", require("./wardAPI"));
 publicRouter.use("/vouchers", require("./voucherAPI"));
+publicRouter.use("/vehicle", require("./vehicleAPI"));
+publicRouter.use("/payment-method", require("./paymentMethodAPI"));
+publicRouter.use("/driver", require("./driverAPI"));
+publicRouter.use("/employee/auth", require("./Auth/employeeAPI"));
+publicRouter.use("/employee-type", require("./employeeTypeAPI"));
 publicRouter.use("/way", require("./wayAPI"));
 publicRouter.use("/employee/auth", require("./Auth/employeeAPI"));
 publicRouter.use("/employee-type", require("./employeeTypeAPI"));
+
 publicRouter.use("/article", require("./articleAPI"));
 publicRouter.use("/articleimage", require("./articleImageAPI"));
 publicRouter.use("/review", require("./reviewAPI"));
 publicRouter.use("/employee", require("./employeeAPI"));
+
+publicRouter.use("/payment-method", require("./paymentMethodAPI"));
+
+publicRouter.use("/vehicle", require("./vehicleAPI"));
+publicRouter.use("/payment-config", require("./paymentConfigAPI")); 
+
+publicRouter.use("/driver", require("./driverAPI"));
+publicRouter.use("/vehicle", require("./vehicleAPI"));
+
 module.exports = publicRouter;

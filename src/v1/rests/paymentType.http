@@ -1,0 +1,52 @@
+@hostname = localhost
+@port = 8800
+@object = payment-type
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+### Tạo loại thanh toán mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+{
+  "name": "Thanh toán qua ví điện tử"
+}
+### Cập nhật loại thanh toán
+PUT http://{{host}}/{{endpoint}}/update/29
+Content-Type: {{contentType}}
+{
+  "name": "Thanh toán qua thẻ ngân hàng"
+}
+### Xóa loại thanh toán
+DELETE http://{{host}}/{{endpoint}}/delete/30
+Content-Type: {{contentType}}
+### Lấy tất cả loại thanh toán
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Tạo loại thanh toán mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "name": "Thanh toán qua ví điện tử"
+}
+
+### Cập nhật loại thanh toán
+PUT http://{{host}}/{{endpoint}}/update/29
+Content-Type: {{contentType}}
+
+{
+  "name": "Thanh toán qua thẻ ngân hàng"
+}
+
+### Xóa loại thanh toán
+DELETE http://{{host}}/{{endpoint}}/delete/30
+Content-Type: {{contentType}}
+
+### Lấy tất cả loại thanh toán
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy loại thanh toán theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?typeId=22
+Content-Type: {{contentType}}

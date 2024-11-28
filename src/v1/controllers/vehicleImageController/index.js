@@ -12,38 +12,43 @@ const __VEHICLE_IMAGE_CONTROLLER = {
          request: req,
       }).send(res);
    },
-   getVehicleImageById: async (req, res, next) => {
-      new __RESPONSE.UPDATE({
-         message: "Vehicle updated",
-         metadata: await getVehicleImageById(req),
+   getVehicleByVehicleId: async (req, res, next) => {
+      req.office = await getVehicleByVehicleId(req, res, next);
+      next();
+   },
+  
+   getAllVehicleImages: async (req, res, next) => {
+      new __RESPONSE.SUCCESS({
+         message: "Get all vehicle images successfully",
+         metadata: await getAllVehicleImages(req, res, next),
          request: req,
       }).send(res);
    },
-   getAllVehicleImages: async (req, res, next) => {
-      new __RESPONSE.GET({
-         message: "List of all vehicle images",
-         metadata: await getAllVehicleImages(),
+   getVehicleImageById: async (req, res, next) => {
+      new __RESPONSE.SUCCESS({
+         message: "Get office image by id successfully",
+         metadata: await getVehicleImageById(req, res, next),
          request: req,
       }).send(res);
    },
    updateVehicleImage: async (req, res, next) => {
-      new __RESPONSE.UPDATE({
-         message: "Vehicle updated",
-         metadata: await updateVehicleImage(req),
+      new __RESPONSE.SUCCESS({
+         message: "Update vehicle image successfully",
+         metadata: await updateVehicleImage(req, res, next),
          request: req,
       }).send(res);
    },
    deleteVehicleImage: async (req, res, next) => {
-      new __RESPONSE.DELETE({
-         message: "vehicle deleted",
-         metadata: await deleteVehicleImage(req),
+      new __RESPONSE.SUCCESS({
+         message: "Delete vehicle image successfully",
+         metadata: await deleteAllVehicleImages(req, res, next),
          request: req,
       }).send(res);
    },
    findAllDeleteVehicleImages: async (req, res, next) => {
       new __RESPONSE.GET({
          message: "List of all deleted vehicle",
-         metadata: await findAllDeleteVehicleImages(req),
+         metadata: await findAllDeleteVehicleImages(req, res, next),
          request: req,
       }).send(res);
    },

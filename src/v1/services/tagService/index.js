@@ -1,30 +1,30 @@
 "use strict";
 const __RESPONSE = require("../../core");
-const { validationResult } = require("express-validator");
+const {validationResult} = require("express-validator");
 const db = require("../../models");
 
-const getAllMapVehicleLayouts = async () => {
-   return await db.MapVehicleLayout.findAll({
-      attributes: ['map_vehicle_layout_id', 'layout_name'],
+const getAllTags = async () => {
+   return await db.Tag.findAll({
+      attributes: ["tag_id", "tag_name", "tag_description"],
    })
-      .then((layouts) => {
-         if (!layouts || layouts.length === 0) {
+      .then((tags) => {
+         if (!tags || tags.length === 0) {
             throw new __RESPONSE.NotFoundError({
-               message: "Resource not found - MapVehicleLayouts not found!",
+               message: "Resource not found - Tags not found!",
                suggestion: "Please check your request",
             });
          }
-         return { layouts, total: layouts.length };
+         return {tags, total: tags.length};
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in finding all map vehicle layouts",
+            message: "Error in finding all tags",
             suggestion: "Please check your request",
          });
       });
 };
 
-const getMapVehicleLayoutById = async (req) => {
+const getTagById = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -34,29 +34,29 @@ const getMapVehicleLayoutById = async (req) => {
       });
    }
 
-   const { layoutId } = req.query;
-   return await db.MapVehicleLayout.findOne({
-      where: { map_vehicle_layout_id: layoutId },
-      attributes: ['map_vehicle_layout_id', 'layout_name'],
+   const {tagId} = req.query;
+   return await db.Tag.findOne({
+      where: {tag_id: tagId},
+      attributes: ["tag_id", "tag_name", "tag_description"],
    })
-      .then((layout) => {
-         if (!layout) {
+      .then((tag) => {
+         if (!tag) {
             throw new __RESPONSE.NotFoundError({
-               message: "Resource not found - MapVehicleLayout not found!",
+               message: "Resource not found - Tag not found!",
                suggestion: "Please check your request",
             });
          }
-         return { layout };
+         return {tag};
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in finding map vehicle layout: " + error.message,
+            message: "Error in finding tag: " + error.message,
             suggestion: "Please check your request",
          });
       });
 };
 
-const createMapVehicleLayout = async (req) => {
+const createTag = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -66,37 +66,38 @@ const createMapVehicleLayout = async (req) => {
       });
    }
 
-   const { name } = req.body;
-   return await db.MapVehicleLayout.create({
-      layout_name: name,
+   const {tag_name, tag_description} = req.body;
+   return await db.Tag.create({
+      tag_name,
+      tag_description,
    })
-      .then((layout) => {
-         if (!layout) {
+      .then((tag) => {
+         if (!tag) {
             throw new __RESPONSE.BadRequestError({
-               message: "Error in creating map vehicle layout",
+               message: "Error in creating tag",
                suggestion: "Please check your request",
                request: req,
             });
          }
-         return { layout };
+         return {tag};
       })
       .catch((error) => {
          if (error.original?.code === "ER_DUP_ENTRY") {
             throw new __RESPONSE.BadRequestError({
-               message: "Layout name already exists: " + error.original.sqlMessage,
-               suggestion: "Please use different layout name",
+               message: "Tag name already exists: " + error.original.sqlMessage,
+               suggestion: "Please use different tag name",
                request: req,
             });
          }
          throw new __RESPONSE.BadRequestError({
-            message: "Error in creating map vehicle layout: " + error.message,
+            message: "Error in creating tag: " + error.message,
             suggestion: "Please check your request",
             request: req,
          });
       });
 };
 
-const updateMapVehicleLayout = async (req) => {
+const updateTag = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -106,45 +107,46 @@ const updateMapVehicleLayout = async (req) => {
       });
    }
 
-   const id = parseInt(req.params.id);
-   const { name } = req.body;
+   const tag_id = parseInt(req.params.id);
+   const {tag_name, tag_description} = req.body;
 
-   const layout = await db.MapVehicleLayout.findOne({
-      where: { map_vehicle_layout_id: id },
+   const tag = await db.Tag.findOne({
+      where: {tag_id},
    });
 
-   if (!layout) {
+   if (!tag) {
       throw new __RESPONSE.NotFoundError({
-         message: "Resource not found - MapVehicleLayout not found!",
+         message: "Resource not found - Tag not found!",
          suggestion: "Please check your request",
          request: req,
       });
    }
 
-   return await layout
+   return await tag
       .update({
-         layout_name: name || layout.layout_name,
+         tag_name: tag_name || tag.tag_name,
+         tag_description: tag_description || tag.tag_description,
       })
-      .then((updatedLayout) => {
-         return { layout: updatedLayout };
+      .then((updatedTag) => {
+         return {tag: updatedTag};
       })
       .catch((error) => {
          if (error.original?.code === "ER_DUP_ENTRY") {
             throw new __RESPONSE.BadRequestError({
-               message: "Layout name already exists: " + error.original.sqlMessage,
-               suggestion: "Please use different layout name",
+               message: "Tag name already exists: " + error.original.sqlMessage,
+               suggestion: "Please use different tag name",
                request: req,
             });
          }
          throw new __RESPONSE.BadRequestError({
-            message: "Error in updating map vehicle layout: " + error.message,
+            message: "Error in updating tag: " + error.message,
             suggestion: "Please check your request",
             request: req,
          });
       });
 };
 
-const deleteMapVehicleLayout = async (req) => {
+const deleteTag = async (req) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
       throw new __RESPONSE.BadRequestError({
@@ -154,28 +156,28 @@ const deleteMapVehicleLayout = async (req) => {
       });
    }
 
-   const id = parseInt(req.params.id);
+   const tag_id = parseInt(req.params.id);
 
-   const layout = await db.MapVehicleLayout.findOne({
-      where: { map_vehicle_layout_id: id },
+   const tag = await db.Tag.findOne({
+      where: {tag_id},
    });
 
-   if (!layout) {
+   if (!tag) {
       throw new __RESPONSE.NotFoundError({
-         message: "Resource not found - MapVehicleLayout not found!",
+         message: "Resource not found - Tag not found!",
          suggestion: "Please check your request",
          request: req,
       });
    }
 
-   return await layout
+   return await tag
       .destroy()
       .then(() => {
-         return { message: "MapVehicleLayout deleted successfully" };
+         return {message: "Tag deleted successfully"};
       })
       .catch((error) => {
          throw new __RESPONSE.BadRequestError({
-            message: "Error in deleting map vehicle layout: " + error.message,
+            message: "Error in deleting tag: " + error.message,
             suggestion: "Please check your request",
             request: req,
          });
@@ -183,9 +185,9 @@ const deleteMapVehicleLayout = async (req) => {
 };
 
 module.exports = {
-   getAllMapVehicleLayouts,
-   getMapVehicleLayoutById,
-   createMapVehicleLayout,
-   updateMapVehicleLayout,
-   deleteMapVehicleLayout,
+   getAllTags,
+   getTagById,
+   createTag,
+   updateTag,
+   deleteTag,
 };

@@ -33,6 +33,12 @@ const getAllDrivers = async () => {
                     "last_lock_at",
                     "office_id",
                     "employee_type_id",
+                  "employee_id",
+                  "employee_full_name",
+                  "employee_email",
+                  "employee_phone",
+                  "employee_profile_image",
+                  "employee_gender"
                ],
                where: {
                   deleted_at: null
@@ -121,7 +127,11 @@ const createDriver = async (req) => {
             suggestion: "Please provide the correct data",
          });
       }
+
       const {license_number, experience_years, employee_id} = req.body;
+
+      const {license_number, experience_years, employee_id} = req.body;
+
       // Kiểm tra employee tồn tại
       const employee = await db.Employee.findOne({
          where: {
@@ -191,6 +201,9 @@ const updateDriver = async (req) => {
             suggestion: "Please provide the correct data",
          });
       }
+      const id = parseInt(req.params.id);
+      const {license_number, experience_years, employee_id} = req.body;
+
       const id = parseInt(req.params.id);
       const {license_number, experience_years, employee_id} = req.body;
       const driver = await db.Driver.findOne({
@@ -298,6 +311,7 @@ const deleteDriver = async (req) => {
       });
    }
 };
+
 module.exports = {
    getAllDrivers,
    getDriverById,

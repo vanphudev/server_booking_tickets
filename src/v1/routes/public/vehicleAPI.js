@@ -8,6 +8,7 @@ const {
    validateCreateVehicle,
    validateUpdateVehicle,
 } = require("../../middlewares/validates/vehicleValidates");
+
 rootRouter
    .get("/getall", asyncHandler(__VEHICLE_CONTROLLER.getAllVehicles))
    .get("/getbyid", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.getVehicleById))
@@ -15,4 +16,8 @@ rootRouter
    .put("/update", validateUpdateVehicle, asyncHandler(__VEHICLE_CONTROLLER.updateVehicle))
    .delete("/delete/:vehicleId", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
    .get("/getalldeleted", asyncHandler(__VEHICLE_CONTROLLER.findAllDeletedVehicle));
+   .delete("/delete", validateVehicleWithByIDToQuery, asyncHandler(__VEHICLE_CONTROLLER.deleteVehicle))
+   .get("/getalldeleted", asyncHandler(__VEHICLE_CONTROLLER.findAllDeletedVehicle));
+   .get("/getall", asyncHandler(__VEHICLE_CONTROLLER.getAllVehicles));
+
 module.exports = rootRouter;

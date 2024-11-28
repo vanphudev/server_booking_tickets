@@ -1,4 +1,5 @@
 "use strict";
+
 const __RESPONSE = require("../../core");
 const {
    getAllDrivers,
@@ -7,6 +8,7 @@ const {
    updateDriver,
    deleteDriver,
 } = require("../../services/driverService");
+
 const __DRIVER_CONTROLLER = {
    getAllDrivers: async (req, res, next) => {
       try {
@@ -24,6 +26,7 @@ const __DRIVER_CONTROLLER = {
          });
       }
    },
+
    getDriverById: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
@@ -40,6 +43,7 @@ const __DRIVER_CONTROLLER = {
          });
       }
    },
+
    createDriver: async (req, res, next) => {
       try {
          new __RESPONSE.CREATED({
@@ -56,6 +60,7 @@ const __DRIVER_CONTROLLER = {
          });
       }
    },
+
    updateDriver: async (req, res, next) => {
       try {
          new __RESPONSE.OK({
@@ -72,6 +77,7 @@ const __DRIVER_CONTROLLER = {
          });
       }
    },
+
    deleteDriver: async (req, res, next) => {
       try {
          new __RESPONSE.DELETE({
@@ -89,4 +95,5 @@ const __DRIVER_CONTROLLER = {
       }
    },
 };
+
 module.exports = __DRIVER_CONTROLLER;

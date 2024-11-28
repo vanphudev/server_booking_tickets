@@ -7,7 +7,7 @@ const {
    createPaymentMethod,
    updatePaymentMethod,
    deletePaymentMethod,
-   updatePaymentMethodAvatar, // Thêm hàm cập nhật hình ảnh
+
 } = require("../../services/paymentMethodService");
 
 const __PAYMENT_METHOD_CONTROLLER = {
@@ -63,8 +63,9 @@ const __PAYMENT_METHOD_CONTROLLER = {
    },
 
    updatePaymentMethod: async (req, res, next) => {
-      try {
+
          new __RESPONSE.UPDATE({
+
             message: "Payment method updated successfully",
             metadata: await updatePaymentMethod(req),
             request: req,
@@ -78,6 +79,7 @@ const __PAYMENT_METHOD_CONTROLLER = {
          });
       }
    },
+
 
    // deletePaymentMethod: async (req, res, next) => {
    //    try {
@@ -131,6 +133,16 @@ const __PAYMENT_METHOD_CONTROLLER = {
          }).send(res);
       } catch (error) {
          console.error("Error updating payment method avatar:", error);
+
+   deletePaymentMethod: async (req, res, next) => {
+      try {
+         new __RESPONSE.DELETE({
+            message: "Payment method deleted successfully",
+            metadata: await deletePaymentMethod(req),
+            request: req,
+         }).send(res);
+      } catch (error) {
+         console.error("Error deleting payment method:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -140,4 +152,6 @@ const __PAYMENT_METHOD_CONTROLLER = {
    },
 };
 
+
 module.exports = __PAYMENT_METHOD_CONTROLLER;
+

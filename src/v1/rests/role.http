@@ -1,0 +1,37 @@
+@hostname = localhost
+@port = 8800
+@object = role
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo vai trò mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "role_name": "Admin2",
+  "role_description": "Administrator role with full access.",
+  "role_value_url": "/admin1/*"
+}
+
+### Cập nhật vai trò
+PUT http://{{host}}/{{endpoint}}/update/29
+Content-Type: {{contentType}}
+
+{
+  "role_name": "Developer",
+  "role_description": "Administrator role with full access.",
+  "role_value_url": "/developer/*"
+}
+### Xóa vai trò
+DELETE http://{{host}}/{{endpoint}}/delete/36
+Content-Type: {{contentType}}
+
+### Lấy tất cả vai trò
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy vai trò theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?roleId=21
+Content-Type: {{contentType}}

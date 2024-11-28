@@ -1,5 +1,6 @@
 const {body, query, param} = require("express-validator");
 const {validationResult} = require("express-validator");
+
 const validateResult = (req, res, next) => {
    const errors = validationResult(req);
    if (!errors.isEmpty()) {
@@ -13,6 +14,7 @@ const validateResult = (req, res, next) => {
    }
    next();
 };
+
 const validateDriverWithIdInQuery = [
    query("driverId")
       .notEmpty()
@@ -21,6 +23,7 @@ const validateDriverWithIdInQuery = [
       .withMessage("Driver ID must be a number"),
    validateResult,
 ];
+
 const validateCreateDriver = [
    body("license_number")
       .notEmpty()
@@ -41,6 +44,7 @@ const validateCreateDriver = [
       .withMessage("Employee ID must be a number"),
    validateResult,
 ];
+
 const validateUpdateDriver = [
    param("id")
       .notEmpty()
@@ -63,6 +67,7 @@ const validateUpdateDriver = [
       .withMessage("Employee ID must be a number"),
    validateResult,
 ];
+
 const validateDeleteDriver = [
    param("id")
       .notEmpty()
@@ -71,6 +76,7 @@ const validateDeleteDriver = [
       .withMessage("Driver ID must be a number"),
    validateResult,
 ];
+
 module.exports = {
    validateDriverWithIdInQuery,
    validateCreateDriver,

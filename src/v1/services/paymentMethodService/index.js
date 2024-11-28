@@ -17,6 +17,12 @@ const getAllPaymentMethod = async () => {
             "payment_type_id",
             "created_at",
             "updated_at"
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
          ],
          include: [
             {
@@ -46,6 +52,16 @@ const getAllPaymentMethod = async () => {
       });
 
       return { methods, total: methods.length };
+               attributes: ["payment_type_name"],
+            },
+         ],
+         order: [["payment_method_id", "ASC"]],
+         where: {
+            deleted_at: null,
+         },
+      });
+
+      return {methods, total: methods.length};
    } catch (error) {
       console.error("getAllPaymentMethod Error:", error);
       throw new __RESPONSE.BadRequestError({
@@ -67,6 +83,7 @@ const getPaymentMethodById = async (req) => {
       }
 
       const { methodId } = req.query;
+      const {methodId} = req.query;
       const method = await db.PaymentMethod.findOne({
          where: {
             payment_method_id: methodId,
@@ -83,6 +100,13 @@ const getPaymentMethodById = async (req) => {
             "payment_type_id",
             "created_at",
             "updated_at"
+=======
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
          ],
          include: [
             {
@@ -105,6 +129,8 @@ const getPaymentMethodById = async (req) => {
                ],
                required: false
             }
+               attributes: ["payment_type_name"],
+            },
          ],
       });
 
@@ -114,6 +140,7 @@ const getPaymentMethodById = async (req) => {
             suggestion: "Please check the payment method ID",
          });
       }
+
 
       return { method };
    } catch (error) {
@@ -150,6 +177,11 @@ const createPaymentMethod = async (req) => {
       // Kiểm tra payment type tồn tại
       if (payment_type_id) {
          const paymentType = await db.PaymentType.findByPk(payment_type_id);
+      const {code, name, avatar_url, avatar_public_id, islocked, lock_at, description, paymenttypeid} = req.body;
+
+      // Kiểm tra payment type tồn tại
+      if (paymenttypeid) {
+         const paymentType = await db.PaymentType.findByPk(paymenttypeid);
          if (!paymentType) {
             throw new __RESPONSE.NotFoundError({
                message: "PaymentType not found",
@@ -170,6 +202,18 @@ const createPaymentMethod = async (req) => {
 
       const newMethod = await db.PaymentMethod.findOne({
          where: { payment_method_id: method.payment_method_id },
+         payment_method_code: code,
+         payment_method_name: name,
+         payment_method_avatar_url: avatar_url,
+         payment_method_avatar_public_id: avatar_public_id,
+         is_locked: islocked ? 1 : 0,
+         last_lock_at: lock_at,
+         payment_method_description: description,
+         payment_type_id: paymenttypeid,
+      });
+
+      const newMethod = await db.PaymentMethod.findOne({
+         where: {payment_method_id: method.payment_method_id},
          attributes: [
             "payment_method_id",
             "payment_method_code",
@@ -181,6 +225,12 @@ const createPaymentMethod = async (req) => {
             "payment_type_id",
             "created_at",
             "updated_at"
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
          ],
          include: [
             {
@@ -192,6 +242,12 @@ const createPaymentMethod = async (req) => {
       });
 
       return { method: newMethod };
+               attributes: ["payment_type_name"],
+            },
+         ],
+      });
+
+      return {method: newMethod};
    } catch (error) {
       console.error("createPaymentMethod Error:", error);
       if (error.name === "SequelizeUniqueConstraintError") {
@@ -228,7 +284,7 @@ const updatePaymentMethod = async (req) => {
          payment_method_description,
          payment_type_id
       } = req.body;
-
+      const {code, name, avatar_url, avatar_public_id, islocked, lock_at, description, paymenttypeid} = req.body;
       const method = await db.PaymentMethod.findOne({
          where: {
             payment_method_id: id,
@@ -242,9 +298,10 @@ const updatePaymentMethod = async (req) => {
             suggestion: "Please check the payment method ID",
          });
       }
-
       if (payment_type_id) {
          const paymentType = await db.PaymentType.findByPk(payment_type_id);
+      if (paymenttypeid) {
+         const paymentType = await db.PaymentType.findByPk(paymenttypeid);
          if (!paymentType) {
             throw new __RESPONSE.NotFoundError({
                message: "PaymentType not found",
@@ -264,6 +321,20 @@ const updatePaymentMethod = async (req) => {
 
       const updatedMethod = await db.PaymentMethod.findOne({
          where: { payment_method_id: id },
+
+      await method.update({
+         payment_method_code: code || method.payment_method_code,
+         payment_method_name: name || method.payment_method_name,
+         payment_method_avatar_url: avatar_url || method.payment_method_avatar_url,
+         payment_method_avatar_public_id: avatar_public_id || method.payment_method_avatar_public_id,
+         is_locked: islocked !== undefined ? (islocked ? 1 : 0) : method.is_locked,
+         last_lock_at: lock_at || method.last_lock_at,
+         payment_method_description: description || method.payment_method_description,
+         payment_type_id: paymenttypeid || method.payment_type_id,
+      });
+
+      const updatedMethod = await db.PaymentMethod.findOne({
+         where: {payment_method_id: id},
          attributes: [
             "payment_method_id",
             "payment_method_code",
@@ -275,6 +346,12 @@ const updatePaymentMethod = async (req) => {
             "payment_type_id",
             "created_at",
             "updated_at"
+            "payment_method_avatar_url",
+            "payment_method_avatar_public_id",
+            "is_locked",
+            "last_lock_at",
+            "payment_method_description",
+            "payment_type_id",
          ],
          include: [
             {
@@ -286,6 +363,12 @@ const updatePaymentMethod = async (req) => {
       });
 
       return { method: updatedMethod };
+               attributes: ["payment_type_name"],
+            },
+         ],
+      });
+
+      return {method: updatedMethod};
    } catch (error) {
       console.error("updatePaymentMethod Error:", error);
       if (error.name === "SequelizeUniqueConstraintError") {
@@ -414,6 +497,7 @@ const deletePaymentMethod = async (req, res, next) => {
 // };
 
 const updatePaymentMethodAvatar = async (req) => {
+const deletePaymentMethod = async (req) => {
    try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -425,7 +509,6 @@ const updatePaymentMethodAvatar = async (req) => {
 
       const id = parseInt(req.params.id);
       const { payment_method_avatar_url } = req.body;
-
       const method = await db.PaymentMethod.findOne({
          where: {
             payment_method_id: id,
@@ -455,6 +538,12 @@ const updatePaymentMethodAvatar = async (req) => {
       console.error("updatePaymentMethodAvatar Error:", error);
       throw new __RESPONSE.BadRequestError({
          message: "Error in updating payment method avatar",
+      await method.destroy();
+      return {message: "PaymentMethod deleted successfully"};
+   } catch (error) {
+      console.error("deletePaymentMethod Error:", error);
+      throw new __RESPONSE.BadRequestError({
+         message: "Error in deleting payment method",
          suggestion: "Please check your request",
          details: error.message,
       });

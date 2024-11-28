@@ -2,23 +2,23 @@
 
 const __RESPONSE = require("../../core");
 const {
-   getAllMapVehicleSeat,
-   getMapVehicleSeatById,
-   createMapVehicleSeat,
-   updateMapVehicleSeat,
-   deleteMapVehicleSeat,
-} = require("../../services/mapVehicleSeatService");
+   getAllTags,
+   getTagById,
+   createTag,
+   updateTag,
+   deleteTag,
+} = require("../../services/tagService");
 
-const __MAP_VEHICLE_SEAT_CONTROLLER = {
-   getAllMapVehicleSeat: async (req, res, next) => {
+const __TAG_CONTROLLER = {
+   getAllTags: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "List of all map vehicle seats",
-            metadata: await getAllMapVehicleSeat(),
+            message: "List of all tags",
+            metadata: await getAllTags(),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding map vehicle seats:", error);
+         console.error("Error finding tags:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -27,15 +27,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   getMapVehicleSeatById: async (req, res, next) => {
+   getTagById: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "Map vehicle seat details",
-            metadata: await getMapVehicleSeatById(req),
+            message: "Tag details",
+            metadata: await getTagById(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding map vehicle seat by ID:", error);
+         console.error("Error finding tag by ID:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -44,15 +44,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   createMapVehicleSeat: async (req, res, next) => {
+   createTag: async (req, res, next) => {
       try {
          new __RESPONSE.CREATED({
-            message: "Map vehicle seat created successfully",
-            metadata: await createMapVehicleSeat(req),
+            message: "Tag created successfully",
+            metadata: await createTag(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error creating map vehicle seat:", error);
+         console.error("Error creating tag:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -61,15 +61,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   updateMapVehicleSeat: async (req, res, next) => {
+   updateTag: async (req, res, next) => {
       try {
          new __RESPONSE.OK({
-            message: "Map vehicle seat updated successfully",
-            metadata: await updateMapVehicleSeat(req),
+            message: "Tag updated successfully",
+            metadata: await updateTag(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error updating map vehicle seat:", error);
+         console.error("Error updating tag:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -78,15 +78,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   deleteMapVehicleSeat: async (req, res, next) => {
+   deleteTag: async (req, res, next) => {
       try {
          new __RESPONSE.DELETE({
-            message: "Map vehicle seat deleted successfully",
-            metadata: await deleteMapVehicleSeat(req),
+            message: "Tag deleted successfully",
+            metadata: await deleteTag(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error deleting map vehicle seat:", error);
+         console.error("Error deleting tag:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -96,4 +96,4 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
    },
 };
 
-module.exports = __MAP_VEHICLE_SEAT_CONTROLLER;
+module.exports = __TAG_CONTROLLER;

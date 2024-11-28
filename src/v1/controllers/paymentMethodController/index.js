@@ -2,23 +2,23 @@
 
 const __RESPONSE = require("../../core");
 const {
-   getAllMapVehicleSeat,
-   getMapVehicleSeatById,
-   createMapVehicleSeat,
-   updateMapVehicleSeat,
-   deleteMapVehicleSeat,
-} = require("../../services/mapVehicleSeatService");
+   getAllPaymentMethod,
+   getPaymentMethodById,
+   createPaymentMethod,
+   updatePaymentMethod,
+   deletePaymentMethod,
+} = require("../../services/paymentMethodService");
 
-const __MAP_VEHICLE_SEAT_CONTROLLER = {
-   getAllMapVehicleSeat: async (req, res, next) => {
+const __PAYMENT_METHOD_CONTROLLER = {
+   getAllPaymentMethod: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "List of all map vehicle seats",
-            metadata: await getAllMapVehicleSeat(),
+            message: "List of all payment methods",
+            metadata: await getAllPaymentMethod(),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding map vehicle seats:", error);
+         console.error("Error finding payment methods:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -27,15 +27,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   getMapVehicleSeatById: async (req, res, next) => {
+   getPaymentMethodById: async (req, res, next) => {
       try {
          new __RESPONSE.GET({
-            message: "Map vehicle seat details",
-            metadata: await getMapVehicleSeatById(req),
+            message: "Payment method details",
+            metadata: await getPaymentMethodById(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error finding map vehicle seat by ID:", error);
+         console.error("Error finding payment method by ID:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -44,15 +44,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   createMapVehicleSeat: async (req, res, next) => {
+   createPaymentMethod: async (req, res, next) => {
       try {
          new __RESPONSE.CREATED({
-            message: "Map vehicle seat created successfully",
-            metadata: await createMapVehicleSeat(req),
+            message: "Payment method created successfully",
+            metadata: await createPaymentMethod(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error creating map vehicle seat:", error);
+         console.error("Error creating payment method:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -61,15 +61,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   updateMapVehicleSeat: async (req, res, next) => {
+   updatePaymentMethod: async (req, res, next) => {
       try {
          new __RESPONSE.OK({
-            message: "Map vehicle seat updated successfully",
-            metadata: await updateMapVehicleSeat(req),
+            message: "Payment method updated successfully",
+            metadata: await updatePaymentMethod(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error updating map vehicle seat:", error);
+         console.error("Error updating payment method:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -78,15 +78,15 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
       }
    },
 
-   deleteMapVehicleSeat: async (req, res, next) => {
+   deletePaymentMethod: async (req, res, next) => {
       try {
          new __RESPONSE.DELETE({
-            message: "Map vehicle seat deleted successfully",
-            metadata: await deleteMapVehicleSeat(req),
+            message: "Payment method deleted successfully",
+            metadata: await deletePaymentMethod(req),
             request: req,
          }).send(res);
       } catch (error) {
-         console.error("Error deleting map vehicle seat:", error);
+         console.error("Error deleting payment method:", error);
          res.status(error.statusCode || 500).json({
             error: true,
             message: error.message,
@@ -96,4 +96,4 @@ const __MAP_VEHICLE_SEAT_CONTROLLER = {
    },
 };
 
-module.exports = __MAP_VEHICLE_SEAT_CONTROLLER;
+module.exports = __PAYMENT_METHOD_CONTROLLER;

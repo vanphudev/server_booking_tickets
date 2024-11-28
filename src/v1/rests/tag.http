@@ -1,0 +1,36 @@
+@hostname = localhost
+@port = 8800
+@object = tag
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo tag mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "tag_name": "Featured 1",
+  "tag_description": "Tag for featured content and items."
+}
+
+### Cập nhật tag
+PUT http://{{host}}/{{endpoint}}/update/32
+Content-Type: {{contentType}}
+
+{
+  "tag_name": "Popular 1",
+  "tag_description": "Tag for popular and trending items."
+}
+
+### Xóa tag
+DELETE http://{{host}}/{{endpoint}}/delete/32
+Content-Type: {{contentType}}
+
+### Lấy tất cả tag
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy tag theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?tagId=21
+Content-Type: {{contentType}}

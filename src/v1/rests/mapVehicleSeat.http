@@ -1,0 +1,44 @@
+@hostname = localhost
+@port = 8800
+@object = map-vehicle-seat
+@host = {{hostname}}:{{port}}
+@endpoint = api/v1/private/{{object}}
+@contentType = application/json
+
+### Tạo ghế xe mới
+POST http://{{host}}/{{endpoint}}/create
+Content-Type: {{contentType}}
+
+{
+  "code": "A7",
+  "row": 1,
+  "col": 1,
+  "floor": 1,
+  "lock_chair": false,
+  "mapvehiclelayoutid": 22
+}
+
+### Cập nhật ghế xe
+PUT http://{{host}}/{{endpoint}}/update/31
+Content-Type: {{contentType}}
+
+{
+  "code": "A7",
+  "row": 1,
+  "col": 2,
+  "floor": 1,
+  "lock_chair": true,
+  "mapvehiclelayoutid": 22
+}
+
+### Xóa ghế xe
+DELETE http://{{host}}/{{endpoint}}/delete/31
+Content-Type: {{contentType}}
+
+### Lấy tất cả ghế xe
+GET http://{{host}}/{{endpoint}}/all
+Content-Type: {{contentType}}
+
+### Lấy ghế xe theo ID
+GET http://{{host}}/{{endpoint}}/getbyid?seatId=22
+Content-Type: {{contentType}}

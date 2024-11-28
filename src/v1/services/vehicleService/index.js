@@ -1,7 +1,6 @@
 "use strict";
 const __RESPONSE = require("../../core");
 const {validationResult} = require("express-validator");
-const db = require("../../models");
 
 const getAllVehicles = async () => {
    return await db.Vehicle.findAll({
